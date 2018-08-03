@@ -1,12 +1,14 @@
 <template>
 	<div>
-		<navbar></navbar>
+		<Navbar/>
 		<router-view></router-view>
+		<Statusbar/>
 	</div>
 </template>
 
 <script>
 import Navbar from './navbar.vue';
+import Statusbar from './statusbar.vue';
 
 export default {
   name: 'app',
@@ -15,7 +17,8 @@ export default {
     }
 	},
 	components: {
-		Navbar
+		Navbar,
+		Statusbar
 	}
 }
 </script>
