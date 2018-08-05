@@ -1,97 +1,112 @@
 <template>
 	<div>
+
 		<b-modal id="loginModal" title="登录" @ok="handleLogin()">
+			<p>用户名：</p>
 			<b-form-input
 				class="login-input"
 				v-model="username"
-        type="text"
-        placeholder="用户名">
+				type="text"
+				placeholder="用户名">
 			</b-form-input>
 			<p></p>
-			<p></p>
+			<p>密码：</p>
 			<b-form-input
 				class="login-input"
 				v-model="password"
-        type="password"
-    		placeholder="密码">
+				type="password"
+				placeholder="密码">
 			</b-form-input>
-  	</b-modal>
+		</b-modal>
 
 		<b-navbar id="navbar" toggleable="md" type="dark" variant="dark">
 
-			<b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-
-			<b-navbar-brand>
-				<router-link to="/">DRRobot</router-link>
-			</b-navbar-brand>
-
-			<b-collapse is-nav id="nav_collapse">
+			<b-navbar-brand to="/">DRRobot</b-navbar-brand>
 
 				<b-navbar-nav>
-					<b-nav-item>
-						<router-link to="/editor">代码编辑器</router-link>
-					</b-nav-item>
-					<b-nav-item>
-						<router-link to="/setting">设置</router-link>
-					</b-nav-item>
 					<b-nav-item
-						@click="switchEditorMode()"
-						v-if="this.$route.path == '/editor'"
-						right
-					>
-						{{this.editorMode}}
+						v-for="(tab, index) in tabList"
+						:key="index"
+						:to="tab.route">
+						{{tab.name}}
 					</b-nav-item>
 				</b-navbar-nav>
 
-			<!-- Right aligned nav items -->
-			<b-navbar-nav class="ml-auto">
+				<b-navbar-nav class="mx-auto" v-if="this.$route.path == '/editor'">
+					<b-button
+						@click="switchEditorMode()"
+						class="menu-button my-2 my-sm-0"
+						:class="{'active': this.editorMode == 'blockly'}">
+						{{this.editorMode}}
+					</b-button>
+					<b-button
+						class="menu-button my-2 my-sm-0">
+						打开
+					</b-button>
+					<b-button
+						class="menu-button my-2 my-sm-0">
+						保存
+					</b-button>
+				</b-navbar-nav>
 
-		 	 <b-nav-item-dropdown right>
-					<!-- Using button-content slot -->
-			 	 <template slot="button-content">
-			 		 <a>{{this.loggenInUsername}}</a>
-					</template>
-					<b-dropdown-item href="#">个人资料</b-dropdown-item>
-					<b-dropdown-item href="#" v-if="this.loggenInUserid" @click="handleLogout()">注销</b-dropdown-item>
-					<b-dropdown-item href="#" v-b-modal.loginModal v-else>登录</b-dropdown-item>
-				</b-nav-item-dropdown>
-			</b-navbar-nav>
-
-		</b-collapse>
-	</b-navbar>
+				<b-navbar-nav class="ml-auto">
+			 	 <b-nav-item-dropdown right>
+				 		<template slot="button-content">
+			 				<a>{{this.loggenInUsername}}</a>
+						</template>
+						<b-dropdown-item href="#">个人资料</b-dropdown-item>
+						<b-dropdown-item href="#" v-if="this.loggenInUserid" @click="handleLogout()">注销</b-dropdown-item>
+						<b-dropdown-item href="#" v-b-modal.loginModal v-else>登录</b-dropdown-item>
+					</b-nav-item-dropdown>
+				</b-navbar-nav>
+		</b-navbar>
 	</div>
 </template>
 
 <script>
 export default {
-  name: "navbar",
-  data() {
-    return {
+	name: "navbar",
+	data() {
+		return {
+			tabList: [
+				{
+					name: '代码编辑器',
+					route: '/editor'
+				},
+				{
+					name: '机器人管理',
+					route: '/home'
+				},
+				{
+					name: '设置',
+					route: '/setting'
+				}
+			],
 			battery: 70,
 			username: '',
 			password: '',
-    };
-  },
-  computed: {
-    editorMode() {
-      return this.$store.state.editor.mode;
-    },
-    loggenInUsername() {
+		};
+	},
+	computed: {
+		editorMode() {
+			return this.$store.state.editor.mode;
+		},
+		loggenInUsername() {
 			const name = this.$store.state.user.name;
 			if (name) {
 				return name;
 			}
-      return '用户';
+			return '用户';
 		},
 		loggenInUserid() {
 			return this.$store.state.user.id;
 		}
-  },
-  methods: {
-    switchEditorMode() {
-      const editorMode = this.editorMode == "blockly" ? "python" : "blockly";
+	},
+	methods: {
+		switchEditorMode() {
+			const editorMode = this.editorMode == "blockly" ? "python" : "blockly";
 
-      this.$store.commit("modeUpdate", editorMode);
+			this.$store.commit("modeUpdate", editorMode);
 		},
 		handleLogin() {
 			this.updateUserStatus(
@@ -105,11 +120,18 @@ export default {
 		updateUserStatus(id, username) {
 			this.$store.commit("updateUserStatus", { id, username });
 		}
-  }
+	}
 };
 </script>
 
 <style lang="less">
-
+.menu-button{
+	margin-left: 10px;
+	margin-right: 10px;
+}
+.menu-button.active {
+	color: black!important;
+	background-color: white!important;
+}
 </style>
 
