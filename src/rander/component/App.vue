@@ -1,3 +1,7 @@
+<script src="@/lib/blockly/blockly_compressed.js"></script>
+<script src="@/lib/blockly/blocks_compressed.js"></script>
+<script src="@/src/lib/blockly/python_compressed.js"></script>
+<script src="@/src/lib/blockly/msg/js/zh-hans.js"></script>
 <template>
 	<div>
 		<Navbar/>
