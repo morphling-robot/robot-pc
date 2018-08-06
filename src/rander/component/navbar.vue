@@ -1,50 +1,44 @@
 <template>
 	<div>
-
-		<b-modal id="loginModal" title="登录" @ok="handleLogin()">
-			<p>用户名：</p>
-			<b-form-input
-				class="login-input"
-				v-model="username"
-				type="text"
-				placeholder="用户名">
-			</b-form-input>
-			<p></p>
-			<p>密码：</p>
-			<b-form-input
-				class="login-input"
-				v-model="password"
-				type="password"
-				placeholder="密码">
-			</b-form-input>
-		</b-modal>
-
 		<b-navbar id="navbar" toggleable="md" type="dark" variant="dark">
 
 			<b-navbar-brand to="/">DRRobot</b-navbar-brand>
 
 				<b-navbar-nav>
 					<b-nav-item
-						v-for="(tab, index) in tabList"
-						:key="index"
-						:to="tab.route">
-						{{tab.name}}
+						to="/editor">
+						代码编辑器
+					</b-nav-item>
+					<b-nav-item
+						v-b-modal.manageModal>
+						机器人管理
+					</b-nav-item>
+					<b-nav-item
+						v-b-modal.videoModal>
+						录像功能
 					</b-nav-item>
 				</b-navbar-nav>
 
-				<b-navbar-nav class="mx-auto" v-if="this.$route.path == '/editor'">
-					<b-button
+				<b-navbar-nav class="mx-auto">
+					<!-- <b-button
 						@click="switchEditorMode()"
 						class="menu-button my-2 my-sm-0"
 						:class="{'active': this.editorMode == 'blockly'}">
 						{{this.editorMode}}
-					</b-button>
+					</b-button> -->
+					<b-form-file
+						v-model="file"
+						id="fileInput"
+						style="display:none"></b-form-file>
 					<b-button
-						class="menu-button my-2 my-sm-0">
+						class="menu-button my-2 my-sm-0"
+						file
+						@click="onOpenhandle()">
 						打开
 					</b-button>
 					<b-button
-						class="menu-button my-2 my-sm-0">
+						class="menu-button my-2 my-sm-0"
+						@click="onSavehandle()">
 						保存
 					</b-button>
 				</b-navbar-nav>
@@ -64,28 +58,17 @@
 </template>
 
 <script>
+
+
+
 export default {
 	name: "navbar",
 	data() {
 		return {
-			tabList: [
-				{
-					name: '代码编辑器',
-					route: '/editor'
-				},
-				{
-					name: '机器人管理',
-					route: '/home'
-				},
-				{
-					name: '设置',
-					route: '/setting'
-				}
-			],
-			battery: 70,
-			username: '',
-			password: '',
-		};
+			file: null,
+			filetext: null,
+			filetype: null
+		}
 	},
 	computed: {
 		editorMode() {
@@ -108,18 +91,61 @@ export default {
 
 			this.$store.commit("modeUpdate", editorMode);
 		},
-		handleLogin() {
-			this.updateUserStatus(
-				Math.floor(Math.random() * (100 - 1) + 1),
-				this.username
-			);
-		},
 		handleLogout() {
 			this.updateUserStatus(null, null);
 		},
 		updateUserStatus(id, username) {
 			this.$store.commit("updateUserStatus", { id, username });
+		},
+		onOpenhandle() {
+			const fileInput = document.querySelector('#fileInput');
+			const event = new MouseEvent('click');
+			fileInput.dispatchEvent(event);
+		},
+		onSavehandle() {
+
+		},
+		fileReader() {
+			const fr = new FileReader();
+			fr.onload = (e) => {
+    		this.filetext = e.target.result;
+				console.log(this.filetext);
+			}
+
+			fr.readAsText(this.file);
+		},
+		parserXML(str) {
+			const dp = new DOMParser();
+			const xml = dp.parseFromString(str, 'text/xml').firstChild;
+			return xml;
 		}
+	},
+	watch: {
+		file() {
+			console.log(this.file);
+			const blocklyReg = /.bk$/;
+			const pythonReg = /.py$/;
+
+			if (blocklyReg.test(this.file.name)) {
+				this.filetype = 'blockly';
+				this.$router.push('/blockly');
+			} else if (pythonReg.test(this.file.name)) {
+				this.filetype = 'python';
+				this.$router.push('/python');
+			}
+
+			// this.fileReader();
+		},
+		// filetext() {
+		// 	if (this.filetype == 'blockly') {
+		// 		// const xml = this.parserXML(this.filetext);
+		// 		// this.$store.commit('blocklyUpdate', xml);
+				
+		// 	} else if (this.filetype == 'python') {
+		// 		// this.$store.commit('pythonUpdate', this.filetext);
+				
+		// 	}
+		// }
 	}
 };
 </script>

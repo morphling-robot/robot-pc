@@ -10,8 +10,9 @@ const state = {
 
 const mutations = {
 	modeUpdate(state, payload) {
-		if (payload == 'blockly' || payload == 'python')
-		state.mode = payload;
+		if (payload == 'blockly' || payload == 'python') {
+			state.mode = payload;
+		}
 	},
 	blocklyUpdate(state, payload) {
 		state.blockly.content = payload;

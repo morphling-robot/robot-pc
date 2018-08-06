@@ -95,16 +95,13 @@ export default {
     editor.$blockScrolling = Infinity;
     editor.setFontSize(this.fontsize);
     editor.getSession().on('change', this.emitCode);
-    editor.setReadOnly(true);
+    editor.setReadOnly(!this.editable);
   },
   watch: {
     code() {
       if (!this.editable) {
         this.updateCode();
       }
-    },
-    editable() {console.log(this.editable);
-      editor.setReadOnly(!this.editable);
     },
     mode () {
       this.setMode()

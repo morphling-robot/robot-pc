@@ -1,9 +1,8 @@
-<script src="@/lib/blockly/blockly_compressed.js"></script>
-<script src="@/lib/blockly/blocks_compressed.js"></script>
-<script src="@/src/lib/blockly/python_compressed.js"></script>
-<script src="@/src/lib/blockly/msg/js/zh-hans.js"></script>
 <template>
 	<div>
+		<login-modal/>
+		<video-modal/>
+		<manage-modal/>
 		<Navbar/>
 		<router-view></router-view>
 		<Statusbar/>
@@ -13,6 +12,9 @@
 <script>
 import Navbar from './navbar.vue';
 import Statusbar from './statusbar.vue';
+import LoginModal from './login-modal.vue';
+import VideoModal from './video-modal.vue';
+import ManageModal from './manage-modal.vue';
 
 export default {
   name: 'app',
@@ -22,7 +24,10 @@ export default {
 	},
 	components: {
 		Navbar,
-		Statusbar
+		Statusbar,
+		LoginModal,
+		VideoModal,
+		ManageModal
 	}
 }
 </script>

@@ -64,14 +64,6 @@ export default {
     test(python) {
       console.log(python);
     }
-  },
-  mounted() {
-    
-  },
-  watch: {
-    fuck() {
-      console.log(this.fuck);
-    }
   }
 }
 </script>

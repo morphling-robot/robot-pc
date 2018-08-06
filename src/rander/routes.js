@@ -1,6 +1,7 @@
 import home from './component/home';
 import editor from './component/editor';
-import setting from './component/setting';
+import block from './component/block';
+import python from './component/python';
 
 export default [
 	{
@@ -13,7 +14,11 @@ export default [
 		component: editor
 	},
 	{
-		path: '/setting',
-		component: setting
+		path: '/python',
+		component: python
+	},
+	{
+		path: '/blockly',
+		component: block
 	}
 ]
