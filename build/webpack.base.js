@@ -3,7 +3,13 @@ const { VueLoaderPlugin } = require('vue-loader');
 const cwd = process.cwd();
 
 module.exports = {
-  entry: './src/rander/index.js',
+  entry: {
+    app: [
+      'videojs-record/dist/css/videojs.record.css',
+      'video.js/dist/video-js.min.css',
+      './src/rander/index.js'
+    ]
+  },
   output: {
     path: path.resolve(cwd, './dist'),
     publicPath: '/dist/',
