@@ -21,7 +21,6 @@ function createWindow() {
     }
 	});
 
-	mainWindow.setMenu(null);
 	mainWindow.loadURL(winURL);
 
 	mainWindow.on('closed', () =>

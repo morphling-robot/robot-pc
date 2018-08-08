@@ -1,7 +1,4 @@
-<template>
-	<div>
-		<div id="blocklyDiv"></div>
-		<xml id="toolbox" style="display: none">
+<xml id="toolbox" style="display: none">
     <category name="Logic" colour="%{BKY_LOGIC_HUE}">
       <category name="If">
         <block type="controls_if"></block>
@@ -315,46 +312,3 @@
       </category>
     </category>
   </xml>
-	</div>
-</template>
-
-<script>
-export default {
-	name: 'blockly',
-	props: {
-
-	},
-	data() {
-		return {
-			hello: ''
-		}
-	},
-	mounted() {
-		const self = this;
-		const workspacePlayground = Blockly.inject('blocklyDiv',
-			{toolbox: document.getElementById('toolbox')}
-		);
-
-		window.aoeu = workspacePlayground;
-
-		function myUpdateFunction(event) {
-			const code = Blockly.Python.workspaceToCode(workspacePlayground);
-			const xml = Blockly.Xml.workspaceToDom(workspacePlayground);
-			self.$emit('update', { code, xml });
-		}
-		workspacePlayground.addChangeListener(myUpdateFunction);
-	},
-	methods: {
-		
-	}
-}
-</script>
-
-<style lang="less">
-#blocklyDiv {
-	height: 688px;
-	width: 600px;
-}
-</style>
-
-

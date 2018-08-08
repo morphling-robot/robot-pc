@@ -1,8 +1,7 @@
-import home from './component/home';
-import editor from './component/editor';
-import block from './component/block';
-import python from './component/python';
-import test from './component/test';
+import home from './component/pages/home';
+import blockly from './component/pages/editor/blockly';
+import python from './component/pages/editor/python';
+import test from './component/pages/utils/test';
 
 export default [
 	{
@@ -11,16 +10,12 @@ export default [
 		component: home
 	},
 	{
-		path: '/editor',
-		component: editor
-	},
-	{
 		path: '/python',
 		component: python
 	},
 	{
 		path: '/blockly',
-		component: block
+		component: blockly
 	},
 	{
 		path: '/test',

@@ -41,6 +41,10 @@ module.exports = {
           }
         }
       },
+      {
+        test:/\.xml$/,
+        loader: 'xml-loader'
+      }
     ]
   },
   resolve: {

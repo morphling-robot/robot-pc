@@ -2,11 +2,11 @@
 	<div>
 		<b-navbar id="navbar" toggleable="md" type="dark" variant="dark">
 
-			<b-navbar-brand to="/">DRRobot</b-navbar-brand>
+			<b-navbar-brand to="/python">DRRobot</b-navbar-brand>
 
 				<b-navbar-nav>
 					<b-nav-item
-						to="/editor">
+						to="/blockly">
 						代码编辑器
 					</b-nav-item>
 					<b-nav-item

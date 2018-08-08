@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import Brace from './brace.vue';
+import Brace from '../utils/brace.vue';
 
 export default {
   name: 'editor',
@@ -40,7 +40,4 @@ export default {
 </script>
 
 <style lang="less">
-.brace-editor {
-  height: 688px;
-}
 </style>

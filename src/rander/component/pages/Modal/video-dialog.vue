@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import TestVideo from './test';
+import TestVideo from '../utils/test';
 
 export default {
 	components: {

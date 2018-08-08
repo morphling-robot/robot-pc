@@ -1,23 +1,10 @@
 <template>
-	<div>
-		<b-navbar id="statusbar" toggleable="md" type="dark" variant="primary">
-
-    	<b-navbar-nav class="ml-auto status">
-				<b-nav-text>
-					剩余电量：{{this.robotStatus.battery}}%
-				</b-nav-text>
-				<b-nav-text>
-					信号强度：{{this.robotStatus.signalStrenght}}%
-				</b-nav-text>
-				<b-nav-text>
-					舵机状态：{{this.robotStatus.servo}}
-				</b-nav-text>
-				<b-nav-text>
-					警告：{{this.robotStatus.alert}}
-				</b-nav-text>
-    	</b-navbar-nav>
-		</b-navbar>
-	</div>
+	<b-container id="app-status-bar" fluid>
+		<b-row>
+			<b-col></b-col>
+			<b-col cols="auto">123</b-col>
+		</b-row>
+	</b-container>
 </template>
 
 <script>
@@ -47,13 +34,14 @@ export default {
 </script>
 
 <style lang="less">
-#statusbar {
+
+
+#app-status-bar {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	background-color: blue;
 	height: 24px;
-	.navbar-text {
-		margin-left: 10px;
-		margin-right: 10px;
-		color: white;
-	}
 }
 </style>
 
