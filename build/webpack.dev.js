@@ -23,5 +23,6 @@ module.exports = Object.assign({}, webpackBase, {
 	serve: {
 		port: 8081,
 		host: 'localhost',
+		vaildTargets: ['electron-renderer']
 	}
 });

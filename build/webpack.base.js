@@ -3,6 +3,7 @@ const { VueLoaderPlugin } = require('vue-loader');
 const cwd = process.cwd();
 
 module.exports = {
+  target: 'electron-renderer',
   entry: {
     app: [
       'videojs-record/dist/css/videojs.record.css',
@@ -43,7 +44,11 @@ module.exports = {
       },
       {
         test:/\.xml$/,
-        loader: 'xml-loader'
+        loader: 'raw-loader'
+      },
+      {
+        test:/\.yaml$/,
+        loader: 'json-loader!yaml-loader'
       }
     ]
   },

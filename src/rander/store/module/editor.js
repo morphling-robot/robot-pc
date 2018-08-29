@@ -1,7 +1,8 @@
 const state = {
 	mode: 'blockly',
 	blockly: {
-		content: {}
+		content: '',
+		code: ''
 	},
 	python: {
 		code: ''
@@ -14,8 +15,11 @@ const mutations = {
 			state.mode = payload;
 		}
 	},
-	blocklyUpdate(state, payload) {
+	blocklyUpdateContent(state, payload) {
 		state.blockly.content = payload;
+	},
+	blocklyUpdateCode(state, payload) {
+		state.blockly.code = payload;
 	},
 	pythonUpdate(state, payload) {
 		state.python.code = payload;

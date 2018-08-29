@@ -1,0 +1,12 @@
+home: '首页'
+
+navbar:
+  brand: '大然科技'
+  editor: '代码编辑器'
+  manage: '机器人管理'
+  action: '动作管理'
+  video: '录像管理'
+  user: '用户'
+  profile: '个人资料'
+  login: '登录'
+  logout: '注销'

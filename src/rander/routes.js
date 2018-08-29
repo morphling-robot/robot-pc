@@ -1,7 +1,7 @@
-import home from './component/pages/home';
-import blockly from './component/pages/editor/blockly';
-import python from './component/pages/editor/python';
-import test from './component/pages/utils/test';
+import home from './pages/home';
+import blockly from './pages/editor/blockly';
+import python from './pages/editor/python';
+import test from './pages/component/test';
 
 export default [
 	{
