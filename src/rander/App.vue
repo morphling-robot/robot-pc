@@ -46,7 +46,7 @@ export default {
 		
 		ipcRenderer.on('app-new-python', () => {
 				if (this.$route.path !== '/python') {
-					this.$router.push('python');console.log('jumpp');
+					this.$router.push('python');
 				}
 				
 				setTimeout(() => {
@@ -56,7 +56,7 @@ export default {
 
 		ipcRenderer.on('app-new-blockly', () => {
 			if (this.$route.path !== '/blockly') {
-				this.$router.push('blockly');console.log('jumpb');
+				this.$router.push('blockly');
 			}
 				
 				setTimeout(() => {
@@ -106,13 +106,11 @@ export default {
 			}
 
 			dialog.showSaveDialog({properties: ['openFile'], filters}, (filename) => {
-				console.log('cb', filename);
 				fs.writeFileSync(filename, text, 'utf8');
 			});
 		});
 
 		ipcRenderer.on('app-change-locale', (event, msg) => {
-			console.log(msg);
 			this.$i18n.locale = msg;
 		});
 	},

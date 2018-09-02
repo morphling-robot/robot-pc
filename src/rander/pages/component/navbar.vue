@@ -80,21 +80,6 @@ export default {
 		updateUserStatus(id, username) {
 			this.$store.commit("updateUserStatus", { id, username });
 		},
-	},
-	watch: {
-		file() {
-			console.log(this.file);
-			const blocklyReg = /.bk$/;
-			const pythonReg = /.py$/;
-
-			if (blocklyReg.test(this.file.name)) {
-				this.filetype = 'blockly';
-				this.$router.push('/blockly');
-			} else if (pythonReg.test(this.file.name)) {
-				this.filetype = 'python';
-				this.$router.push('/python');
-			}
-		},
 	}
 };
 </script>

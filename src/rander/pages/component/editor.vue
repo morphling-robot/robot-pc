@@ -58,11 +58,8 @@ export default {
     updateBlocklyModel(xml) {
       this.$store.commit('blocklyUpdate', xml);
     },
-    updatePythonModel(code) {console.log(code);
+    updatePythonModel(code) {
       this.$store.commit('pythonUpdate', code);
-    },
-    test(python) {
-      console.log(python);
     }
   }
 }
