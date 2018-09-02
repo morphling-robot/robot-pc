@@ -37,9 +37,6 @@ export default {
       this.$store.commit('pythonUpdate', code);
     }
   },
-  mounted() {
-    window.rrr = this;
-  },
   computed: {
     fuck() {
       return this.$store.state.editor.python.code;

@@ -44,7 +44,7 @@ export default {
 			extensions: ['py']
 		};
 		
-		ipcRenderer.on("app-new-python", () => {
+		ipcRenderer.on('app-new-python', () => {
 				if (this.$route.path !== '/python') {
 					this.$router.push('python');console.log('jumpp');
 				}
@@ -54,7 +54,7 @@ export default {
 				}, 100);
 		});
 
-		ipcRenderer.on("app-new-blockly", () => {
+		ipcRenderer.on('app-new-blockly', () => {
 			if (this.$route.path !== '/blockly') {
 				this.$router.push('blockly');console.log('jumpb');
 			}
@@ -64,7 +64,7 @@ export default {
 				}, 100);
 		});
 
-		ipcRenderer.on("app-openfile", () => {
+		ipcRenderer.on('app-openfile', () => {
 			const blocklyReg = /.bk$/;
 			const pythonReg = /.py$/;
 			const filters = [ blocklyFilter, pythonFilter ];
@@ -90,7 +90,7 @@ export default {
 			});			
 		});
 
-		ipcRenderer.on("app-savefile", () => {
+		ipcRenderer.on('app-savefile', () => {
 			let text = '';
 			const filters = [];
 			switch (this.$route.path) {
@@ -109,6 +109,11 @@ export default {
 				console.log('cb', filename);
 				fs.writeFileSync(filename, text, 'utf8');
 			});
+		});
+
+		ipcRenderer.on('app-change-locale', (event, msg) => {
+			console.log(msg);
+			this.$i18n.locale = msg;
 		});
 	},
 	components: {

@@ -2,7 +2,7 @@
 	<div>
 		<b-navbar id="navbar" toggleable="md" type="dark" variant="dark">
 
-			<b-navbar-brand to="/python">{{$t('navbar.brand')}}</b-navbar-brand>
+			<b-navbar-brand to="/">{{$t('navbar.brand')}}</b-navbar-brand>
 
 				<b-navbar-nav>
 					<b-nav-item

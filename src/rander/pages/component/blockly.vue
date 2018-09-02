@@ -6,41 +6,63 @@
 
 <script>
 import Blockly from '@/lib/blockly/browser.js';
-import En from '@/lib/blockly/lib/i18n/en';
-import Zh from '@/lib/blockly/lib/i18n/zh-hans';
 import xmlParser from '@/utils/xmlParser'
 import toolboxRaw from './toolbox.xml';
-const toolbox = xmlParser(toolboxRaw);window.toolbox = toolbox;
-let workspacePlayground;
+const toolbox = xmlParser(toolboxRaw);
+
 export default {
 	name: 'blockly',
 	props: {
     blockStr: {
 			type: String
+		},
+		locale: {
+			type: String
 		}
 	},
 	data() {
 		return {
-			hello: '1'
+			content: Blockly.Xml.textToDom('<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'),
+			editor: null
+		}
+	},
+	methods: {
+		render(element, toolbox) {
+			if(this.editor) {
+				this.editor.removeChangeListener(this.updateCode);
+				this.content = Blockly.Xml.workspaceToDom(this.editor);
+				this.editor.dispose();
+  		}
+			this.editor = Blockly.inject(element, {toolbox});
+
+			Blockly.Xml.domToWorkspace(this.content, this.editor);
+
+			this.editor.addChangeListener(this.updateCode);
+
+			return this.editor;
+		},
+		updateCode() {
+			const code = Blockly.Python.workspaceToCode(this.editor);
+			const xml = Blockly.Xml.workspaceToDom(this.editor, true);
+			const blockStr = Blockly.Xml.domToPrettyText(xml);
+			this.$emit('update', { code, xml, blockStr });
+		},
+		changeLocale(locale) {
+			Blockly.setLocale(locale);
+			this.render('blocklyDiv', toolbox);
 		}
 	},
 	mounted() {
-		const self = this;
-		workspacePlayground = Blockly.inject('blocklyDiv', {toolbox});
-
-		function myUpdateFunction(event) {
-			const code = Blockly.Python.workspaceToCode(workspacePlayground);
-			const xml = Blockly.Xml.workspaceToDom(workspacePlayground, true);
-			const blockStr = Blockly.Xml.domToPrettyText(xml);
-			self.$emit('update', { code, xml, blockStr });
-		}
-		workspacePlayground.addChangeListener(myUpdateFunction);
+		this.editor = this.render('blocklyDiv', toolbox);
+		this.editor.addChangeListener(this.updateCode);
 	},
 	watch: {
 		blockStr() {
 			const xml = Blockly.Xml.textToDom(this.blockStr);
-			console.log(xml);
-			Blockly.Xml.clearWorkspaceAndLoadFromXml(xml, workspacePlayground);
+			Blockly.Xml.clearWorkspaceAndLoadFromXml(xml, this.editor);
+		},
+		locale() {
+			this.changeLocale(this.locale);
 		}
 	}
 }

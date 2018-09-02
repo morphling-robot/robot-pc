@@ -2,6 +2,7 @@
 	<b-modal
 		id="loginModal"
 		title="登录"
+		size="lg"
 		no-close-on-backdrop
 		centered
 		@ok="handleLogin()">

@@ -421,6 +421,37 @@ Blockly.Msg["TEXT_CREATE_JOIN_ITEM_TITLE_ITEM"] = Blockly.Msg["VARIABLES_DEFAULT
 Blockly.Msg["LISTS_INDEX_OF_INPUT_IN_LIST"] = Blockly.Msg["LISTS_INLIST"];
 Blockly.Msg["PROCEDURES_DEFRETURN_COMMENT"] = Blockly.Msg["PROCEDURES_DEFNORETURN_COMMENT"];
 
+var MSG = {
+  title: "Code",
+  blocks: "Blocks",
+  linkTooltip: "Save and link to blocks.",
+  runTooltip: "Run the program defined by the blocks in the workspace.",
+  badCode: "Program error:\n%1",
+  timeout: "Maximum execution iterations exceeded.",
+  trashTooltip: "Discard all blocks.",
+  catLogic: "Logic",
+  catLoops: "Loops",
+  catMath: "Math",
+  catText: "Text",
+  catLists: "Lists",
+  catColour: "Colour",
+  catVariables: "Variables",
+  catFunctions: "Functions",
+  listVariable: "list",
+  textVariable: "text",
+  httpRequestError: "There was a problem with the request.",
+  linkAlert: "Share your blocks with this link:\n\n%1",
+  hashError: "Sorry, '%1' doesn't correspond with any saved program.",
+  xmlError: "Could not load your saved file. Perhaps it was created with a different version of Blockly?",
+  badXml: "Error parsing XML:\n%1\n\nSelect 'OK' to abandon your changes or 'Cancel' to further edit the XML."
+};
+
+for (var messageKey in MSG) {
+	if (messageKey.indexOf('cat') == 0) {
+		Blockly.Msg[messageKey.toUpperCase()] = MSG[messageKey];
+	}
+}
+
 Blockly.Msg["MATH_HUE"] = "230";
 Blockly.Msg["LOOPS_HUE"] = "120";
 Blockly.Msg["LISTS_HUE"] = "260";

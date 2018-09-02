@@ -6,6 +6,7 @@
           id="blockly-editor"
           class="editor"
           :block-str="blockStr"
+          :locale="$i18n.locale"
           @update="onBlocklyUpdate($event)">
         </blockly>
       </b-col>
@@ -46,7 +47,6 @@ export default {
   },
   methods: {
     onBlocklyUpdate({ code, blockStr }) {
-    window.rrr = this;console.log(blockStr)
       this.updateBlocklyModel(blockStr);
       this.updatePythonModel(code);
     },

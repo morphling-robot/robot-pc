@@ -40,7 +40,8 @@ export default {
 	position: absolute;
 	bottom: 0;
 	width: 100%;
-	background-color: blue;
+	color: rgb(255, 255, 255);
+	background-color: rgb(0, 122, 204);
 	height: 24px;
 }
 </style>
