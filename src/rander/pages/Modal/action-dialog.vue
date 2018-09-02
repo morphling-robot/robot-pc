@@ -5,7 +5,7 @@
 		no-close-on-backdrop
 		centered
 		@ok="fuck()">
-
+    
   </b-modal>
 </template>
 

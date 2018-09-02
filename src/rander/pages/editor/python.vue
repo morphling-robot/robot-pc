@@ -38,7 +38,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.fuck);
+    window.rrr = this;
   },
   computed: {
     fuck() {

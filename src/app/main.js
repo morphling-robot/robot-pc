@@ -51,16 +51,22 @@ function createWindow() {
 					]
 				},
 				{
+					type: 'separator'
+				},
+				{
 					click(menuItem, browserWindow, event) {
 						webContents.send('app-openfile');
 					},
 					label: 'Open File...'
 				},
 				{
+					type: 'separator'
+				},
+				{
 					click(menuItem, browserWindow, event) {
 						webContents.send('app-savefile');
 					},
-					label: 'Save'
+					label: 'Save...'
 				}
 			]
 		},

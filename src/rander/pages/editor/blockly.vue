@@ -53,7 +53,7 @@ export default {
     updateBlocklyModel(blockStr) {
       if (this.flag) {
         console.log(blockStr);
-        this.$store.commit('blocklyUpdate', blockStr);
+        this.$store.commit('blocklyUpdateCode', blockStr);
         this.flag = false;
         setTimeout(() => {
           this.flag = true;

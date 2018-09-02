@@ -1,1 +1,12 @@
 home: 'home'
+
+navbar:
+  brand: 'DRRobot'
+  editor: 'editor'
+  manage: 'robot manage'
+  action: 'action manage'
+  video: 'video manage'
+  user: 'User'
+  profile: 'profile'
+  login: 'login'
+  logout: 'logout'
