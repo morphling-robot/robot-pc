@@ -10,3 +10,8 @@ navbar:
   profile: 'profile'
   login: 'login'
   logout: 'logout'
+
+action:
+  label: 'Action'
+  id: 'ID'
+  name: 'Name'

@@ -6,6 +6,7 @@ import App from './App.vue';
 import store from './store';
 import routes from './routes';
 import i18n from './i18n';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import './style.less'

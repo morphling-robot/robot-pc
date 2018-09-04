@@ -3,6 +3,7 @@
 		id="loginModal"
 		title="登录"
 		size="lg"
+		ref="loginModalRef"
 		no-close-on-backdrop
 		centered
 		@ok="handleLogin()">
@@ -30,6 +31,13 @@ export default {
 			username: '',
 			password: '',
 		};
+	},
+	mounted() {
+		try {
+			this.$refs.loginModalRef.show();
+		} catch (error) {
+			console.log(error);
+		}
 	},
 	methods: {
 		updateUserStatus(id, username) {

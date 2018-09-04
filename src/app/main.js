@@ -86,6 +86,29 @@ function createWindow() {
 				]
 			},
 			{
+				label: localeStr.manage,
+				submenu: [
+					{ 
+						click(menuItem, browserWindow, event) {
+							webContents.send('app-toggle-robot-dialog');
+						},
+						label: localeStr.robot
+					},
+					{
+						click(menuItem, browserWindow, event) {
+							webContents.send('app-toggle-action-dialog');
+						},
+						label: localeStr.action
+					},
+					{
+						click(menuItem, browserWindow, event) {
+							webContents.send('app-toggle-video-dialog');
+						},
+						label: localeStr.video
+					}
+				]
+			},
+			{
 				label: localeStr.help,
 				submenu: [
 					{

@@ -10,7 +10,7 @@
 						{{$t('navbar.editor')}}
 					</b-nav-item>
 					<b-nav-item
-						v-b-modal.manageModal>
+						v-b-modal.robotModal>
 						{{$t('navbar.manage')}}
 					</b-nav-item>
 					<b-nav-item

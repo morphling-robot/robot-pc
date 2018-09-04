@@ -3,7 +3,7 @@
 		<login-modal/>
 		<video-modal/>
 		<action-modal/>
-		<manage-modal/>
+		<robot-modal/>
 		<Navbar/>
 
 		<div id="app-view-container">
@@ -19,11 +19,19 @@ import Navbar from "./pages/component/navbar.vue";
 import Statusbar from "./pages/component/statusbar.vue";
 import LoginModal from "./pages/Modal/login-dialog.vue";
 import VideoModal from "./pages/Modal/video-dialog.vue";
-import actionModal from "./pages/Modal/action-dialog.vue";
-import ManageModal from "./pages/Modal/manage-dialog.vue";
+import ActionModal from "./pages/Modal/action-dialog.vue";
+import RobotModal from "./pages/Modal/robot-dialog.vue";
 
 export default {
 	name: "app",
+	components: {
+		Navbar,
+		Statusbar,
+		LoginModal,
+		VideoModal,
+		ActionModal,
+		RobotModal
+	},
 	data() {
 		return {
 			file: null
@@ -113,14 +121,6 @@ export default {
 		ipcRenderer.on('app-change-locale', (event, msg) => {
 			this.$i18n.locale = msg;
 		});
-	},
-	components: {
-		Navbar,
-		Statusbar,
-		LoginModal,
-		VideoModal,
-		actionModal,
-		ManageModal
 	}
 };
 </script>

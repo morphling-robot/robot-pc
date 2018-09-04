@@ -7,7 +7,7 @@ export default [
 	{
 		path: '/',
 		alias: '/home',
-		component: home
+		component: blockly
 	},
 	{
 		path: '/python',

@@ -1,72 +1,163 @@
 <template>
-  <b-modal
-    id="actionModal"
+	<b-modal
+		id="actionModal"
+		ref="actionModalRef"
 		title="动作管理"
-    size="lg"
+		size="lg"
 		no-close-on-backdrop
 		centered
 		@ok="fuck()">
-    <div style="height: 530px;">
-      <b-row>
-        <b-col cols="3">
-          <b-list-group class="robot-list">
-              <b-list-group-item
-                button
-                v-for="(action, index) in actionList"
-                :key="index"
-                @click="changeAction(index)">
-                {{action.name}}
-              </b-list-group-item>
-            </b-list-group>
-        </b-col>
-        <b-col cols="9">
-          <div style="height: 50%">
-            <b-button-group
-              v-for="(frame, index) in actionList[actionIndex]"
-              :key="index"
-              @click="changeFrameIndex(index)">
-              {{index+1}}
-            </b-button-group>
-          </div>
-          <div style="height: 50%">
-            
-          </div>
-        </b-col>
-      </b-row>
-    </div>
-  </b-modal>
+		<div style="height: 530px;">
+			<b-row>
+				<b-col cols="3">
+					<b-table
+						small
+						striped
+						hover
+						:items="actionList"
+						:fields="[
+							{ key: 'id', label: $t('action.id'), class: 'action-id' },
+							{ key: 'name', label: $t('action.name'), class: 'action-name' }
+						]"
+						@row-clicked="changeActionIndex" />
+				</b-col>
+				<b-col cols="9">
+					<b-row>
+						<b-col cols="auto">
+							<b-input-group size="sm" :prepend="$t('action.frame.jump')" :append="$t('action.frame.label')">
+								<b-form-input style="width: 5em" type="number" v-model.number="frameIndex" />
+							</b-input-group>
+						</b-col>
+						<b-col cols="auto" />
+						<b-col>
+							<b-pagination
+								id="frame-pagination"
+								size="sm"
+								class="d-flex justify-content-center"
+								:total-rows="selectedFrameList.length"
+								v-model="frameIndex"
+								:per-page="1"
+								:limit="7" />
+						</b-col>
+					</b-row>
+						<b-row>
+							<adjuster
+								v-for="(servo, index) in selectedFrame"
+								:key="index"
+								:id="index+1"
+								:angle.sync="servo.angle"
+								class="adjuster"
+								:style="styleObject[index]" />
+						</b-row>
+				</b-col>
+			</b-row>
+		</div>
+	</b-modal>
 </template>
 
 <script>
+import Adjuster from '../component/adjuster.vue';
+import adjusterMap from '../component/adjusterMap.yaml';
+import genStyleObjectFromMap from '@/utils/genStyleObjectFromMap';
+
 export default {
-  data() {
-    return {
-      actionIndex: null,
-      frameIndex: null,
-      actionList: [
-        {
-          name: '123'
-        },
-        {
-          name: 'aoeu'
-        },
-        {
-          name: 'test'
-        }
-      ]
-    }
-  },
-  methods: {
-    fuck () {
-      alert(1);
-    },
-    changeActionIndex(index) {
-      this.actionIndex = index;
-    },
-    changeFrameIndex(index) {
-      this.frameIndex = index;
-    }
-  }
+	components: {
+		Adjuster
+	},
+	data() {
+		return {
+			actionIndex: 0,
+			frameIndex: 0,
+			actionList: [
+				{
+					id: 1,
+					name: '123',
+					frameList: [
+						[{"angle":13},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":88},{"angle":77}],
+						[{"angle":23},{"angle":33},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":88},{"angle":77}],
+						[{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":88},{"angle":77}],
+						[{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":88},{"angle":77}],
+						[{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":88},{"angle":77}],
+					]
+				},
+				{
+					id: 2,
+					name: 'aoeu',
+					frameList: [
+						[{"angle":13},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":88},{"angle":77}],
+						[{"angle":23},{"angle":33},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":88},{"angle":77}],
+						[{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":88},{"angle":77}],
+						[{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":88},{"angle":77}],
+					]
+				},
+				{
+					id: 3,
+					name: 'test',
+					frameList: [
+						[{"angle":13},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":88},{"angle":77}],
+						[{"angle":23},{"angle":33},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":88},{"angle":77}],
+						[{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":88},{"angle":77}],
+						[{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":88},{"angle":77}],
+						[{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":88},{"angle":77}],
+					]
+				},
+				{
+					id: 4,
+					name: 'wrong',
+					frameList: [
+						[ 13, 23, 34, 45, 56, 12, 23, 34, 45, 56, 12, 23, 34, 45, 56, 88, 77 ],
+						[ 23, 33, 45, 56, 12, 23, 34, 45, 56, 12, 23, 34, 45, 56, 12, 88, 77 ],
+						[ 34, 45, 56, 12, 23, 34, 45, 56, 12, 23, 34, 45, 56, 12, 23, 88, 77 ],
+						[ 45, 56, 12, 23, 34, 45, 56, 12, 23, 34, 45, 56, 12, 23, 34, 88, 77 ],
+						[ 56, 12, 23, 34, 45, 56, 12, 23, 34, 45, 56, 12, 23, 34, 45, 88, 77 ],
+					]
+				}
+			],
+			styleObject: {}
+		}
+	},
+	mounted() {
+		this.styleObject = genStyleObjectFromMap(adjusterMap);
+
+		const { ipcRenderer } = this.$electron;
+		
+		ipcRenderer.on('app-toggle-action-dialog', () => {
+			this.$refs.actionModalRef.show();
+		});
+	},
+	methods: {
+		changeActionIndex(item, index, event) {
+			this.actionIndex = index;
+		},
+		changeFrameIndex(item, index, event) {
+			this.frameIndex = index;
+		}
+	},
+	computed: {
+		selectedFrameList() {
+			return this.actionList[this.actionIndex].frameList;
+		},
+		selectedFrame() {
+			return this.selectedFrameList[this.frameIndex - 1];
+		}
+	}
 }
 </script>
+
+<style lang="less">
+.action-id {
+	width: 3em;
+}
+
+.adjuster {
+	position: relative;
+}
+
+#frame-pagination {
+	a, span {
+		width: 2.5em;
+		text-align: center;
+	}
+}
+</style>
 
