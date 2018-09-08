@@ -3,7 +3,8 @@ const state = {
 	updateCycle: 2 * 1000,
 	env: {
 		ip: null,
-		serialNumber: null
+		serialNumber: null,
+		ssid: null
 	},
 	status: {
 		battery: null,

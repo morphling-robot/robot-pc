@@ -1,26 +1,24 @@
 <template>
 	<b-modal
 		id="loginModal"
-		title="登录"
-		size="lg"
+		:title="$t('user.login')"
+		size="sm"
 		ref="loginModalRef"
 		no-close-on-backdrop
 		centered
 		@ok="handleLogin()">
-		<p>用户名：</p>
-		<b-form-input
-			class="login-input"
-			v-model="username"
-			type="text"
-			placeholder="用户名">
-		</b-form-input>
-		<p>密码：</p>
-		<b-form-input
-			class="login-input"
-			v-model="password"
-			type="password"
-			placeholder="密码">
-			</b-form-input>
+		<b-form-group
+			:label="$t('user.name')">
+			<b-form-input
+				size="sm"
+				v-model="username" />
+		</b-form-group>
+		<b-form-group
+			:label="$t('user.password')">
+			<b-form-input
+				size="sm"
+				v-model="password" />
+		</b-form-group>
 	</b-modal>
 </template>
 
@@ -33,15 +31,19 @@ export default {
 		};
 	},
 	mounted() {
-		try {
+		this.$refs.loginModalRef.show();
+
+		const { ipcRenderer } = this.$electron;
+
+		ipcRenderer.removeAllListeners('app-toggle-login-dialog');
+		
+		ipcRenderer.on('app-toggle-login-dialog', () => {console.log(1);
 			this.$refs.loginModalRef.show();
-		} catch (error) {
-			console.log(error);
-		}
+		});
 	},
 	methods: {
 		updateUserStatus(id, username) {
-			this.$store.commit("updateUserStatus", { id, username });
+			this.$store.commit('updateUserStatus', { id, username });
 		},
 		handleLogin() {
 			this.updateUserStatus(

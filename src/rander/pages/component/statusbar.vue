@@ -1,7 +1,10 @@
 <template>
 	<b-container id="app-status-bar" fluid>
 		<b-row>
-			<b-col></b-col>
+			<b-col>
+				未登录
+			</b-col>
+			<b-col />
 			<b-col cols="auto">123</b-col>
 		</b-row>
 	</b-container>
@@ -18,6 +21,9 @@ export default {
 		}
 	},
 	methods: {
+		test() {
+			alert(1);
+		},
 		updateRobotStatus() {
 			this.$store.commit('updateRobotStatus', {
 				battery: Math.floor(Math.random() * (100 - 70) + 70),
@@ -34,7 +40,6 @@ export default {
 </script>
 
 <style lang="less">
-
 
 #app-status-bar {
 	position: absolute;

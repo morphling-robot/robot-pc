@@ -10,12 +10,14 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import './style.less'
+import axios from '@/utils/axios';
 
 const router = new VueRouter({ routes });
 
 Vue.use(VueRouter);
 Vue.use(BootstrapVue);
 Vue.use(VueElectron);
+Vue.use(axios);
 
 const app = new Vue(Object.assign({ store, router, i18n }, App));
 

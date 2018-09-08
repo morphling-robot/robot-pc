@@ -14,11 +14,15 @@ const winURL = process.env.NODE_ENV === 'development'
 function createWindow() {
 
 	mainWindow = new BrowserWindow({
-		width: 1024,
+		width: 1366,
 		height: 768,
+		minWidth: 1366,
+		minHeight: 768,
 		useContentSize: true,
 		webPreferences: {
-			nodeIntegration: true
+			nodeIntegration: true,
+			webSecurity: false,
+			allowRunningInsecureContent: true
 		}
 	});
 
@@ -55,22 +59,25 @@ function createWindow() {
 						]
 					},
 					{
-						type: 'separator'
-					},
-					{
 						click(menuItem, browserWindow, event) {
 							webContents.send('app-openfile');
 						},
 						label: localeStr.open
 					},
 					{
-						type: 'separator'
-					},
-					{
 						click(menuItem, browserWindow, event) {
 							webContents.send('app-savefile');
 						},
 						label: localeStr.save
+					},
+					{
+						type: 'separator'
+					},
+					{
+						click(menuItem, browserWindow, event) {
+							webContents.send('app-uploadfile');
+						},
+						label: localeStr.upload
 					}
 				]
 			},
@@ -86,13 +93,19 @@ function createWindow() {
 				]
 			},
 			{
-				label: localeStr.manage,
+				label: localeStr.robot,
 				submenu: [
 					{ 
 						click(menuItem, browserWindow, event) {
-							webContents.send('app-toggle-robot-dialog');
+							webContents.send('app-toggle-connect-dialog');
 						},
-						label: localeStr.robot
+						label: localeStr.connect
+					},
+					{ 
+						click(menuItem, browserWindow, event) {
+							webContents.send('app-toggle-network-dialog');
+						},
+						label: localeStr.network
 					},
 					{
 						click(menuItem, browserWindow, event) {
@@ -105,6 +118,29 @@ function createWindow() {
 							webContents.send('app-toggle-video-dialog');
 						},
 						label: localeStr.video
+					}
+				]
+			},
+			{
+				label: localeStr.user,
+				submenu: [
+					{
+						click(menuItem, browserWindow, event) {
+							webContents.send('app-toggle-login-dialog');
+						},
+						label: localeStr.login
+					},
+					{
+						click(menuItem, browserWindow, event) {
+							webContents.send('app-toggle-profile-dialog');
+						},
+						label: localeStr.profile
+					},
+					{
+						click(menuItem, browserWindow, event) {
+							webContents.send('app-logout');
+						},
+						label: localeStr.logout
 					}
 				]
 			},
@@ -181,6 +217,7 @@ function createWindow() {
 	function setLocaleMenu(locale = 'zh') {
 		const template = getLocalTemplate(locale);
 		const menu = Menu.buildFromTemplate(template);
+		mainWindow.setTitle(i18n(locale).title);
 		Menu.setApplicationMenu(menu);
 	}
 

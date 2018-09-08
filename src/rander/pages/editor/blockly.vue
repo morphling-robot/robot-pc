@@ -10,7 +10,7 @@
           @update="onBlocklyUpdate($event)">
         </blockly>
       </b-col>
-      <b-col cols="6">
+      <b-col cols="6" style="padding-right:2px">
         <brace
           class="brace-editor"
           :editable="false"

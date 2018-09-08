@@ -9,8 +9,8 @@ export default {
       "myVideo",
       {
         controls: true,
-        width: 320,
-        height: 240,
+        width: 720,
+        height: 540,
         fluid: false,
         plugins: {
           record: {

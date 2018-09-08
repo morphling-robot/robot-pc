@@ -8,12 +8,12 @@
 			:formatter="limit"
 			v-model="modified" />
     <b-input-group-append>
-      <b-btn
+      <b-button
 				variant="success"
 				:disabled="isOrigin"
 				@click="commit">
 				<i class="fas fa-pen" />
-			</b-btn>
+      </b-button>
     </b-input-group-append>
   </b-input-group>
 </template>

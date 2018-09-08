@@ -10,11 +10,32 @@ navbar:
   profile: '个人资料'
   login: '登录'
   logout: '注销'
-  
-action:
-  label: 'Action'
-  id: '#'
-  name: '名称'
-  frame:
-    label: '帧'
-    jump: '到'
+
+robot:
+  label: '机器人'
+  connect:
+    label: '连接'
+    type: '型号'
+    serialNumber: '序列号'
+    search: '搜索'
+    connect: '连接'
+  network:
+    label: '网络'
+    ssid: 'WIFI'
+    password: '密码'
+    connect: '连接'
+  action:
+    label: '动作'
+    id: 'ID'
+    name: '名称'
+    frame:
+      label: '帧'
+      jump: '到'
+  video:
+    label: '录像'
+
+user:
+  label: '用户'
+  login: '登录'
+  name: '用户名'
+  password: '密码'

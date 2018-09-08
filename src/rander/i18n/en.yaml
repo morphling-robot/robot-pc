@@ -11,7 +11,33 @@ navbar:
   login: 'login'
   logout: 'logout'
 
-action:
-  label: 'Action'
-  id: 'ID'
-  name: 'Name'
+
+
+robot:
+  label: 'Robot'
+  connect:
+    label: 'Connect'
+    type: 'Type'
+    serialNumber: 'SN'
+    search: 'Search'
+    connect: 'Connect'
+  network:
+    label: 'Network'
+    ssid: 'WIFI'
+    password: 'Password'
+    connect: 'Connect'
+  action:
+    label: 'Action'
+    id: 'ID'
+    name: 'Name'
+    frame:
+      label: 'Frame'
+      jump: 'To'
+  video:
+    label: 'Video'
+
+user:
+  label: 'User'
+  login: 'Login'
+  name: 'Username'
+  password: 'Password'

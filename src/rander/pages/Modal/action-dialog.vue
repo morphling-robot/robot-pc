@@ -2,7 +2,7 @@
 	<b-modal
 		id="actionModal"
 		ref="actionModalRef"
-		title="动作管理"
+		:title="$t('robot.action.label')"
 		size="lg"
 		no-close-on-backdrop
 		centered
@@ -16,15 +16,15 @@
 						hover
 						:items="actionList"
 						:fields="[
-							{ key: 'id', label: $t('action.id'), class: 'action-id' },
-							{ key: 'name', label: $t('action.name'), class: 'action-name' }
+							{ key: 'id', label: $t('robot.action.id'), class: 'action-id' },
+							{ key: 'name', label: $t('robot.action.name'), class: 'action-name' }
 						]"
 						@row-clicked="changeActionIndex" />
 				</b-col>
 				<b-col cols="9">
 					<b-row>
 						<b-col cols="auto">
-							<b-input-group size="sm" :prepend="$t('action.frame.jump')" :append="$t('action.frame.label')">
+							<b-input-group size="sm" :prepend="$t('robot.action.frame.jump')" :append="$t('robot.action.frame.label')">
 								<b-form-input style="width: 5em" type="number" v-model.number="frameIndex" />
 							</b-input-group>
 						</b-col>
@@ -120,10 +120,14 @@ export default {
 		this.styleObject = genStyleObjectFromMap(adjusterMap);
 
 		const { ipcRenderer } = this.$electron;
+
+		ipcRenderer.removeAllListeners('app-toggle-action-dialog');
 		
 		ipcRenderer.on('app-toggle-action-dialog', () => {
 			this.$refs.actionModalRef.show();
 		});
+
+		this.$api.getActionsList().then(data => this.actionList = data);
 	},
 	methods: {
 		changeActionIndex(item, index, event) {

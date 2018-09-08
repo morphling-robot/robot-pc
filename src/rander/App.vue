@@ -1,10 +1,10 @@
 <template>
 	<div id="app">
-		<login-modal/>
-		<video-modal/>
-		<action-modal/>
-		<robot-modal/>
-		<Navbar/>
+		<login-modal />
+		<video-modal />
+		<action-modal />
+		<connect-modal />
+		<network-modal />
 
 		<div id="app-view-container">
 			<router-view></router-view>
@@ -20,7 +20,8 @@ import Statusbar from "./pages/component/statusbar.vue";
 import LoginModal from "./pages/Modal/login-dialog.vue";
 import VideoModal from "./pages/Modal/video-dialog.vue";
 import ActionModal from "./pages/Modal/action-dialog.vue";
-import RobotModal from "./pages/Modal/robot-dialog.vue";
+import ConnectModal from "./pages/Modal/connect-dialog.vue";
+import NetworkModal from "./pages/Modal/network-dialog.vue";
 
 export default {
 	name: "app",
@@ -30,7 +31,8 @@ export default {
 		LoginModal,
 		VideoModal,
 		ActionModal,
-		RobotModal
+		ConnectModal,
+		NetworkModal
 	},
 	data() {
 		return {
@@ -51,6 +53,17 @@ export default {
 			name: 'python',
 			extensions: ['py']
 		};
+
+		const events = [
+			'app-new-python',
+			'app-new-blockly',
+			'app-openfile',
+			'app-savefile',
+			'app-change-locale',
+			'app-uploadfile'
+		];
+
+		events.forEach(e => ipcRenderer.removeAllListeners(e));
 		
 		ipcRenderer.on('app-new-python', () => {
 				if (this.$route.path !== '/python') {
@@ -118,6 +131,10 @@ export default {
 			});
 		});
 
+		ipcRenderer.on('app-uploadfile', () => {
+			
+		});
+
 		ipcRenderer.on('app-change-locale', (event, msg) => {
 			this.$i18n.locale = msg;
 		});
@@ -133,7 +150,7 @@ export default {
 
 #app-view-container {
 	position: absolute;
-	top: 56px;
+	top: 0px;
 	bottom: 24px;
 	background: #f0f0f0;
 	width: 100%;
