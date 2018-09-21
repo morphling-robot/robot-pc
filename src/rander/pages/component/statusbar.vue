@@ -5,7 +5,7 @@
 				未登录
 			</b-col>
 			<b-col />
-			<b-col cols="auto">123</b-col>
+			<b-col cols="auto">机器人状态（states未定）</b-col>
 		</b-row>
 	</b-container>
 </template>

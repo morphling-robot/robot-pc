@@ -9,7 +9,7 @@ let mainWindow;
 
 const winURL = process.env.NODE_ENV === 'development'
 	? `http://localhost:8081`
-	: `file://${STATIC_PATH}/index.html`
+	: path.resolve(__dirname, '../../dist/index.html')
 
 function createWindow() {
 
@@ -78,20 +78,26 @@ function createWindow() {
 							webContents.send('app-uploadfile');
 						},
 						label: localeStr.upload
+					},
+					{
+						click(menuItem, browserWindow, event) {
+
+						},
+						label: localeStr.uploadAndRun
 					}
 				]
 			},
-			{
-				label: localeStr.edit,
-				submenu: [
-					{ label: localeStr.undo, role: 'undo' },
-					{ label: localeStr.redo, role: 'redo' },
-					{ type: 'separator' },
-					{ label: localeStr.cut, role: 'cut' },
-					{ label: localeStr.copy, role: 'copy' },
-					{ label: localeStr.paste, role: 'paste' }
-				]
-			},
+			// {
+			// 	label: localeStr.edit,
+			// 	submenu: [
+			// 		{ label: localeStr.undo, role: 'undo' },
+			// 		{ label: localeStr.redo, role: 'redo' },
+			// 		{ type: 'separator' },
+			// 		{ label: localeStr.cut, role: 'cut' },
+			// 		{ label: localeStr.copy, role: 'copy' },
+			// 		{ label: localeStr.paste, role: 'paste' }
+			// 	]
+			// },
 			{
 				label: localeStr.robot,
 				submenu: [

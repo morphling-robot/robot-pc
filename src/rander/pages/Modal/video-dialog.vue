@@ -3,7 +3,7 @@
 		id="videoModal"
 		ref="videoModalRef"
 		size="lg"
-		:title="$t(robot.video.label)"
+		:title="$t('robot.video.label')"
 		no-close-on-backdrop>
 		<test-video
 			class="mx-auto"/>

@@ -10,7 +10,7 @@
       :softwrap="'free'"
       :selectionstyle="'text'"
       :highlightline="true"
-      :code="fuck"
+      :code="content"
       @update="onPythonUpdate($event)">
     </brace>
   </div>
@@ -21,11 +21,6 @@ import Brace from '../component/brace.vue';
 
 export default {
   name: 'editor',
-  data() {
-    return {
-
-    }
-  },
   components: {
     Brace
   },
@@ -34,12 +29,12 @@ export default {
       this.updatePythonModel(code);
     },
     updatePythonModel(code) {
-      this.$store.commit('pythonUpdate', code);
+      this.$store.commit('pythonUpdateCode', code);
     }
   },
   computed: {
-    fuck() {
-      return this.$store.state.editor.python.code;
+    content() {
+      return this.$store.state.editor.python.content;
     }
   }
 }

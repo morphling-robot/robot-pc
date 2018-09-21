@@ -5,6 +5,7 @@ const state = {
 		code: ''
 	},
 	python: {
+		content: '',
 		code: ''
 	}
 };
@@ -21,7 +22,10 @@ const mutations = {
 	blocklyUpdateCode(state, payload) {
 		state.blockly.code = payload;
 	},
-	pythonUpdate(state, payload) {
+	pythonUpdateContent(state, payload) {
+		state.python.content = payload;
+	},
+	pythonUpdateCode(state, payload) {
 		state.python.code = payload;
 	}
 };

@@ -3,6 +3,9 @@
 </template>
 
 <script>
+// import videojs from 'videojs-record/dist/videojs.record.min.js';
+
+
 export default {
   mounted() {
     var player = videojs(

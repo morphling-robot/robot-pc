@@ -7,8 +7,8 @@
 		no-close-on-backdrop
 		centered
 		@ok="fuck()">
-		<div style="height: 530px;">
-			<b-row>
+		<div style="height: 530px;position: relative;">
+			<b-row style="height: auto">
 				<b-col cols="3">
 					<b-table
 						small
@@ -49,6 +49,17 @@
 								class="adjuster"
 								:style="styleObject[index]" />
 						</b-row>
+				</b-col>
+			</b-row>
+			<b-row style="bottom: 0;position: absolute;width: 100%;">
+				<b-col cols="3">
+					<b-button size="sm" variant="success">创建动作</b-button>
+					<b-button size="sm" variant="danger">删除动作</b-button>
+				</b-col>
+				<b-col></b-col>
+				<b-col cols="auto">
+					<b-button size="sm" variant="primary">读取当前帧</b-button>
+					<b-button size="sm" variant="success">保存修改</b-button>
 				</b-col>
 			</b-row>
 		</div>
@@ -99,17 +110,6 @@ export default {
 						[{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":88},{"angle":77}],
 						[{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":88},{"angle":77}],
 						[{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":88},{"angle":77}],
-					]
-				},
-				{
-					id: 4,
-					name: 'wrong',
-					frameList: [
-						[ 13, 23, 34, 45, 56, 12, 23, 34, 45, 56, 12, 23, 34, 45, 56, 88, 77 ],
-						[ 23, 33, 45, 56, 12, 23, 34, 45, 56, 12, 23, 34, 45, 56, 12, 88, 77 ],
-						[ 34, 45, 56, 12, 23, 34, 45, 56, 12, 23, 34, 45, 56, 12, 23, 88, 77 ],
-						[ 45, 56, 12, 23, 34, 45, 56, 12, 23, 34, 45, 56, 12, 23, 34, 88, 77 ],
-						[ 56, 12, 23, 34, 45, 56, 12, 23, 34, 45, 56, 12, 23, 34, 45, 88, 77 ],
 					]
 				}
 			],

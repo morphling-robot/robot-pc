@@ -68,7 +68,8 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': path.resolve(__dirname, '../src'),
-      '@fontawesome$': path.resolve(__dirname, '../node_modules/@fontawesome')
+      '@fontawesome$': path.resolve(__dirname, '../node_modules/@fontawesome'),
+      'video.js$': path.resolve(__dirname, '../node_modules/video.js')
     },
     extensions: ['*', '.js', '.vue', '.json']
   },

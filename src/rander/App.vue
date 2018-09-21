@@ -71,7 +71,7 @@ export default {
 				}
 				
 				setTimeout(() => {
-					this.$store.commit('pythonUpdate', '');
+					this.$store.commit('pythonUpdateContent', '');
 				}, 100);
 		});
 
@@ -104,16 +104,17 @@ export default {
 				this.$router.push(route);
 
 				setTimeout(() => {
+					console.log(filename);
 					const data = fs.readFileSync(filename, 'utf8');
-
-					this.$store.commit(`${route}Update${route == 'blockly' ? 'Content' : ''}`, data);
+					console.log(data);
+					this.$store.commit(`${route}UpdateContent`, data);
 				}, 100);
 			});			
 		});
 
 		ipcRenderer.on('app-savefile', () => {
 			let text = '';
-			const filters = [];
+			const filters = [];console.log(this.$route.path);
 			switch (this.$route.path) {
 				case '/python':
 					text = this.$store.state.editor.python.code;
@@ -121,6 +122,11 @@ export default {
 					break;
 
 				case '/blockly':
+					text = this.$store.state.editor.blockly.code;
+					filters.push(blocklyFilter);
+					break;
+
+				case '/':
 					text = this.$store.state.editor.blockly.code;
 					filters.push(blocklyFilter);
 					break;
