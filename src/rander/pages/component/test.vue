@@ -12,8 +12,8 @@ export default {
       "myVideo",
       {
         controls: true,
-        width: 720,
-        height: 540,
+        width: 640,
+        height: 360,
         fluid: false,
         plugins: {
           record: {

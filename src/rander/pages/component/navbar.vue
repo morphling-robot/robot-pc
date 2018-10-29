@@ -1,27 +1,34 @@
 <template>
 	<div>
 		<b-navbar id="navbar" toggleable="md" type="dark" variant="dark">
-
-			<!-- <b-navbar-brand to="/">{{$t('navbar.brand')}}</b-navbar-brand>
-
-			<b-navbar-nav>
-				<b-nav-item
+			<b-dropdown variant="dark" size="lg" no-caret>
+				<template slot="button-content">
+					<i class="fas fa-bars" />
+				</template>
+				<!-- <b-dropdown-item
 					to="/blockly">
 					{{$t('navbar.editor')}}
-				</b-nav-item>
-				<b-nav-item
+				</b-dropdown-item> -->
+				<b-dropdown-item
 					v-b-modal.robotModal>
 					{{$t('navbar.manage')}}
-				</b-nav-item>
-				<b-nav-item
+				</b-dropdown-item>
+				<b-dropdown-item
 					v-b-modal.actionModal>
 					{{$t('navbar.action')}}
-				</b-nav-item>
-				<b-nav-item
+				</b-dropdown-item>
+				<b-dropdown-item
 					v-b-modal.videoModal>
 					{{$t('navbar.video')}}
-				</b-nav-item>
-			</b-navbar-nav> -->
+				</b-dropdown-item>
+			</b-dropdown>
+
+
+			<b-navbar-brand to="/">{{$t('navbar.brand')}}</b-navbar-brand>
+
+			<b-navbar-nav>
+				
+			</b-navbar-nav>
 
 			<b-navbar-nav class="mx-auto">
 			</b-navbar-nav>
@@ -74,3 +81,9 @@ export default {
 	}
 };
 </script>
+
+<style lang="less">
+#navbar {
+	height: 48px;
+}
+</style>

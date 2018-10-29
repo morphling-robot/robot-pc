@@ -1,7 +1,7 @@
 <template>
   <b-container id="playground" fluid>
     <b-row>
-      <b-col cols="6">
+      <b-col>
         <blockly
           id="blockly-editor"
           class="editor"

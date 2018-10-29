@@ -151,11 +151,11 @@ export default {
 			this.getIpList();console.log(this.ipList)
 
 			this.ipList.forEach(ip => {
-				axios.get(`http://${ip}:8080`, { timeout: 5000 })
+				axios.get(`http://192.168.50.89:5000/v1/states`, { timeout: 5000 })
 							.then(r => {
 								console.log(r);
 								this.robotList.push(ip);
-							}).catch(r => console.log(1));
+							}).catch(r => console.log(r));
 			});
 		},
 		connect() {

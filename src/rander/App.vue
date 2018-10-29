@@ -1,14 +1,28 @@
 <template>
 	<div id="app">
+		<navbar />
 		<login-modal />
 		<video-modal />
 		<action-modal />
 		<connect-modal />
 		<network-modal />
 
-		<div id="app-view-container">
-			<router-view></router-view>
-		</div>
+		<b-container
+			id="app-view-container"
+			fluid>
+			<b-row
+				style="height: 100%;">
+				<!-- <b-col>
+					<side-view />
+				</b-col> -->
+				<b-col>
+					<div id="router-view-container">
+						<router-view></router-view>
+					</div>
+				</b-col>
+			</b-row>
+		</b-container>
+
 
 		<Statusbar/>
 	</div>
@@ -16,6 +30,7 @@
 
 <script>
 import Navbar from "./pages/component/navbar.vue";
+import SideView from "./pages/component/sideView.vue";
 import Statusbar from "./pages/component/statusbar.vue";
 import LoginModal from "./pages/Modal/login-dialog.vue";
 import VideoModal from "./pages/Modal/video-dialog.vue";
@@ -24,141 +39,152 @@ import ConnectModal from "./pages/Modal/connect-dialog.vue";
 import NetworkModal from "./pages/Modal/network-dialog.vue";
 
 export default {
-	name: "app",
-	components: {
+  name: "app",
+  components: {
 		Navbar,
-		Statusbar,
-		LoginModal,
-		VideoModal,
-		ActionModal,
-		ConnectModal,
-		NetworkModal
-	},
-	data() {
-		return {
-			file: null
-		};
-	},
-	mounted() {
-		const aaa = new MouseEvent("click");
-		const electron = this.$electron;
-		const { dialog } = electron.remote;
-		const ipcRenderer = electron.ipcRenderer;
-		const fs = electron.remote.require("fs");
-		const blocklyFilter = {
-			name: 'block',
-			extensions: ['bk']
-		};
-		const pythonFilter = {
-			name: 'python',
-			extensions: ['py']
-		};
+		SideView,
+    Statusbar,
+    LoginModal,
+    VideoModal,
+    ActionModal,
+    ConnectModal,
+    NetworkModal
+  },
+  data() {
+    return {
+      file: null
+    };
+  },
+  mounted() {
+    const aaa = new MouseEvent("click");
+    const electron = this.$electron;
+    const { dialog } = electron.remote;
+    const ipcRenderer = electron.ipcRenderer;
+    const fs = electron.remote.require("fs");
+    const blocklyFilter = {
+      name: "block",
+      extensions: ["bk"]
+    };
+    const pythonFilter = {
+      name: "python",
+      extensions: ["py"]
+    };
 
-		const events = [
-			'app-new-python',
-			'app-new-blockly',
-			'app-openfile',
-			'app-savefile',
-			'app-change-locale',
-			'app-uploadfile'
-		];
+    const events = [
+      "app-new-python",
+      "app-new-blockly",
+      "app-openfile",
+      "app-savefile",
+      "app-change-locale",
+      "app-uploadfile"
+    ];
 
-		events.forEach(e => ipcRenderer.removeAllListeners(e));
-		
-		ipcRenderer.on('app-new-python', () => {
-				if (this.$route.path !== '/python') {
-					this.$router.push('python');
-				}
-				
-				setTimeout(() => {
-					this.$store.commit('pythonUpdateContent', '');
-				}, 100);
-		});
+    events.forEach(e => ipcRenderer.removeAllListeners(e));
 
-		ipcRenderer.on('app-new-blockly', () => {
-			if (this.$route.path !== '/blockly') {
-				this.$router.push('blockly');
-			}
-				
-				setTimeout(() => {
-					this.$store.commit('blocklyUpdateContent', '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>');
-				}, 100);
-		});
+    ipcRenderer.on("app-new-python", () => {
+      if (this.$route.path !== "/python") {
+        this.$router.push("python");
+      }
 
-		ipcRenderer.on('app-openfile', () => {
-			const blocklyReg = /.bk$/;
-			const pythonReg = /.py$/;
-			const filters = [ blocklyFilter, pythonFilter ];
+      setTimeout(() => {
+        this.$store.commit("pythonUpdateContent", "");
+      }, 100);
+    });
 
-			const filePaths = dialog.showOpenDialog({properties: ['openFile'], filters}, (filePaths) => {
-				const filename = filePaths[0];
-				let route;
+    ipcRenderer.on("app-new-blockly", () => {
+      if (this.$route.path !== "/blockly") {
+        this.$router.push("blockly");
+      }
 
-				if (blocklyReg.test(filename)) {
-					route = 'blockly';
-				}
+      setTimeout(() => {
+        this.$store.commit(
+          "blocklyUpdateContent",
+          '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
+        );
+      }, 100);
+    });
 
-				if (pythonReg.test(filename)) {
-					route = 'python';
-				}
-				this.$router.push(route);
+    ipcRenderer.on("app-openfile", () => {
+      const blocklyReg = /.bk$/;
+      const pythonReg = /.py$/;
+      const filters = [blocklyFilter, pythonFilter];
 
-				setTimeout(() => {
-					console.log(filename);
-					const data = fs.readFileSync(filename, 'utf8');
-					console.log(data);
-					this.$store.commit(`${route}UpdateContent`, data);
-				}, 100);
-			});			
-		});
+      const filePaths = dialog.showOpenDialog(
+        { properties: ["openFile"], filters },
+        filePaths => {
+          const filename = filePaths[0];
+          let route;
 
-		ipcRenderer.on('app-savefile', () => {
-			let text = '';
-			const filters = [];console.log(this.$route.path);
-			switch (this.$route.path) {
-				case '/python':
-					text = this.$store.state.editor.python.code;
-					filters.push(pythonFilter);
-					break;
+          if (blocklyReg.test(filename)) {
+            route = "blockly";
+          }
 
-				case '/blockly':
-					text = this.$store.state.editor.blockly.code;
-					filters.push(blocklyFilter);
-					break;
+          if (pythonReg.test(filename)) {
+            route = "python";
+          }
+          this.$router.push(route);
 
-				case '/':
-					text = this.$store.state.editor.blockly.code;
-					filters.push(blocklyFilter);
-					break;
-			}
+          setTimeout(() => {
+            console.log(filename);
+            const data = fs.readFileSync(filename, "utf8");
+            console.log(data);
+            this.$store.commit(`${route}UpdateContent`, data);
+          }, 100);
+        }
+      );
+    });
 
-			dialog.showSaveDialog({properties: ['openFile'], filters}, (filename) => {
-				fs.writeFileSync(filename, text, 'utf8');
-			});
-		});
+    ipcRenderer.on("app-savefile", () => {
+      let text = "";
+      const filters = [];
+      console.log(this.$route.path);
+      switch (this.$route.path) {
+        case "/python":
+          text = this.$store.state.editor.python.code;
+          filters.push(pythonFilter);
+          break;
 
-		ipcRenderer.on('app-uploadfile', () => {
-			
-		});
+        case "/blockly":
+          text = this.$store.state.editor.blockly.code;
+          filters.push(blocklyFilter);
+          break;
 
-		ipcRenderer.on('app-change-locale', (event, msg) => {
-			this.$i18n.locale = msg;
-		});
-	}
+        case "/":
+          text = this.$store.state.editor.blockly.code;
+          filters.push(blocklyFilter);
+          break;
+      }
+
+      dialog.showSaveDialog({ properties: ["openFile"], filters }, filename => {
+        fs.writeFileSync(filename, text, "utf8");
+      });
+    });
+
+    ipcRenderer.on("app-uploadfile", () => {});
+
+    ipcRenderer.on("app-change-locale", (event, msg) => {
+      this.$i18n.locale = msg;
+    });
+  }
 };
 </script>
 
 <style lang="less">
 #app {
+  height: 100%;
+  width: 100%;
+}
+
+#router-view-container {
 	height: 100%;
-	width: 100%;
 }
 
 #app-view-container {
-	position: absolute;
-	top: 0px;
-	bottom: 24px;
-	background: #f0f0f0;
+  position: absolute;
+  top: 48px;
+  bottom: 24px;
+  background: #f0f0f0;
 	width: 100%;
+	height: auto;
 }
 </style>
