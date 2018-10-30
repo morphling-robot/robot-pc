@@ -6,7 +6,7 @@
 		size="lg"
 		no-close-on-backdrop
 		centered
-		@ok="fuck()">
+		@ok="getActionsList">
 		<div style="height: 530px;position: relative;">
 			<b-row style="height: auto">
 				<b-col cols="3">
@@ -119,17 +119,22 @@ export default {
 	mounted() {
 		this.styleObject = genStyleObjectFromMap(adjusterMap);
 
-		const { ipcRenderer } = this.$electron;
+		// const { ipcRenderer } = this.$electron;
 
-		ipcRenderer.removeAllListeners('app-toggle-action-dialog');
+		// ipcRenderer.removeAllListeners('app-toggle-action-dialog');
 		
-		ipcRenderer.on('app-toggle-action-dialog', () => {
-			this.$refs.actionModalRef.show();
-		});
-
-		this.$api.getActionsList().then(data => this.actionList = data);
+		// ipcRenderer.on('app-toggle-action-dialog', () => {
+		// 	this.$refs.actionModalRef.show();
+		// });
+		this.getActionsList();
 	},
 	methods: {
+		getActionsList() {
+			this.$api.getActionsList().then(data => {
+				this.actionList = data;
+				console.log(data);
+			});
+		},
 		changeActionIndex(item, index, event) {
 			this.actionIndex = index;
 		},

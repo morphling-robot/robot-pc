@@ -7,7 +7,7 @@
 		no-close-on-backdrop
 		centered
 		hide-footer
-		@ok="fuck()">
+		@shown="getNetworkList">
 		<b-form-group
 			:label="$t('robot.network.label')">
 			<!-- <template
@@ -18,6 +18,7 @@
 				size="sm">
 				<b-input-group-prepend>
 					<b-btn
+						@click="getNetworkList"
 						variant="success"><i
 							class="fas fa-sync-alt" />
 					</b-btn>
@@ -39,12 +40,13 @@
 			:label="$t('robot.network.password')">
 			<b-form-input
 				size="sm"
-				value="N/A" />
+				v-model="password" />
 		</b-form-group>
 		<b-row>
 			<b-col />
 			<b-col cols="auto">
 				<b-button
+					@click="setNetwork"
 					size="sm">{{$t('robot.network.connect')}}</b-button>
 			</b-col>
 		</b-row>
@@ -60,28 +62,33 @@ export default {
 				'ORCHANGE_5G'
 			],
 			selectedSSID: null,
-			password: null
+			password: 'P@ssw0rd'
 		}
 	},
 	mounted() {
-		const { ipcRenderer } = this.$electron;
+		// const { ipcRenderer } = this.$electron;
 
-		ipcRenderer.removeAllListeners('app-toggle-network-dialog');
+		// ipcRenderer.removeAllListeners('app-toggle-network-dialog');
 		
-		ipcRenderer.on('app-toggle-network-dialog', () => {console.log(1);
-			this.$refs.networkModalRef.show();
-		});
-
-		this.$api.getNetworkList().then(data => this.ssidList = data);
-		this.changeSSID(this.ssidList[0]);
+		// ipcRenderer.on('app-toggle-network-dialog', () => {console.log(1);
+		// 	this.$refs.networkModalRef.show();
+		// });
+		
+		this.getNetworkList();
 	},
 	methods: {
-		changeSSID(ssid) {
+		changeSSID(ssid = this.ssidList[0]) {
 			this.selectedSSID = ssid;
+		},
+		getNetworkList() {
+			this.$api.getNetworkList().then(data => {
+				this.ssidList = data;
+				this.changeSSID();
+			});
 		},
 		setNetwork() {
 			this.$api.postNetwork({
-				axiosData: {
+				data: {
 					ssid: this.selectedSSID,
 					password: this.password
 				}

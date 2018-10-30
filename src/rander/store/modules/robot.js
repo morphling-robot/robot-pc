@@ -7,10 +7,12 @@ const state = {
 		ssid: null
 	},
 	status: {
-		battery: null,
-		signalStrength: null,
-		servo: null,
-		alert: null
+		ip: null,
+		posture: null,
+		power: null,
+		robotId: null,
+		ssid: null,
+		robotState: null
 	}
 };
 

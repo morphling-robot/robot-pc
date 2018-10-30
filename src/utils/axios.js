@@ -1,6 +1,9 @@
 import axios from 'axios';
 const serverURL = 'localhost';
 
+const versionPrefix = '/v1';
+const prefix = '' + versionPrefix;
+
 const api = {
 	robot: axios,
 	server: AxiosFactory(serverURL)
@@ -12,52 +15,89 @@ function AxiosFactory(axiosConfig) {
 
 const apiList = {
 	getNetworkList() {
-		return api.robot.get('/network').then(({data}) => {
-			console.log(data);
-		});
+		return api.robot.get(prefix + '/network').then(({data}) => {
+			return Promise.resolve(data);
+		}).catch(error => console.log(error));
 	},
-	postNetwork({axiosData, axiosConfig}) {
-		return api.robot.post('/network', axiosData, axiosConfig).then(({data}) => {
+	postNetwork({data, config: axiosConfig}) {
+		const axiosData = {
+			ssid: data.ssid,
+			secret: data.password
+		};
+
+		return api.robot.post(prefix + '/network', axiosData, axiosConfig).then(({data}) => {
 			console.log(data);
-		});
+		}).catch(error => console.log(error));
 	},
 	getCodeList() {
-		return api.robot.get('/codes')
+		return api.robot.get(prefix + '/codes').then(({data}) => {
+			return Promise.resolve(data);
+		}).catch(error => console.log(error));
 	},
-	getCode({axiosData, axiosConfig}) {
-		return api.robot.get('/codes')
+	getCode({data, config}) {
+		return api.robot.get(prefix + '/codes').then(({data}) => {
+			return Promise.resolve(data);
+		}).catch(error => console.log(error));
 	},
-	uploadCode({axiosData, axiosConfig}) {
-		return api.robot.post('/codes')
+	uploadCode({data, config}) {
+		return api.robot.post(prefix + '/codes').then(({data}) => {
+			return Promise.resolve(data);
+		}).catch(error => console.log(error));
 	},
-	deleteCode({axiosData, axiosConfig}) {
-		return api.robot.delete('/codes')
+	deleteCode({data, config}) {
+		return api.robot.delete(prefix + '/codes').then(({data}) => {
+			return Promise.resolve(data);
+		}).catch(error => console.log(error));
 	},
-	updateCode({axiosData, axiosConfig}) {
-		return api.robot.put('/codes')
+	updateCode({data, config}) {
+		return api.robot.put(prefix + '/codes').then(({data}) => {
+			return Promise.resolve(data);
+		}).catch(error => console.log(error));
 	},
 	getActionsList() {
-		return api.robot.get('/codes').then(({data}) => {
+		return api.robot.get(prefix + '/actions').then(({data}) => {
 			return Promise.resolve(data.data);
 		});
 	},
-	getActions({axiosData, axiosConfig}) {
-		return api.robot.get('/codes')
+	getActions({data, config}) {
+		return api.robot.get(prefix + '/actions').then(({data}) => {
+			return Promise.resolve(data);
+		}).catch(error => console.log(error));
 	},
-	uploadActions({axiosData, axiosConfig}) {
-		return api.robot.post('/codes')
+	uploadActions({data, config}) {
+		return api.robot.post(prefix + '/codes').then(({data}) => {
+			return Promise.resolve(data);
+		}).catch(error => console.log(error));
 	},
-	deleteActions({axiosData, axiosConfig}) {
-		return api.robot.delete('/codes')
+	deleteActions({data, config}) {
+		return api.robot.delete(prefix + '/codes').then(({data}) => {
+			return Promise.resolve(data);
+		}).catch(error => console.log(error));
 	},
-	updateActions({axiosData, axiosConfig}) {
-		return api.robot.put('/codes')
+	updateActions({data, config}) {
+		return api.robot.put(prefix + '/codes').then(({data}) => {
+			return Promise.resolve(data);
+		}).catch(error => console.log(error));
 	},
 	getStates() {
-		return api.robot.get('/states')
+		return api.robot
+			.get(prefix + '/states')
+			.then(({data}) => {
+				return {
+					ip: data.ip,
+					posture: data.posture,
+					power: data.power,
+					robotId: data.robot_id,
+					ssid: data.ssid,
+					robotState: data.state
+				}
+			})
+			.catch(error => console.log(error));
 	},
 	postInstructs() {
-		return api.robot.post('/instructs')
+		return api.robot.post(prefix + '/instructs').then(({data}) => {
+			return Promise.resolve(data);
+		}).catch(error => console.log(error));
 	}
 };
 
@@ -65,6 +105,7 @@ export default function install(Vue) {
 	Vue.prototype.$api = apiList;
 
 	window.addEventListener('connect', event => {
+		console.log(event.baseURL);
 		api.robot = AxiosFactory({
 			baseURL: event.baseURL
 		});

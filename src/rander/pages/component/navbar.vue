@@ -5,21 +5,21 @@
 				<template slot="button-content">
 					<i class="fas fa-bars" />
 				</template>
-				<!-- <b-dropdown-item
-					to="/blockly">
-					{{$t('navbar.editor')}}
-				</b-dropdown-item> -->
 				<b-dropdown-item
 					v-b-modal.robotModal>
-					{{$t('navbar.manage')}}
+					{{$t('robot.connect.label')}}
+				</b-dropdown-item>
+				<b-dropdown-item
+					v-b-modal.networkModal>
+					{{$t('robot.network.label')}}
 				</b-dropdown-item>
 				<b-dropdown-item
 					v-b-modal.actionModal>
-					{{$t('navbar.action')}}
+					{{$t('robot.action.label')}}
 				</b-dropdown-item>
 				<b-dropdown-item
 					v-b-modal.videoModal>
-					{{$t('navbar.video')}}
+					{{$t('robot.video.label')}}
 				</b-dropdown-item>
 			</b-dropdown>
 

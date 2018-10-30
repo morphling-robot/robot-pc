@@ -18,13 +18,13 @@ export default {
 		TestVideo
 	},	
 	mounted() {
-		const { ipcRenderer } = this.$electron;
+		// const { ipcRenderer } = this.$electron;
 
-		ipcRenderer.removeAllListeners('app-toggle-video-dialog');
+		// ipcRenderer.removeAllListeners('app-toggle-video-dialog');
 
-		ipcRenderer.on('app-toggle-video-dialog', () => {
-			this.$refs.videoModalRef.show();
-		});
+		// ipcRenderer.on('app-toggle-video-dialog', () => {
+		// 	this.$refs.videoModalRef.show();
+		// });
 	},
 }
 </script>

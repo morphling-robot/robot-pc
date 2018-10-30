@@ -33,13 +33,13 @@ export default {
 	mounted() {
 		this.$refs.loginModalRef.show();
 
-		const { ipcRenderer } = this.$electron;
+		// const { ipcRenderer } = this.$electron;
 
-		ipcRenderer.removeAllListeners('app-toggle-login-dialog');
+		// ipcRenderer.removeAllListeners('app-toggle-login-dialog');
 		
-		ipcRenderer.on('app-toggle-login-dialog', () => {console.log(1);
-			this.$refs.loginModalRef.show();
-		});
+		// ipcRenderer.on('app-toggle-login-dialog', () => {console.log(1);
+		// 	this.$refs.loginModalRef.show();
+		// });
 	},
 	methods: {
 		updateUserStatus(id, username) {

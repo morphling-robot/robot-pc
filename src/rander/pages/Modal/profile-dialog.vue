@@ -5,13 +5,13 @@
 <script>
 export default {
 	mounted() {
-		const { ipcRenderer } = this.$electron;
+		// const { ipcRenderer } = this.$electron;
 
-		ipcRenderer.removeAllListeners('app-toggle-profile-dialog');
+		// ipcRenderer.removeAllListeners('app-toggle-profile-dialog');
 
-		ipcRenderer.on('app-toggle-profile-dialog', () => {
-			this.$refs.robotModalRef.show();
-		});
+		// ipcRenderer.on('app-toggle-profile-dialog', () => {
+		// 	this.$refs.robotModalRef.show();
+		// });
 	}
 }
 </script>

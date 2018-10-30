@@ -65,7 +65,7 @@
 				:current-page="currentPage"
 				:per-page="perPage">
 				<template slot="connect" slot-scope="row">
-					<b-button size="sm" @click.stop="connect">
+					<b-button size="sm" @click.stop="connect(row)">
 						{{$t('robot.connect.connect')}}
 					</b-button>
 				</template>
@@ -105,13 +105,13 @@ export default {
     };
 	},
 	mounted() {
-		const { ipcRenderer } = this.$electron;
+		// const { ipcRenderer } = this.$electron;
 
-		ipcRenderer.removeAllListeners('app-toggle-connect-dialog');
+		// ipcRenderer.removeAllListeners('app-toggle-connect-dialog');
 
-		ipcRenderer.on('app-toggle-connect-dialog', () => {
-			this.$refs.robotModalRef.show();
-		});
+		// ipcRenderer.on('app-toggle-connect-dialog', () => {
+		// 	this.$refs.robotModalRef.show();
+		// });
 
 		this.getNetworkInterfaceList();
 	},
@@ -151,17 +151,20 @@ export default {
 			this.getIpList();console.log(this.ipList)
 
 			this.ipList.forEach(ip => {
-				axios.get(`http://192.168.50.89:5000/v1/states`, { timeout: 5000 })
+				axios.get(`http://${ip}:5000/v1/states`, { timeout: 5000 })
 							.then(r => {
 								console.log(r);
-								this.robotList.push(ip);
+								this.robotList.push({
+									ip,
+									serialNumber: 'TEST'
+								});
 							}).catch(r => console.log(r));
 			});
 		},
-		connect() {
+		connect(row) {
 			const event = new CustomEvent('connect');
 
-			event.baseURL = 'http://localhost:8888';
+			event.baseURL = `http://${row.item.ip}:5000`;
 
 			window.dispatchEvent(event);
 		}
