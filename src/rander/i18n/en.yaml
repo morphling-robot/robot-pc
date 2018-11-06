@@ -26,6 +26,11 @@ robot:
     ssid: 'WIFI'
     password: 'Password'
     connect: 'Connect'
+  code:
+    label: 'code'
+    run: 'Run'
+    save: 'Save'
+    delete: 'Delete'
   action:
     label: 'Action'
     id: 'ID'

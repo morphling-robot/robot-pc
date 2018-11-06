@@ -18,19 +18,34 @@
 					{{$t('robot.action.label')}}
 				</b-dropdown-item>
 				<b-dropdown-item
+					v-b-modal.codeModal>
+					代码
+				</b-dropdown-item>
+				<b-dropdown-item
 					v-b-modal.videoModal>
 					{{$t('robot.video.label')}}
 				</b-dropdown-item>
 			</b-dropdown>
 
 
-			<b-navbar-brand to="/">{{$t('navbar.brand')}}</b-navbar-brand>
+			<b-navbar-brand>{{$t('navbar.brand')}}</b-navbar-brand>
 
 			<b-navbar-nav>
 				
 			</b-navbar-nav>
 
 			<b-navbar-nav class="mx-auto">
+				<b-form-group>
+					<b-form-radio-group
+						id="btnradios1"
+						buttons
+						size="md"
+						style="margin: 0px;"
+						v-model="selected"
+						:options="radioOptions"
+						name="radiosBtnDefault"
+						@change="test" />
+				</b-form-group>
 			</b-navbar-nav>
 
 			<b-navbar-nav class="ml-auto">
@@ -48,7 +63,10 @@ export default {
 	name: "navbar",
 	data() {
 		return {
-
+			radioOptions: [
+				{ text: '方块文件', value: 'blockly'},
+				{ text: 'Python', value: 'python'},
+			]
 		}
 	},
 	computed: {
@@ -78,6 +96,9 @@ export default {
 		updateUserStatus(id, username) {
 			this.$store.commit("updateUserStatus", { id, username });
 		},
+		test(a, b, c) {
+			this.$router.push(a);
+		}
 	}
 };
 </script>

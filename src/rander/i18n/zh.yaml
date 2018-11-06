@@ -24,6 +24,11 @@ robot:
     ssid: 'WIFI'
     password: '密码'
     connect: '连接'
+  code:
+    label: '代码'
+    run: '运行'
+    save: '另存为'
+    delete: '删除'
   action:
     label: '动作'
     id: 'ID'

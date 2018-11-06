@@ -4,6 +4,7 @@
 		<login-modal />
 		<video-modal />
 		<action-modal />
+    <code-modal />
 		<connect-modal />
 		<network-modal />
 
@@ -12,11 +13,11 @@
 			fluid>
 			<b-row
 				style="height: 100%;">
-				<!-- <b-col>
+				<b-col cols="3">
 					<side-view />
-				</b-col> -->
+				</b-col>
 				<b-col>
-					<div id="router-view-container">
+          <div id="router-view-container">
 						<router-view></router-view>
 					</div>
 				</b-col>
@@ -35,6 +36,7 @@ import Statusbar from "./pages/component/statusbar.vue";
 import LoginModal from "./pages/Modal/login-dialog.vue";
 import VideoModal from "./pages/Modal/video-dialog.vue";
 import ActionModal from "./pages/Modal/action-dialog.vue";
+import CodeModal from "./pages/Modal/code-dialog.vue";
 import ConnectModal from "./pages/Modal/connect-dialog.vue";
 import NetworkModal from "./pages/Modal/network-dialog.vue";
 
@@ -47,6 +49,7 @@ export default {
     LoginModal,
     VideoModal,
     ActionModal,
+    CodeModal,
     ConnectModal,
     NetworkModal
   },
@@ -184,7 +187,17 @@ export default {
   top: 48px;
   bottom: 24px;
   background: #f0f0f0;
-	width: 100%;
-	height: auto;
+  width: 100%;
+  padding: 0;
+  height: auto;
+
+  .row {
+    margin: 0;
+  }
+  
+  .row > div {
+    padding: 0;
+    margin: 0;
+  }
 }
 </style>

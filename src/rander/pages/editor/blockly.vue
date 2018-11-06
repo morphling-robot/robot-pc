@@ -73,6 +73,8 @@ export default {
 
 <style lang="less">
 #playground {
+  padding: 0;
+
   &, .row, .row > div {
     height: 100%;
   }

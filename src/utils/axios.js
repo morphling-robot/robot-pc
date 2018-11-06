@@ -94,8 +94,13 @@ const apiList = {
 			})
 			.catch(error => console.log(error));
 	},
-	postInstructs() {
-		return api.robot.post(prefix + '/instructs').then(({data}) => {
+	postInstructs({data, config}) {
+		const axiosData = {
+			instruct_type: data.instruct_type,
+			para: data.para
+		};
+
+		return api.robot.post(prefix + '/instructs', axiosData, axiosConfig).then(({data}) => {
 			return Promise.resolve(data);
 		}).catch(error => console.log(error));
 	}
