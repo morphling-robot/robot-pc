@@ -34,29 +34,42 @@
 				
 			</b-navbar-nav>
 
-			<b-navbar-nav class="mx-auto">
+			<b-navbar-nav  class="mx-auto">
+				
+			</b-navbar-nav>
+
+			<b-navbar-nav id="right" class="ml-auto">
 				<b-form-group>
 					<b-form-radio-group
 						id="btnradios1"
 						buttons
 						size="md"
 						style="margin: 0px;"
-						v-model="selected"
+						v-model="mode"
 						:options="radioOptions"
 						name="radiosBtnDefault"
 						@change="test" />
 				</b-form-group>
-			</b-navbar-nav>
 
-			<b-navbar-nav class="ml-auto">
-				
+				<b-button
+					@click="saveFile">保存</b-button>
+
+				<b-button
+					@click="openFile">打开</b-button>
 			</b-navbar-nav>
 		</b-navbar>
 	</div>
 </template>
 
 <script>
-
+const blocklyFilter = {
+	name: "block",
+	extensions: ["bk"]
+};
+const pythonFilter = {
+	name: "python",
+	extensions: ["py"]
+};
 
 
 export default {
@@ -66,7 +79,8 @@ export default {
 			radioOptions: [
 				{ text: '方块文件', value: 'blockly'},
 				{ text: 'Python', value: 'python'},
-			]
+			],
+			mode: 'blockly'
 		}
 	},
 	computed: {
@@ -85,19 +99,77 @@ export default {
 		}
 	},
 	methods: {
-		switchEditorMode() {
-			const editorMode = this.editorMode == "blockly" ? "python" : "blockly";
-
-			this.$store.commit("modeUpdate", editorMode);
-		},
 		handleLogout() {
 			this.updateUserStatus(null, null);
 		},
 		updateUserStatus(id, username) {
 			this.$store.commit("updateUserStatus", { id, username });
 		},
-		test(a, b, c) {
+		test(a) {
+			this.mode = a;
 			this.$router.push(a);
+		},
+		saveFile() {
+			const electron = this.$electron;
+			const { dialog } = electron.remote;
+			const ipcRenderer = electron.ipcRenderer;
+			const fs = electron.remote.require("fs");
+			let text = "";
+      const filters = [];
+      console.log(this.$route.path);
+      switch (this.$route.path) {
+        case "/python":
+          text = this.$store.state.editor.python.code;
+          filters.push(pythonFilter);
+          break;
+
+        case "/blockly":
+          text = this.$store.state.editor.blockly.code;
+          filters.push(blocklyFilter);
+          break;
+
+        case "/":
+          text = this.$store.state.editor.blockly.code;
+          filters.push(blocklyFilter);
+          break;
+      }
+
+      dialog.showSaveDialog({ properties: ["openFile"], filters }, filename => {
+        fs.writeFileSync(filename, text, "utf8");
+      });
+		},
+		openFile() {
+			const electron = this.$electron;
+			const { dialog } = electron.remote;
+			const ipcRenderer = electron.ipcRenderer;
+			const fs = electron.remote.require("fs");
+			const blocklyReg = /.bk$/;
+      const pythonReg = /.py$/;
+      const filters = [blocklyFilter, pythonFilter];
+
+      const filePaths = dialog.showOpenDialog(
+        { properties: ["openFile"], filters },
+        filePaths => {
+          const filename = filePaths[0];
+          let route;
+
+          if (blocklyReg.test(filename)) {
+            route = "blockly";
+          }
+
+          if (pythonReg.test(filename)) {
+            route = "python";
+          }
+          this.$router.push(route);
+
+          setTimeout(() => {
+            console.log(filename);
+            const data = fs.readFileSync(filename, "utf8");
+            console.log(data);
+            this.$store.commit(`${route}UpdateContent`, data);
+          }, 100);
+        }
+      );
 		}
 	}
 };
@@ -106,5 +178,12 @@ export default {
 <style lang="less">
 #navbar {
 	height: 48px;
+}
+
+#right {
+	fieldset {
+		margin-bottom: 0;
+		margin-right: 30px;
+	}
 }
 </style>

@@ -11,6 +11,9 @@ import toolboxRaw from '@/lib/blockly/toolbox.xml';
 import * as a from './dr_definition';
 import * as b from './dr_generator';
 a(Blockly);b(Blockly);
+
+
+
 const toolbox = xmlParser(toolboxRaw);
 
 export default {

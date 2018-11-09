@@ -6,6 +6,7 @@ import App from './App.vue';
 import store from './store';
 import routes from './routes';
 import i18n from './i18n';
+import Blockly from '@/lib/blockly/browser.js';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
@@ -13,6 +14,16 @@ import 'video.js/dist/video-js.min.css';
 import 'videojs-record/dist/css/videojs.record.css';
 import './style.less'
 import axios from '@/utils/axios';
+
+Blockly.prompt = function (message, defaultValue, callback) {
+	app.$root.$emit('bv::show::modal', 'prompt-modal');
+
+	window.promptArgs = {
+		message,
+		defaultValue,
+		callback
+	};
+};
 
 const router = new VueRouter({ routes });
 

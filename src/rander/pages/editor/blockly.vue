@@ -1,7 +1,7 @@
 <template>
   <b-container id="playground" fluid>
     <b-row>
-      <b-col>
+      <b-col :cols="showCode ? 6 : 12">
         <blockly
           id="blockly-editor"
           class="editor"
@@ -10,7 +10,8 @@
           @update="onBlocklyUpdate($event)">
         </blockly>
       </b-col>
-      <b-col cols="6" style="padding-right:2px">
+      <b-col cols="6" style="padding-right:2px"
+        v-if="showCode">
         <brace
           class="brace-editor"
           :editable="false"
@@ -36,6 +37,7 @@ export default {
   name: 'editor',
   data() {
     return {
+      showCode: true,
       python: '',
       cooldown: 500,
       flag: true
@@ -44,6 +46,13 @@ export default {
   components: {
     Blockly,
     Brace
+  },
+  watch: {
+    showCode() {
+      this.$nextTick(() => {
+        window.dispatchEvent(new CustomEvent('resize'));
+      });
+    }
   },
   methods: {
     onBlocklyUpdate({ code, blockStr }) {
@@ -67,6 +76,9 @@ export default {
     blockStr() {
       return this.$store.state.editor.blockly.content;
     }
+  },
+  mounted() {
+    window.ed = this;
   }
 }
 </script>

@@ -6,7 +6,7 @@
 			</b-col>
 			<b-col />
 			<b-col cols="auto">
-				<span v-for="(item, key) in robotStatus" :key="item">{{key}}:{{item}}</span>
+				<span v-for="(item, key) in robotStatus" :key="item">{{key}}:{{item}}    |    </span>
 			</b-col>
 			</b-col>
 		</b-row>

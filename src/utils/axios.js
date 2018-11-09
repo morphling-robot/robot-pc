@@ -31,7 +31,11 @@ const apiList = {
 	},
 	getCodeList() {
 		return api.robot.get(prefix + '/codes').then(({data}) => {
-			return Promise.resolve(data);
+			const result = [];
+
+			data.forEach(item => result.push({ codeName: item }));
+
+			return result;
 		}).catch(error => console.log(error));
 	},
 	getCode({data, config}) {
@@ -92,7 +96,7 @@ const apiList = {
 					robotState: data.state
 				}
 			})
-			.catch(error => console.log(error));
+			.catch(error => {});
 	},
 	postInstructs({data, config}) {
 		const axiosData = {

@@ -24,6 +24,7 @@
 			</b-row>
 		</b-container>
 
+    <prompt-modal />
 
 		<Statusbar/>
 	</div>
@@ -39,6 +40,7 @@ import ActionModal from "./pages/Modal/action-dialog.vue";
 import CodeModal from "./pages/Modal/code-dialog.vue";
 import ConnectModal from "./pages/Modal/connect-dialog.vue";
 import NetworkModal from "./pages/Modal/network-dialog.vue";
+import PromptModal from "./pages/Modal/prompt-dialog.vue";
 
 export default {
   name: "app",
@@ -51,7 +53,8 @@ export default {
     ActionModal,
     CodeModal,
     ConnectModal,
-    NetworkModal
+    NetworkModal,
+    PromptModal
   },
   data() {
     return {

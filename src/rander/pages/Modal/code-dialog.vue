@@ -12,7 +12,7 @@
 			<b-row>
 				<b-col cols="auto">
 					<b-button
-						@click="search"
+						@click="getCodeList"
 						size="sm">{{$t('robot.connect.search')}}</b-button>
 				</b-col>
 				<b-col></b-col>
@@ -27,23 +27,22 @@
 
 			<b-table
 				small
-				:items="robotList"
+				:items="codeList"
 				:fields="[
-					{ key: 'id', label: 'IP' },
 					{ key: 'codeName', label: 'codeName'},
 					{ key: 'action', label: 'Action'}
 				]"
 				:current-page="currentPage"
 				:per-page="perPage">
-				<template slot="connect" slot-scope="row">
-					<b-button size="sm" @click.stop="connect(row)">
-						{{$t('robot.code.run')}}运行
+				<template slot="action" slot-scope="row">
+					<b-button size="sm" @click.stop="runCode(row)">
+						{{$t('robot.code.run')}}
 					</b-button>
-					<b-button size="sm" @click.stop="connect(row)">
-						{{$t('robot.code.save')}}另存为
+					<b-button size="sm" @click.stop="saveCode(row)">
+						{{$t('robot.code.save')}}
 					</b-button>
-					<b-button size="sm" @click.stop="connect(row)">
-						{{$t('robot.code.delete')}}删除
+					<b-button size="sm" @click.stop="deleteCode(row)">
+						{{$t('robot.code.delete')}}
 					</b-button>
 				</template>
 			</b-table>
@@ -58,8 +57,7 @@ export default {
     return {
 			codeList: [
 				{
-					ip: '192.168.1.1',
-					serialNumber: 'ABCDE-FGHIJ-KLMNO'
+					codeName: 'ABCDE-FGHIJ-KLMNO'
 				}
 			],
 			currentPage: 1,
@@ -67,7 +65,7 @@ export default {
     };
 	},
 	methods: {
-		serach() {
+		getCodeList() {
 			this.$api.getCodeList().then(data => this.codeList = data);
 		},
 		runCode() {
@@ -79,6 +77,9 @@ export default {
 		deleteCode() {
 			this.$api.deleteCode()
 		}
+	},
+	mounted() {
+		this.$api.getCodeList();
 	}
 }
 </script>
