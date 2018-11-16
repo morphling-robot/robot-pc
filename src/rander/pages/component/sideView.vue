@@ -1,36 +1,62 @@
 <template>
-	<!-- <test-video
-		class="mx-auto"/> -->
-	<div>
-		<b-row>
-			<b-col>
-				<b-card title="Card Title"
-          img-src="https://picsum.photos/600/300/?image=25"
-          img-alt="Image"
-          img-top
-          tag="article"
-          style="max-width: 20rem;"
-          class="mb-2">
-  			</b-card>
-				<div
-					style="height: 180px;width: 320px;background-color: black;"></div>
-			</b-col>
-		</b-row>
-		<b-row>
-			<b-col>
-				
-			</b-col>
-		</b-row>
+	<div 
+		:style="{
+			width: `${width}px`
+		}"
+		style="position: absolute;top: 0;bottom: 0;">
+		<b-card
+			style="background-color:#000;"
+			id="video-card"
+			no-body
+			class="mb-2 rounded-0"
+			:style="{
+				height: `${videoCardHeight}px`
+			}">
+		</b-card>
+		<b-card
+			no-body
+			id="card-tabs"
+			:style="{
+				top: `${videoCardHeight}px`,
+				width: `${width}px`
+			}">
+			<b-tabs card>
+				<b-tab :title="$t('robot.connect.label')" no-body active>
+					<connect-table />
+				</b-tab>
+				<b-tab :title="$t('robot.code.label')" no-body>
+					<code-table />
+				</b-tab>
+			</b-tabs>
+		</b-card>
 	</div>
 </template>
 
 <script>
 import TestVideo from "../component/test";
+import CodeTable from '../component/codeTable';
+import ConnectTable from '../component/ConnectTable';
 
 export default {
-  name: "sideView",
+	name: "sideView",
+	props: ['width'],
   components: {
-    TestVideo
-  }
+		TestVideo,
+		CodeTable,
+		ConnectTable
+	},
+	data() {
+		return {
+			videoCardHeight: 240
+		}
+	}
 };
 </script>
+
+<style lang="less">
+#card-tabs {
+	position: absolute;
+	bottom: 0px;
+}
+</style>
+

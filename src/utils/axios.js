@@ -16,7 +16,7 @@ function AxiosFactory(axiosConfig) {
 const apiList = {
 	getNetworkList() {
 		return api.robot.get(prefix + '/network').then(({data}) => {
-			return Promise.resolve(data);
+			return data;
 		}).catch(error => console.log(error));
 	},
 	postNetwork({data, config: axiosConfig}) {
@@ -26,7 +26,7 @@ const apiList = {
 		};
 
 		return api.robot.post(prefix + '/network', axiosData, axiosConfig).then(({data}) => {
-			console.log(data);
+			return data;
 		}).catch(error => console.log(error));
 	},
 	getCodeList() {
@@ -38,49 +38,94 @@ const apiList = {
 			return result;
 		}).catch(error => console.log(error));
 	},
-	getCode({data, config}) {
-		return api.robot.get(prefix + '/codes').then(({data}) => {
-			return Promise.resolve(data);
+	getCode({index, data, config: axiosConfig}) {
+		return api.robot.get(`${prefix}/codes/${index}`).then(({data}) => {
+			return data;
 		}).catch(error => console.log(error));
 	},
-	uploadCode({data, config}) {
-		return api.robot.post(prefix + '/codes').then(({data}) => {
-			return Promise.resolve(data);
+	createCode({index, data, config: axiosConfig}) {
+		const axiosData = data;
+		return api.robot.post(`${prefix}/codes`, axiosData, axiosConfig).then(({data}) => {
+			return data;
 		}).catch(error => console.log(error));
 	},
-	deleteCode({data, config}) {
-		return api.robot.delete(prefix + '/codes').then(({data}) => {
-			return Promise.resolve(data);
+	deleteCode({index, data, config: axiosConfig}) {
+		const axiosData = data;
+		return api.robot.delete(`${prefix}/codes/${index}`, axiosData, axiosConfig).then(({data}) => {
+			return data;
 		}).catch(error => console.log(error));
 	},
-	updateCode({data, config}) {
-		return api.robot.put(prefix + '/codes').then(({data}) => {
-			return Promise.resolve(data);
+	updateCode({index, data, config: axiosConfig}) {
+		return api.robot.put(`${prefix}/codes/${index}`, axiosData, axiosConfig).then(({data}) => {
+			return  data;
 		}).catch(error => console.log(error));
 	},
 	getActionsList() {
 		return api.robot.get(prefix + '/actions').then(({data}) => {
-			return Promise.resolve(data.data);
+			const result = [];
+
+			data.forEach((item, index) => {
+				result.push({
+					id: index,
+					name: item,
+					frameList: []
+				});
+			});
+
+			return result;
 		});
 	},
-	getActions({data, config}) {
-		return api.robot.get(prefix + '/actions').then(({data}) => {
-			return Promise.resolve(data);
+	getActions({index, data, config: axiosConfig}) {
+		const axiosData = data;
+
+		return api.robot.get(`${prefix}/actions/${index}`, axiosData, axiosConfig).then(({data}) => {
+			const frameList = [];
+
+			data.body.split('\n').forEach(item => {
+				if (item === '') {
+					return;
+				}
+
+				const frame = [];
+				
+				item.split(' ').forEach(angle => {
+					if (angle === '') {
+						return;
+					}
+
+					frame.push({angle: new Number(angle)});
+				})
+
+				frameList.push(frame);
+			});
+			
+			return {
+				name: data.name,
+				frameList
+			};
 		}).catch(error => console.log(error));
 	},
-	uploadActions({data, config}) {
-		return api.robot.post(prefix + '/codes').then(({data}) => {
-			return Promise.resolve(data);
+	createActions({data, config: axiosConfig}) {
+		const axiosData = data;
+
+		return api.robot.post(prefix + '/actions', axiosData, axiosConfig).then(({data}) => {
+			return data;
 		}).catch(error => console.log(error));
 	},
-	deleteActions({data, config}) {
-		return api.robot.delete(prefix + '/codes').then(({data}) => {
-			return Promise.resolve(data);
+	deleteActions({index, data, config: axiosConfig}) {
+		const axiosData = data;
+
+		return api.robot.delete(`${prefix}/actions/${index}`, axiosData, axiosConfig).then(({data}) => {
+			return data;
 		}).catch(error => console.log(error));
 	},
-	updateActions({data, config}) {
-		return api.robot.put(prefix + '/codes').then(({data}) => {
-			return Promise.resolve(data);
+	updateActions({index, data, config: axiosConfig}) {
+		const axiosData = {
+
+		};
+
+		return api.robot.put(prefix + '/actions').then(({data}) => {
+			return data;
 		}).catch(error => console.log(error));
 	},
 	getStates() {
@@ -98,14 +143,24 @@ const apiList = {
 			})
 			.catch(error => {});
 	},
-	postInstructs({data, config}) {
+	postInstructs({data, config: axiosConfig}) {
 		const axiosData = {
 			instruct_type: data.instruct_type,
 			para: data.para
 		};
 
 		return api.robot.post(prefix + '/instructs', axiosData, axiosConfig).then(({data}) => {
-			return Promise.resolve(data);
+			return data;
+		}).catch(error => console.log(error));
+	},
+	createToken({data, config: axiosConfig}) {
+		const axiosData = {
+			nickname: data.username,
+			secret: data.password
+		};
+
+		return api.robot.post(prefix + '/token', axiosData, axiosConfig).then(({data}) => {
+			return data;
 		}).catch(error => console.log(error));
 	}
 };

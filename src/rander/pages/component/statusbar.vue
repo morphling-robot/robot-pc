@@ -2,12 +2,13 @@
 	<b-container id="app-status-bar" fluid>
 		<b-row>
 			<b-col>
-				未登录
+				<span v-b-modal.loginModal>未登录</span>
 			</b-col>
 			<b-col />
 			<b-col cols="auto">
-				<span v-for="(item, key) in robotStatus" :key="item">{{key}}:{{item}}    |    </span>
-			</b-col>
+				<span v-for="(item, key) in robotStatus"
+          class="mx-3"
+          :key="item">{{key}}:{{item}}</span>
 			</b-col>
 		</b-row>
 	</b-container>
@@ -24,9 +25,6 @@ export default {
     }
   },
   methods: {
-    test() {
-      alert(1);
-    },
     updateRobotStatus() {
       this.$api
         .getStates()
@@ -63,6 +61,9 @@ export default {
   color: rgb(255, 255, 255);
   background-color: rgb(0, 122, 204);
   height: 24px;
+  font-size: 12px;
+  font-weight: 100;
+  line-height: 24px;
 }
 </style>
 

@@ -25,6 +25,8 @@ Blockly.prompt = function (message, defaultValue, callback) {
 	};
 };
 
+window.prompt = Blockly.prompt;
+
 const router = new VueRouter({ routes });
 
 Vue.use(VueRouter);

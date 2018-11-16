@@ -11,17 +11,13 @@
 		<b-container
 			id="app-view-container"
 			fluid>
-			<b-row
-				style="height: 100%;">
-				<b-col cols="3">
-					<side-view />
-				</b-col>
-				<b-col>
-          <div id="router-view-container">
-						<router-view></router-view>
-					</div>
-				</b-col>
-			</b-row>
+      <side-view :width="sidebarWidth" />
+      <div id="router-view-container"
+        :style="{
+          left: `${sidebarWidth}px`
+        }">
+        <router-view></router-view>
+      </div>
 		</b-container>
 
     <prompt-modal />
@@ -58,7 +54,8 @@ export default {
   },
   data() {
     return {
-      file: null
+      file: null,
+      sidebarWidth: 340
     };
   },
   mounted() {
@@ -182,7 +179,9 @@ export default {
 }
 
 #router-view-container {
-	height: 100%;
+  height: 100%;
+  position: absolute;
+  right: 0;
 }
 
 #app-view-container {
@@ -195,11 +194,6 @@ export default {
   height: auto;
 
   .row {
-    margin: 0;
-  }
-  
-  .row > div {
-    padding: 0;
     margin: 0;
   }
 }

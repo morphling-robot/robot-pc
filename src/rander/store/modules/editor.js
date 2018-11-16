@@ -1,5 +1,6 @@
 const state = {
 	mode: 'blockly',
+	fileName: '',
 	blockly: {
 		content: '',
 		code: ''
@@ -27,6 +28,9 @@ const mutations = {
 	},
 	pythonUpdateCode(state, payload) {
 		state.python.code = payload;
+	},
+	updateFileName(state, payload) {
+		state.fileName = payload;
 	}
 };
 

@@ -46,10 +46,14 @@ export default {
 			this.$store.commit('updateUserStatus', { id, username });
 		},
 		handleLogin() {
-			this.updateUserStatus(
-				Math.floor(Math.random() * (100 - 1) + 1),
-				this.username
-			);
+			this.$api.createToken({
+				data: {
+					username: this.username,
+					password: this.password
+				}
+			}).then((data) => {
+				this.$store.commit('updateUserToken', data.token);
+			}).catch(e => console.log(e))
 		}
 	}
 }

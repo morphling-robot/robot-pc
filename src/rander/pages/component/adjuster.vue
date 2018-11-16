@@ -46,7 +46,7 @@ export default {
 			this.modified = this.temp = this.angle;
 		},
 		limit(value) {
-			return Math.max(0, Math.min(value, 360));
+			return Math.max(-360, Math.min(value, 360));
 		} 
 	},
 	computed: {

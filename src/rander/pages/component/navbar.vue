@@ -1,4 +1,5 @@
 <template>
+
 	<div>
 		<b-navbar id="navbar" toggleable="md" type="dark" variant="dark">
 			<b-dropdown variant="dark" size="lg" no-caret>
@@ -27,38 +28,51 @@
 				</b-dropdown-item>
 			</b-dropdown>
 
-
-			<b-navbar-brand>{{$t('navbar.brand')}}</b-navbar-brand>
-
-			<b-navbar-nav>
-				
+			<b-navbar-nav class="mr-auto">
+				<b-navbar-brand>{{$t('navbar.brand')}}</b-navbar-brand>
 			</b-navbar-nav>
 
 			<b-navbar-nav  class="mx-auto">
-				
-			</b-navbar-nav>
-
-			<b-navbar-nav id="right" class="ml-auto">
-				<b-form-group>
+				<b-input-group size="sm">
 					<b-form-radio-group
 						id="btnradios1"
 						buttons
-						size="md"
+						size="sm"
 						style="margin: 0px;"
 						v-model="mode"
-						:options="radioOptions"
 						name="radiosBtnDefault"
-						@change="test" />
-				</b-form-group>
+						@change="changeMode">
+						<b-form-radio value="blockly"><i class="fas fa-cubes mr-1" />方块文件</b-form-radio>
+						<b-form-radio value="python"><i class="fab fa-python mr-1" />Python</b-form-radio>
+					</b-form-radio-group>
+					<b-form-input style="width: 10em;" v-model="fileName" />
+				</b-input-group>
 
-				<b-button
-					@click="saveFile">保存</b-button>
+			</b-navbar-nav>
 
-				<b-button
-					@click="openFile">打开</b-button>
+			<b-navbar-nav class="ml-auto">
+				<b-nav-form>
+					
+
+					<b-button
+						class="mr-2"
+						size="sm"
+						@click="saveFile"><i class="fas fa-save" /></b-button>
+
+					<b-button
+						class="mr-2"
+						size="sm"
+						@click="openFile"><i class="fas fa-folder-open" /></b-button>
+
+					<b-button
+						size="sm"
+						@click="createCode"><i class="fas fa-upload" /></b-button>
+
+				</b-nav-form>
 			</b-navbar-nav>
 		</b-navbar>
 	</div>
+
 </template>
 
 <script>
@@ -76,12 +90,12 @@ export default {
 	name: "navbar",
 	data() {
 		return {
-			radioOptions: [
-				{ text: '方块文件', value: 'blockly'},
-				{ text: 'Python', value: 'python'},
-			],
-			mode: 'blockly'
+			mode: 'blockly',
+			fileName: ''
 		}
+	},
+	mounted() {
+		this.fileName = '无标题';
 	},
 	computed: {
 		editorMode() {
@@ -105,7 +119,7 @@ export default {
 		updateUserStatus(id, username) {
 			this.$store.commit("updateUserStatus", { id, username });
 		},
-		test(a) {
+		changeMode(a) {
 			this.mode = a;
 			this.$router.push(a);
 		},
@@ -170,6 +184,25 @@ export default {
           }, 100);
         }
       );
+		},
+		createCode() {
+			this.$api.createCode({
+				data: {
+					name: this.$store.state.editor.fileName,
+					body: this.$store.state.editor.python.code
+				},
+				config: {
+          auth: {
+            username: this.$store.state.user.token,
+            password: ''
+          }
+        }
+			});
+		},
+	},
+	watch: {
+		fileName() {
+			this.$store.commit('updateFileName', this.fileName);
 		}
 	}
 };
