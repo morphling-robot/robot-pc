@@ -106,7 +106,7 @@ export default {
 		// 	this.$refs.robotModalRef.show();
 		// });
 
-		init();
+		this.init();
 	},
 	methods: {
 		init() {

@@ -11,14 +11,14 @@
 			<b-row style="width: 100%;margin-bottom: 15px;">
 				<b-col cols="4">
 					<b-button size="sm" variant="success" @click="getActionsList"><i class="fas fa-sync-alt" /></b-button>
-					<b-button size="sm" variant="success">创建动作</b-button>
+					<b-button size="sm" variant="success" @click="createAction">创建动作</b-button>
 				</b-col>
 				<b-col></b-col>
 				<b-col cols="auto">
 					<b-button size="sm" variant="primary" @click="insertFrame">插入一帧</b-button>
 					<b-button size="sm" variant="danger" @click="deleteFrame">删除该帧</b-button>
-					<b-button size="sm" variant="primary">读取当前状态</b-button>
-					<b-button size="sm" variant="success">保存修改</b-button>
+					<b-button size="sm" variant="primary" @click="getFrame">读取当前状态</b-button>
+					<b-button size="sm" variant="success" @click="updateAction">保存修改</b-button>
 				</b-col>
 			</b-row>
 			<b-row style="height: auto">
@@ -47,10 +47,10 @@
 							<a v-b-tooltip.hover.left :title="row.value">{{row.value}}</a>
 						</template>
 						<template slot="operate" slot-scope="row">
-							<b-button size="sm" @click.stop="connect(row)">
+							<b-button size="sm" @click.stop="deleteAction(row)">
 								<i class="fas fa-trash-alt" />
 							</b-button>
-							<b-button size="sm" @click.stop="connect(row)">
+							<b-button size="sm" @click.stop="runAction(row)">
 								<i class="fas fa-play" />
 							</b-button>
 						</template>
@@ -163,7 +163,12 @@ export default {
 		},
 		createAction() {
 			window.prompt('请输入动作名称', 'newAction', name => {
-				// this.$api.createActions(name);
+				this.$api.createActions({
+					data: {
+						body: '',
+						name
+					}
+				});
 			});
 		},
 		getAction(index) {
@@ -180,17 +185,43 @@ export default {
 			});
 		},
 		updateAction() {
-			this.$api.updateActions()
+			const { name } = this.actionList[this.actionIndex];
+			this.$api.updateActions({
+				index: name,
+				data: {
+					name: name,
+					body: this.selectedFrameList
+				}
+			});
 		},
-		deleteAction() {
-			this.$api.deleteActions()
+		deleteAction(row) {
+			const { name } = row.item;
+			this.$api.deleteActions({
+				index: name
+			});
 		},
 		changeActionIndex(item, index, event) {
 			this.actionIndex = index;
 			this.getAction(index);
 		},
+		runAction(row) {
+			const { name } = row.item;
+      this.$api.postInstructs({
+        data: {
+          instruct_type: 3002,
+          para: name
+        }
+			});
+		},
 		getFrame() {
-
+			this.$api.postInstructs({
+        data: {
+          instruct_type: 2000,
+          para: name
+        }
+			}).then(data => {
+				// this.selectedFrameList[this.frameIndex - 1] = data;
+			})
 		},
 		insertFrame() {
 			let { frameList } = this.actionList[this.actionIndex];

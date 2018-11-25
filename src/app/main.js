@@ -1,15 +1,32 @@
 const { app, BrowserWindow, Menu, dialog } = require('electron');
+const fs = require('fs');
 const path = require('path');
 const i18n = require('./i18n');
 const cwd = process.cwd();
 const STATIC_PATH = path.resolve(cwd, './dist');
+const isProd = process.env.NODE_ENV === 'development';
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true;
+const { COPYFILE_EXCL } = fs.constants;
 
 let mainWindow;
 
-const winURL = process.env.NODE_ENV === 'development'
+const winURL = isProd
 	? `http://localhost:8081`
 	: path.resolve(__dirname, '../../dist/index.html')
+
+if (true) {
+	const assetPath = path.resolve(cwd, 'asset');
+	const srcPath = path.resolve(__dirname, '../../asset', )
+	if (!fs.existsSync(path.resolve(assetPath, 'i18n'))) {
+		// fs.mkdirSync(assetPath, { recursive: true });
+		fs.mkdirSync(path.resolve(assetPath, 'i18n'), { recursive: true });
+		fs.copyFileSync(path.resolve(srcPath, 'dr_definition.js'), path.resolve(assetPath, 'dr_definition.js'), COPYFILE_EXCL);
+		fs.copyFileSync(path.resolve(srcPath, 'dr_generator.js'), path.resolve(assetPath, 'dr_generator.js'), COPYFILE_EXCL);
+		fs.copyFileSync(path.resolve(srcPath, 'toolbox.xml'), path.resolve(assetPath, 'toolbox.xml'), COPYFILE_EXCL);
+		fs.copyFileSync(path.resolve(srcPath, 'i18n', 'en.js'), path.resolve(assetPath, 'i18n', 'en.js'), COPYFILE_EXCL);
+		fs.copyFileSync(path.resolve(srcPath, 'i18n', 'zh-hans.js'), path.resolve(assetPath, 'i18n', 'zh-hans.js'), COPYFILE_EXCL);
+	}
+}
 
 function createWindow() {
 

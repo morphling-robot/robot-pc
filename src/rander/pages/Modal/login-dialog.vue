@@ -31,7 +31,7 @@ export default {
 		};
 	},
 	mounted() {
-		this.$refs.loginModalRef.show();
+		// this.$refs.loginModalRef.show();
 
 		// const { ipcRenderer } = this.$electron;
 

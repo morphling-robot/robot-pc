@@ -12,7 +12,7 @@
 			<b-col cols="auto">
 				<b-pagination
 					size="sm"
-					:total-rows="codeList.length"
+					:total-rows="2"
 					v-model="currentPage"
 					:per-page="perPage" />
 			</b-col>

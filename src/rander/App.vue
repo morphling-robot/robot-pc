@@ -62,8 +62,16 @@ export default {
     const aaa = new MouseEvent("click");
     const electron = this.$electron;
     const { dialog } = electron.remote;
+
+    const { process } = electron.remote;
+
+    const cwd = process.cwd();
+
     const ipcRenderer = electron.ipcRenderer;
     const fs = electron.remote.require("fs");
+
+    fs.readdir(cwd + '/asset', (err, files) => console.log(files));
+
     const blocklyFilter = {
       name: "block",
       extensions: ["bk"]

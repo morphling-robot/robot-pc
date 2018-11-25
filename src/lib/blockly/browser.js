@@ -2,10 +2,15 @@ const Blockly = require('./lib/blockly_compressed_browser');
 const en = require('./lib/i18n/en');
 const zh = require('./lib/i18n/zh-hans');
 
+let message = { zh, en };
+
 Blockly.setLocale = function(locale) {
-  const message = { zh, en };
   Blockly.Msg = Object.assign(message[locale], Blockly.Msg);
   Blockly.Msg = Blockly.Msg();
+}
+
+Blockly.updateLocale = function(newMessage) {
+  message = newMessage;
 }
 
 Blockly.utils.getMessageArray_ = function () {

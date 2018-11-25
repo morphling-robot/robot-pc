@@ -106,25 +106,39 @@ const apiList = {
 		}).catch(error => console.log(error));
 	},
 	createActions({data, config: axiosConfig}) {
-		const axiosData = data;
+		const axiosData = {
+			body: data.body,
+			name: data.name
+		};
 
-		return api.robot.post(prefix + '/actions', axiosData, axiosConfig).then(({data}) => {
+		return api.robot.post(`${prefix}/actions/${index}/user`, axiosData, axiosConfig).then(({data}) => {
 			return data;
 		}).catch(error => console.log(error));
 	},
 	deleteActions({index, data, config: axiosConfig}) {
 		const axiosData = data;
 
-		return api.robot.delete(`${prefix}/actions/${index}`, axiosData, axiosConfig).then(({data}) => {
+		return api.robot.delete(`${prefix}/actions/${index}/user`, axiosData, axiosConfig).then(({data}) => {
 			return data;
 		}).catch(error => console.log(error));
 	},
 	updateActions({index, data, config: axiosConfig}) {
-		const axiosData = {
+		const result = '';
 
+		data.body.forEach(frame => {
+			frame.forEach(servo => {
+				result + servo.angle + ' ';
+			});
+
+			result + '\n';
+		});console.log(result);
+
+		const axiosData = {
+			name: data.name,
+			body: result
 		};
 
-		return api.robot.put(prefix + '/actions').then(({data}) => {
+		return api.robot.put(`${prefix}/actions/${index}/user`, axiosData, axiosConfig).then(({data}) => {
 			return data;
 		}).catch(error => console.log(error));
 	},
