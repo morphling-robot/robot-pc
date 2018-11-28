@@ -17,8 +17,8 @@ const winURL = isProd
 if (true) {
 	const assetPath = path.resolve(cwd, 'asset');
 	const srcPath = path.resolve(__dirname, '../../asset', )
-	if (!fs.existsSync(path.resolve(assetPath, 'i18n'))) {
-		// fs.mkdirSync(assetPath, { recursive: true });
+	if (!fs.existsSync(path.resolve(assetPath))) {
+		fs.mkdirSync(assetPath, { recursive: true });
 		fs.mkdirSync(path.resolve(assetPath, 'i18n'), { recursive: true });
 		fs.copyFileSync(path.resolve(srcPath, 'dr_definition.js'), path.resolve(assetPath, 'dr_definition.js'), COPYFILE_EXCL);
 		fs.copyFileSync(path.resolve(srcPath, 'dr_generator.js'), path.resolve(assetPath, 'dr_generator.js'), COPYFILE_EXCL);

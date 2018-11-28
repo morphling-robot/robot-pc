@@ -100,7 +100,8 @@ export default {
       this.$api.postInstructs({
         data: {
           instruct_type: 4002,
-          para: codeName
+          para1: codeName,
+          para2: 1
         }
       });
     },

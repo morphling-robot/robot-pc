@@ -122,7 +122,7 @@ const apiList = {
 			return data;
 		}).catch(error => console.log(error));
 	},
-	updateActions({index, data, config: axiosConfig}) {
+	updateActions({index, data, config: axiosConfig}) {  //调试put接口
 		const result = '';
 
 		data.body.forEach(frame => {

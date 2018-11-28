@@ -10,6 +10,8 @@ navbar:
   profile: 'profile'
   login: 'login'
   logout: 'logout'
+  Chinese: 'Chinese'
+  English: 'English'
 
 
 
@@ -46,3 +48,9 @@ user:
   login: 'Login'
   name: 'Username'
   password: 'Password'
+
+modal: 
+  prompt: 'Prompt'
+  message: 'Files are not saved. Switching mode directly will cause files to disappear!'
+  ok: 'ok'
+  cancel: 'cancel'

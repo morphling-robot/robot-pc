@@ -16,9 +16,8 @@
 				<b-form-group
 					:label="$t('robot.connect.type')">
 					<b-form-input
-						readonly
 						size="sm"
-						value="N/A" />
+						v-model="robotName" />
 				</b-form-group>
 			</b-col>
 			<b-col>
@@ -69,7 +68,7 @@
 </template>
 
 <script>
-import cidrRange from 'cidr-range';
+import cidrRange from 'cidr-range'; //改
 import axios from 'axios';
 
 export default {
@@ -94,8 +93,9 @@ export default {
 			],
 			selectedIp: null,
 			currentPage: 1,
-			perPage: 5
-    };
+			perPage: 5,
+			robotName: ''
+    	};
 	},
 	mounted() {
 		// const { ipcRenderer } = this.$electron;
@@ -143,19 +143,38 @@ export default {
 			this.ipList = result;
 		},
 		search() {
-			this.getNetworkInterfaceList();
-			this.getIpList();console.log(this.ipList);
+			// this.getNetworkInterfaceList();
+			// this.getIpList();console.log(this.ipList);
 
-			this.robotList = [];
-			this.ipList.forEach(ip => {
-				axios.get(`http://${ip}:5000/v1/states`, { timeout: 5000 })
-							.then(r => {
-								console.log(r);
-								this.robotList.push({
-									ip,
-									serialNumber: 'TEST'
-								});
-							}).catch(r => console.log(r));
+			// this.robotList = [];
+			// this.ipList.forEach(ip => {
+			// 	axios.get(`http://${ip}:5000/v1/states`, { timeout: 5000 })
+			// 				.then(r => {
+			// 					console.log(r);
+			// 					this.robotList.push({
+			// 						ip,
+			// 						serialNumber: 'TEST'
+			// 					});
+			// 				}).catch(r => console.log(r));
+			// });
+
+			const dgram = this.$electron.remote.require("dgram");
+			const socket = dgram.createSocket("udp4");
+
+			socket.bind(function () {
+				socket.setBroadcast(true);
+			});
+
+			var message = new Buffer(this.robotName);
+				socket.send(message, 0, message.length, 10000, '255.255.255.255', function(err, bytes) {
+				socket.close();
+			});
+
+			socket.on('message', function (msg) {
+				this.robotList.push({
+					ip,
+					serialNumber: 'TEST'
+				});
 			});
 		},
 		connect(row) {

@@ -1,5 +1,4 @@
 <template>
-
 	<div>
 		<b-navbar id="navbar" toggleable="md" type="dark" variant="dark">
 			<b-dropdown variant="dark" size="lg" no-caret>
@@ -32,6 +31,18 @@
 				<b-navbar-brand>{{$t('navbar.brand')}}</b-navbar-brand>
 			</b-navbar-nav>
 
+			<b-dropdown variant="dark" size="lg" no-caret id="change-locale">
+				<template slot="button-content">
+					<i class="fas fa-language" style="font-size: 30px" />
+				</template>
+				<b-dropdown-item @click="changeLocale('zh')">
+					{{$t('navbar.Chinese')}}
+				</b-dropdown-item>
+				<b-dropdown-item @click="changeLocale('en')">
+					{{$t('navbar.English')}}
+				</b-dropdown-item>
+			</b-dropdown>
+
 			<b-navbar-nav  class="mx-auto">
 				<b-input-group size="sm">
 					<b-form-radio-group
@@ -41,7 +52,7 @@
 						style="margin: 0px;"
 						v-model="mode"
 						name="radiosBtnDefault"
-						@change="changeMode">
+						@change="isShow = true">
 						<b-form-radio value="blockly"><i class="fas fa-cubes mr-1" />方块文件</b-form-radio>
 						<b-form-radio value="python"><i class="fab fa-python mr-1" />Python</b-form-radio>
 					</b-form-radio-group>
@@ -52,25 +63,36 @@
 
 			<b-navbar-nav class="ml-auto">
 				<b-nav-form>
-					
+					<b-button
+						class="mr-2"
+						size="sm"
+						@click="saveFile"
+						v-b-tooltip.hover title="另存为"><i class="fas fa-save" /></b-button>
 
 					<b-button
 						class="mr-2"
 						size="sm"
-						@click="saveFile"><i class="fas fa-save" /></b-button>
-
-					<b-button
-						class="mr-2"
-						size="sm"
-						@click="openFile"><i class="fas fa-folder-open" /></b-button>
+						@click="openFile"
+						v-b-tooltip.hover title="打开"><i class="fas fa-folder-open" /></b-button>
 
 					<b-button
 						size="sm"
-						@click="createCode"><i class="fas fa-upload" /></b-button>
-
+						@click="createCode"
+						v-b-tooltip.hover title="上传"><i class="fas fa-upload" /></b-button>
 				</b-nav-form>
 			</b-navbar-nav>
 		</b-navbar>
+		<b-modal
+			v-model="isShow"
+			:title="$t('modal.prompt')"
+			size="sm"
+			@ok="changeMode"
+			@cancel="backToMode"
+			:ok-title="$t('modal.ok')"
+			:cancel-title="$t('modal.cancel')"
+			cancel-variant="link">
+			{{$t('modal.message')}}
+		</b-modal>
 	</div>
 
 </template>
@@ -78,7 +100,7 @@
 <script>
 const blocklyFilter = {
 	name: "block",
-	extensions: ["bk"]
+	extensions: ["bk", "py"]
 };
 const pythonFilter = {
 	name: "python",
@@ -91,7 +113,9 @@ export default {
 	data() {
 		return {
 			mode: 'blockly',
-			fileName: ''
+			fileName: '',
+			ipcRenderer: null,
+			isShow: false,
 		}
 	},
 	mounted() {
@@ -113,15 +137,25 @@ export default {
 		}
 	},
 	methods: {
+		changeLocale(msg) {
+			 this.$i18n.locale = msg;
+		},
 		handleLogout() {
 			this.updateUserStatus(null, null);
 		},
 		updateUserStatus(id, username) {
 			this.$store.commit("updateUserStatus", { id, username });
 		},
-		changeMode(a) {
-			this.mode = a;
-			this.$router.push(a);
+		changeMode() {
+			// this.mode = a;
+			this.$router.push(this.mode);
+		},
+		backToMode() {
+			if (this.mode === 'blockly') {
+				this.mode = 'python'
+			} else {
+				this.mode = 'blockly'
+			}
 		},
 		saveFile() {
 			const electron = this.$electron;
@@ -129,28 +163,28 @@ export default {
 			const ipcRenderer = electron.ipcRenderer;
 			const fs = electron.remote.require("fs");
 			let text = "";
-      const filters = [];
-      console.log(this.$route.path);
-      switch (this.$route.path) {
-        case "/python":
-          text = this.$store.state.editor.python.code;
-          filters.push(pythonFilter);
-          break;
+			const filters = [];
+			console.log(this.$route.path);
+			switch (this.$route.path) {
+				case "/python":
+				text = this.$store.state.editor.python.code;
+				filters.push(pythonFilter);
+				break;
 
-        case "/blockly":
-          text = this.$store.state.editor.blockly.code;
-          filters.push(blocklyFilter);
-          break;
+				case "/blockly":
+				text = this.$store.state.editor.blockly.code;
+				filters.push(blocklyFilter);
+				break;
 
-        case "/":
-          text = this.$store.state.editor.blockly.code;
-          filters.push(blocklyFilter);
-          break;
-      }
+				case "/":
+				text = this.$store.state.editor.blockly.code;
+				filters.push(blocklyFilter);
+				break;
+			}
 
-      dialog.showSaveDialog({ properties: ["openFile"], filters }, filename => {
-        fs.writeFileSync(filename, text, "utf8");
-      });
+			dialog.showSaveDialog({ properties: ["openFile"], filters }, filename => {
+				fs.writeFileSync(filename, text, "utf8");
+			});
 		},
 		openFile() {
 			const electron = this.$electron;
@@ -158,32 +192,32 @@ export default {
 			const ipcRenderer = electron.ipcRenderer;
 			const fs = electron.remote.require("fs");
 			const blocklyReg = /.bk$/;
-      const pythonReg = /.py$/;
-      const filters = [blocklyFilter, pythonFilter];
+			const pythonReg = /.py$/;
+			const filters = [blocklyFilter, pythonFilter];
 
-      const filePaths = dialog.showOpenDialog(
-        { properties: ["openFile"], filters },
-        filePaths => {
-          const filename = filePaths[0];
-          let route;
+			const filePaths = dialog.showOpenDialog(
+				{ properties: ["openFile"], filters },
+				filePaths => {
+					const filename = filePaths[0];
+					let route;
 
-          if (blocklyReg.test(filename)) {
-            route = "blockly";
-          }
+					if (blocklyReg.test(filename)) {
+						route = "blockly";
+					}
 
-          if (pythonReg.test(filename)) {
-            route = "python";
-          }
-          this.$router.push(route);
+					if (pythonReg.test(filename)) {
+						route = "python";
+					}
+					this.$router.push(route);
 
-          setTimeout(() => {
-            console.log(filename);
-            const data = fs.readFileSync(filename, "utf8");
-            console.log(data);
-            this.$store.commit(`${route}UpdateContent`, data);
-          }, 100);
-        }
-      );
+					setTimeout(() => {
+						console.log(filename);
+						const data = fs.readFileSync(filename, "utf8");
+						console.log(route);
+						this.$store.commit(`${route}UpdateContent`, data);
+					}, 100);
+				}
+			);
 		},
 		createCode() {
 			this.$api.createCode({
@@ -204,6 +238,10 @@ export default {
 		fileName() {
 			this.$store.commit('updateFileName', this.fileName);
 		}
+	},
+	mounted() {
+		const electron = this.$electron;
+		this.ipcRenderer = electron.ipcRenderer;
 	}
 };
 </script>
@@ -218,5 +256,9 @@ export default {
 		margin-bottom: 0;
 		margin-right: 30px;
 	}
+}
+
+#change-locale button {
+	padding: 0px 1rem;
 }
 </style>
