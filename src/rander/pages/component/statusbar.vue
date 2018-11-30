@@ -2,7 +2,7 @@
 	<b-container id="app-status-bar" fluid>
 		<b-row>
 			<b-col>
-				<span v-b-modal.loginModal>未登录</span>
+				<span v-b-modal.loginModal>{{msg}}</span>
 			</b-col>
 			<b-col />
 			<b-col cols="auto">
@@ -22,6 +22,9 @@ export default {
     },
     statusUpdateCycle() {
       return this.$store.state.robot.updateCycle;
+    },
+    msg() {
+      return this.$store.state.user.id ? '已登录' : '未登录'
     }
   },
   methods: {

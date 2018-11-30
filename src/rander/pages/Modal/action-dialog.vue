@@ -2,23 +2,46 @@
 	<b-modal
 		id="actionModal"
 		ref="actionModalRef"
-		:title="`${$t('robot.action.label')} -> ${actionList[actionIndex].name}`"
-		size="lg"
 		no-close-on-backdrop
+		size="lg"
 		centered
-		@ok="getActionsList">
-		<div style="height: 530px;position: relative;">
+		@ok="getActionsList"
+		:ok-title="$t('modal.ok')"
+		:cancel-title="$t('modal.cancel')"
+		cancel-variant="link">
+		<b-row slot="modal-header" class="w-100" @click.stop="isShow = true">
+			<b-col cols="3">
+				<h5  @dblclick="isShow = false" class="modal-title">{{$t('robot.action.label')}} -&gt; 
+				<span v-if="isShow">{{actionList[actionIndex].name}}</span>
+				<b-form-input
+					size="sm"
+					v-if="!isShow" style="display: inline-block;width: 7rem"
+					v-model="actionList[actionIndex].name"
+					type="text"></b-form-input>
+				</h5>
+			</b-col>
+			<b-col>
+				<action-progress class="mt-1" id="action-speed" :value="actionList[actionIndex].speed"
+					:min="0" :max="100"
+					@update-progress="updatespeed($event, actionList[actionIndex])" pointTarget="1"></action-progress>
+			</b-col>
+			<b-col cols="1">
+				<button type="button" aria-label="Close" class="close" @click="$refs.actionModalRef.hide()">×</button>
+			</b-col>
+			
+			
+		</b-row>
+		<div style="height: 550px;position: relative;">
 			<b-row style="width: 100%;margin-bottom: 15px;">
 				<b-col cols="4">
 					<b-button size="sm" variant="success" @click="getActionsList"><i class="fas fa-sync-alt" /></b-button>
-					<b-button size="sm" variant="success" @click="createAction">创建动作</b-button>
+					<b-button size="sm" variant="success" @click="tempCreateAction">创建动作</b-button>
+					<b-button size="sm" variant="success" @click="updateAction">保存</b-button>
 				</b-col>
 				<b-col></b-col>
 				<b-col cols="auto">
 					<b-button size="sm" variant="primary" @click="insertFrame">插入一帧</b-button>
 					<b-button size="sm" variant="danger" @click="deleteFrame">删除该帧</b-button>
-					<b-button size="sm" variant="primary" @click="getFrame">读取当前状态</b-button>
-					<b-button size="sm" variant="success" @click="updateAction">保存修改</b-button>
 				</b-col>
 			</b-row>
 			<b-row style="height: auto">
@@ -44,7 +67,7 @@
 						:per-page="10"
 						@row-clicked="changeActionIndex">
 						<template slot="name" slot-scope="row">
-							<a v-b-tooltip.hover.left :title="row.value">{{row.value}}</a>
+							<a v-b-tooltip.hover.left :title="row.value" style="cursor: pointer; color: #0000ff">{{row.value}}</a>
 						</template>
 						<template slot="operate" slot-scope="row">
 							<b-button size="sm" @click.stop="deleteAction(row)">
@@ -58,17 +81,11 @@
 				</b-col>
 				<b-col cols="8">
 					<b-row>
-						<b-col cols="auto">
-							<b-input-group size="sm" :prepend="$t('robot.action.frame.jump')" :append="$t('robot.action.frame.label')">
-								<b-form-input style="width: 5em" type="number" v-model.number="frameIndex" />
-							</b-input-group>
-						</b-col>
-						<b-col cols="auto" />
 						<b-col>
 							<b-pagination
 								id="frame-pagination"
 								size="sm"
-								class="d-flex justify-content-center"
+								class="d-flex justify-content-end"
 								:total-rows="selectedFrameList.length"
 								v-model="frameIndex"
 								:per-page="1"
@@ -77,12 +94,7 @@
 					</b-row>
 					<b-row>
 						<adjuster
-							v-for="(servo, index) in selectedFrame"
-							:key="index"
-							:id="index+1"
-							:angle.sync="servo.angle"
-							class="adjuster"
-							:style="styleObject[index]" />
+							class="adjuster" :frame="selectedFrame"/>
 					</b-row>
 				</b-col>
 			</b-row>
@@ -92,14 +104,32 @@
 
 <script>
 import Adjuster from '../component/adjuster.vue';
+import ActionProgress from '@/utils/Progress.vue';
 import adjusterMap from '../component/adjusterMap.yaml';
 import genStyleObjectFromMap from '@/utils/genStyleObjectFromMap';
+import { constants } from 'http2';
 const emptyFrame = Array(17);
 emptyFrame.fill({"angle": 0});
 
+function actionFactory() {
+	const newArr = [];
+
+	for (let i = 0; i < 17; i++) {
+		newArr.push({"angle":10});
+	}
+
+	return {
+		name: '新动作',
+		frameList: [
+			newArr
+		],
+		speed: 10
+	}
+}
+
 export default {
 	components: {
-		Adjuster
+		Adjuster, ActionProgress
 	},
 	data() {
 		return {
@@ -116,31 +146,36 @@ export default {
 						[{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":88},{"angle":77}],
 						[{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":88},{"angle":77}],
 						[{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":88},{"angle":77}],
-					]
+					],
+					speed: 10
 				},
 				{
 					id: 2,
 					name: 'aoeu',
 					frameList: [
-						[{"angle":13},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":88},{"angle":77}],
+						[{"angle":14},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":88},{"angle":77}],
 						[{"angle":23},{"angle":33},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":88},{"angle":77}],
 						[{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":88},{"angle":77}],
 						[{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":88},{"angle":77}],
-					]
+					],
+					speed: 10
 				},
 				{
 					id: 3,
 					name: 'test',
 					frameList: [
-						[{"angle":13},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":88},{"angle":77}],
+						[{"angle":15},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":88},{"angle":77}],
 						[{"angle":23},{"angle":33},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":88},{"angle":77}],
 						[{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":88},{"angle":77}],
 						[{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":88},{"angle":77}],
 						[{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":88},{"angle":77}],
-					]
+					],
+					speed: 10
 				}
 			],
-			styleObject: {}
+			styleObject: {},
+			tempPosition: -1,
+			isShow: true
 		}
 	},
 	mounted() {
@@ -161,27 +196,34 @@ export default {
 				this.actionList = data;
 			});
 		},
-		createAction() {
-			window.prompt('请输入动作名称', 'newAction', name => {
-				this.$api.createActions({
-					data: {
-						body: '',
-						name
-					}
-				});
-			});
+		tempCreateAction() {
+			// window.prompt('请输入动作名称', 'newAction', name => {
+			// 	this.$api.createActions({
+			// 		data: {
+			// 			body: '',
+			// 			name
+			// 		}
+			// 	});
+			// });
+			this.tempPosition = this.actionList.length;
+
+			this.actionList.push(actionFactory());
+
+			this.actionIndex = this.tempPosition;
+
+			this.currentActionPage = Math.ceil(this.actionList.length / 10);
 		},
 		getAction(index) {
 			this.$api.getActions({
 				index: this.actionList[index].name + '/user',
 				config: {
-          auth: {
-            username: this.$store.state.user.token,
-            password: ''
-          }
-        }
+					auth: {
+						username: this.$store.state.user.token,
+						password: ''
+					}
+				}
 			}).then(data => {
-				this.actionList[index].frameList = data.frameList;
+				this.actionList[index].frameList = data.frameList; //真奇怪
 			});
 		},
 		updateAction() {
@@ -225,7 +267,8 @@ export default {
 		},
 		insertFrame() {
 			let { frameList } = this.actionList[this.actionIndex];
-			frameList = frameList.splice(this.frameIndex - 1, 0, emptyFrame);
+			frameList = frameList.splice(this.frameIndex, 0, frameList[this.frameIndex - 1]); //复制当前状态
+			this.frameIndex = this.frameIndex + 1;
 		},
 		deleteFrame() {
 			let { frameList } = this.actionList[this.actionIndex];
@@ -233,6 +276,9 @@ export default {
 		},
 		changeFrameIndex(item, index, event) {
 			this.frameIndex = index;
+		},
+		updatespeed(changed, action) {
+			action.speed = changed;
 		}
 	},
 	computed: {

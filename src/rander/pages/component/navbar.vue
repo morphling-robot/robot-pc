@@ -27,7 +27,7 @@
 				</b-dropdown-item>
 			</b-dropdown>
 
-			<b-navbar-nav class="mr-auto">
+			<b-navbar-nav class="mr-auto" @click="changeVideoShow" title="打开机器人信息面板">
 				<b-navbar-brand>{{$t('navbar.brand')}}</b-navbar-brand>
 			</b-navbar-nav>
 
@@ -137,6 +137,9 @@ export default {
 		}
 	},
 	methods: {
+		changeVideoShow() {
+			return this.$store.commit('updateIsShow');
+		},
 		changeLocale(msg) {
 			 this.$i18n.locale = msg;
 		},

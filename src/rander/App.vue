@@ -11,7 +11,7 @@
 		<b-container
 			id="app-view-container"
 			fluid>
-      <side-view :width="sidebarWidth" />
+      <side-view :width="sidebarWidth" v-if="sidebarWidth !== 0" />
       <div id="router-view-container"
         :style="{
           left: `${sidebarWidth}px`
@@ -55,8 +55,13 @@ export default {
   data() {
     return {
       file: null,
-      sidebarWidth: 340
+      // sidebarWidth: 340
     };
+  },
+  computed: {
+    sidebarWidth() {
+      return this.$store.state.robot.isShow ? 340 : 0;
+    }
   },
   mounted() {
     const aaa = new MouseEvent("click");

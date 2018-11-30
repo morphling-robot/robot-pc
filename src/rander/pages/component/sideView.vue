@@ -5,7 +5,6 @@
 		}"
 		style="position: absolute;top: 0;bottom: 0;">
 		<b-card
-			style="background-color:#000;"
 			id="video-card"
 			no-body
 			class="mb-2 rounded-0"
@@ -54,6 +53,13 @@ export default {
 </script>
 
 <style lang="less">
+#video-card {
+	background-image: url('../../../../asset/images/placeholder.jpg');
+	background-size: 100% 100%;
+	background-origin: 0 0;
+	background-repeat: no-repeat;
+}
+
 #card-tabs {
 	position: absolute;
 	bottom: 0px;

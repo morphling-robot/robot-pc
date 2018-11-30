@@ -13,7 +13,8 @@ const state = {
 		robotId: null,
 		ssid: null,
 		robotState: null
-	}
+	},
+	isShow: false
 };
 
 const mutations = {
@@ -22,6 +23,9 @@ const mutations = {
 	},
 	updateRobotEnv(state, payload) {
 		state.env = payload;
+	},
+	updateIsShow() {
+		state.isShow = !state.isShow;
 	}
 };
 
