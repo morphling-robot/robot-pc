@@ -6,37 +6,35 @@
 		size="lg"
 		centered
 		@ok="getActionsList"
-		:ok-title="$t('modal.ok')"
-		:cancel-title="$t('modal.cancel')"
+		hide-footer
 		cancel-variant="link">
-		<b-row slot="modal-header" class="w-100" @click.stop="isShow = true">
-			<b-col cols="3">
-				<h5  @dblclick="isShow = false" class="modal-title">{{$t('robot.action.label')}} -&gt; 
-				<span v-if="isShow">{{actionList[actionIndex].name}}</span>
-				<b-form-input
-					size="sm"
-					v-if="!isShow" style="display: inline-block;width: 7rem"
-					v-model="actionList[actionIndex].name"
-					type="text"></b-form-input>
+		<div slot="modal-header" class="w-100" @click="isShow = true;">
+			<div style="display: inline-block" @click.stop>
+				<h5 class="modal-title">{{$t('robot.action.label')}} -&gt; 
+					<span v-if="isShow" style="display: inline-block;width: 7rem">{{actionList[actionIndex].name}}</span>
+					<b-form-input
+						size="sm"
+						v-if="!isShow" style="display: inline-block;width: 7rem"
+						v-model="actionList[actionIndex].name"
+						type="text"></b-form-input>
+						<b-btn
+							@click="isShow = false" 
+							variant="success">
+							<i class="fas fa-pencil-alt"></i>
+						</b-btn>
 				</h5>
-			</b-col>
-			<b-col>
-				<action-progress class="mt-1" id="action-speed" :value="actionList[actionIndex].speed"
-					:min="0" :max="100"
-					@update-progress="updatespeed($event, actionList[actionIndex])" pointTarget="1"></action-progress>
-			</b-col>
-			<b-col cols="1">
+			</div>
+			<div style="display: inline-block; float: right">
 				<button type="button" aria-label="Close" class="close" @click="$refs.actionModalRef.hide()">×</button>
-			</b-col>
+			</div>
 			
 			
-		</b-row>
+		</div>
 		<div style="height: 550px;position: relative;">
 			<b-row style="width: 100%;margin-bottom: 15px;">
 				<b-col cols="4">
 					<b-button size="sm" variant="success" @click="getActionsList"><i class="fas fa-sync-alt" /></b-button>
 					<b-button size="sm" variant="success" @click="tempCreateAction">创建动作</b-button>
-					<b-button size="sm" variant="success" @click="updateAction">保存</b-button>
 				</b-col>
 				<b-col></b-col>
 				<b-col cols="auto">
@@ -52,6 +50,9 @@
 					v-model="currentActionPage"
 					:limit="3"
 					:per-page="10" />
+					<action-progress class="mb-2" id="action-speed" :value="speed"
+						:min="0" :max="10"
+						@update-progress="updatespeed($event)" pointTarget="1"></action-progress>
 					<b-table
 						id="action-table"
 						small
@@ -70,6 +71,9 @@
 							<a v-b-tooltip.hover.left :title="row.value" style="cursor: pointer; color: #0000ff">{{row.value}}</a>
 						</template>
 						<template slot="operate" slot-scope="row">
+							<b-button size="sm" @click.stop="updateAction(row.index)" v-if="row.index === actionIndex && hasChanged">
+								<i class="fas fa-save"></i>
+							</b-button>
 							<b-button size="sm" @click.stop="deleteAction(row)">
 								<i class="fas fa-trash-alt" />
 							</b-button>
@@ -94,6 +98,7 @@
 					</b-row>
 					<b-row>
 						<adjuster
+							ref="adjuster"
 							class="adjuster" :frame="selectedFrame"/>
 					</b-row>
 				</b-col>
@@ -107,6 +112,7 @@ import Adjuster from '../component/adjuster.vue';
 import ActionProgress from '@/utils/Progress.vue';
 import adjusterMap from '../component/adjusterMap.yaml';
 import genStyleObjectFromMap from '@/utils/genStyleObjectFromMap';
+import cloneObj from '@/utils/cloneObject.js';
 import { constants } from 'http2';
 const emptyFrame = Array(17);
 emptyFrame.fill({"angle": 0});
@@ -122,8 +128,7 @@ function actionFactory() {
 		name: '新动作',
 		frameList: [
 			newArr
-		],
-		speed: 10
+		]
 	}
 }
 
@@ -146,8 +151,7 @@ export default {
 						[{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":88},{"angle":77}],
 						[{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":88},{"angle":77}],
 						[{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":88},{"angle":77}],
-					],
-					speed: 10
+					]
 				},
 				{
 					id: 2,
@@ -157,8 +161,7 @@ export default {
 						[{"angle":23},{"angle":33},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":88},{"angle":77}],
 						[{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":88},{"angle":77}],
 						[{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":88},{"angle":77}],
-					],
-					speed: 10
+					]
 				},
 				{
 					id: 3,
@@ -169,13 +172,14 @@ export default {
 						[{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":88},{"angle":77}],
 						[{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":88},{"angle":77}],
 						[{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":88},{"angle":77}],
-					],
-					speed: 10
+					]
 				}
 			],
+			origin: [],
 			styleObject: {},
 			tempPosition: -1,
-			isShow: true
+			isShow: true,
+			speed: 0.1
 		}
 	},
 	mounted() {
@@ -189,25 +193,33 @@ export default {
 		// 	this.$refs.actionModalRef.show();
 		// });
 		this.getActionsList();
+
+		this.origin = cloneObj(this.actionList);
 	},
 	methods: {
+		// hideProgress() {
+		// 	this.$refs.adjuster.pointTarget = -1;
+		// },
 		getActionsList() {
 			this.$api.getActionsList().then(data => {
+				const container = [];
+
 				this.actionList = data;
+
+				
+				this.actionList.forEach(action => {
+					container.push(Object.assign({}, action));
+				});
+
+				this.origin = container;
 			});
 		},
 		tempCreateAction() {
-			// window.prompt('请输入动作名称', 'newAction', name => {
-			// 	this.$api.createActions({
-			// 		data: {
-			// 			body: '',
-			// 			name
-			// 		}
-			// 	});
-			// });
 			this.tempPosition = this.actionList.length;
 
 			this.actionList.push(actionFactory());
+
+			this.origin.push({});
 
 			this.actionIndex = this.tempPosition;
 
@@ -226,9 +238,9 @@ export default {
 				this.actionList[index].frameList = data.frameList; //真奇怪
 			});
 		},
-		updateAction() {
-			const { name } = this.actionList[this.actionIndex];
-			this.$api.updateActions({
+		updateAction(index) {
+			const { name } = this.actionList[index];
+			return this.$api.updateActions({
 				index: name,
 				data: {
 					name: name,
@@ -243,8 +255,25 @@ export default {
 			});
 		},
 		changeActionIndex(item, index, event) {
-			this.actionIndex = index;
-			this.getAction(index);
+			const electron = this.$electron;
+			const { dialog } = electron.remote;
+
+			dialog.showMessageBox({
+				type: 'warning',
+				title: '提示',
+				message: '当前有未保存修改, 直接切换可能造成修改丢失!',
+				buttons: ['保存', '跳转']
+			}, (btnIndex) => {
+				if (btnIndex === 0) {
+					this.updateAction(this.actionIndex).then(() => {
+						this.actionIndex = index;
+						this.getAction(index);
+					});
+				} else if (btnIndex === 1) {
+					this.actionIndex = index;
+					this.getAction(index);
+				}
+			});
 		},
 		runAction(row) {
 			const { name } = row.item;
@@ -277,8 +306,8 @@ export default {
 		changeFrameIndex(item, index, event) {
 			this.frameIndex = index;
 		},
-		updatespeed(changed, action) {
-			action.speed = changed;
+		updatespeed(changed) {
+			this.speed = changed; 
 		}
 	},
 	computed: {
@@ -287,6 +316,41 @@ export default {
 		},
 		selectedFrame() {
 			return this.selectedFrameList[this.frameIndex - 1];
+		},
+		currentAction() {
+			return this.actionList[this.actionIndex];
+		},
+		hasChanged() {
+			const keyList = Object.keys(this.actionList[this.actionIndex]);
+			let flag = false;
+
+			keyList.forEach(key => {
+				if (!this.origin[this.actionIndex][key]) {
+					flag = flag || true;
+
+					return;
+				}
+
+				if (key === 'frameList') {
+					const originFrameList = this.origin[this.actionIndex].frameList;
+					const actionFrameList = this.actionList[this.actionIndex].frameList;
+
+					actionFrameList.forEach((item, frameIndex) => {
+						item.forEach((angleObj, angleIndex) => {
+							// console.log(angleObj.angle,originFrameList[frameIndex][angleIndex].angle)
+							if (angleObj.angle !== originFrameList[frameIndex][angleIndex].angle) {
+								flag = flag || true;
+							}
+						})
+					});
+				}else if (this.origin[this.actionIndex][key] !== this.actionList[this.actionIndex][key]) {
+					flag = flag || true;
+				}
+
+			});
+
+			return flag;
+
 		}
 	}
 }
@@ -306,7 +370,7 @@ export default {
 
 #action-table {
 	.operate {
-		width: 75px;
+		width: 113px;
 	}
 
 	.action-name {

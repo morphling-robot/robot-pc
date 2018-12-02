@@ -4,6 +4,7 @@
 		size="lg"
 		ref="robotModalRef"
 		:title="$t('robot.connect.label')"
+		hide-footer
 		no-close-on-backdrop>
 		<connect-table style="height: 540px;"/>
 	</b-modal>

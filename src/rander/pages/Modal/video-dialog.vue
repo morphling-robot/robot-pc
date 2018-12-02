@@ -4,6 +4,7 @@
 		ref="videoModalRef"
 		size="lg"
 		:title="$t('robot.video.label')"
+		hide-footer
 		no-close-on-backdrop>
 		<test-video
 			class="mx-auto"/>

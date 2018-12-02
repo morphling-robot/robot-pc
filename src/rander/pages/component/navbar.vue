@@ -1,37 +1,33 @@
 <template>
 	<div>
-		<b-navbar id="navbar" toggleable="md" type="dark" variant="dark">
+		<b-navbar id="navbar" toggleable="md" type="dark" variant="dark" class="pl-0">
 			<b-dropdown variant="dark" size="lg" no-caret>
 				<template slot="button-content">
 					<i class="fas fa-bars" />
 				</template>
-				<b-dropdown-item
-					v-b-modal.robotModal>
-					{{$t('robot.connect.label')}}
+
+				<b-dropdown-item @click="changeLocale('zh')">
+					{{$t('navbar.Chinese')}}
 				</b-dropdown-item>
-				<b-dropdown-item
-					v-b-modal.networkModal>
-					{{$t('robot.network.label')}}
+				<b-dropdown-item @click="changeLocale('en')">
+					{{$t('navbar.English')}}
 				</b-dropdown-item>
-				<b-dropdown-item
-					v-b-modal.actionModal>
-					{{$t('robot.action.label')}}
+				<b-dropdown-item @click="saveFile">
+					保存
 				</b-dropdown-item>
-				<b-dropdown-item
-					v-b-modal.codeModal>
-					代码
+				<b-dropdown-item @click="openFile">
+					打开
 				</b-dropdown-item>
-				<b-dropdown-item
-					v-b-modal.videoModal>
-					{{$t('robot.video.label')}}
+				<b-dropdown-item @click="createCode">
+					上传
 				</b-dropdown-item>
 			</b-dropdown>
 
-			<b-navbar-nav class="mr-auto" @click="changeVideoShow" title="打开机器人信息面板">
+			<b-navbar-nav class="mr-auto">
 				<b-navbar-brand>{{$t('navbar.brand')}}</b-navbar-brand>
 			</b-navbar-nav>
 
-			<b-dropdown variant="dark" size="lg" no-caret id="change-locale">
+			<!-- <b-dropdown variant="dark" size="lg" no-caret id="change-locale">
 				<template slot="button-content">
 					<i class="fas fa-language" style="font-size: 30px" />
 				</template>
@@ -41,7 +37,7 @@
 				<b-dropdown-item @click="changeLocale('en')">
 					{{$t('navbar.English')}}
 				</b-dropdown-item>
-			</b-dropdown>
+			</b-dropdown> -->
 
 			<b-navbar-nav  class="mx-auto">
 				<b-input-group size="sm">
@@ -56,7 +52,6 @@
 						<b-form-radio value="blockly"><i class="fas fa-cubes mr-1" />方块文件</b-form-radio>
 						<b-form-radio value="python"><i class="fab fa-python mr-1" />Python</b-form-radio>
 					</b-form-radio-group>
-					<b-form-input style="width: 10em;" v-model="fileName" />
 				</b-input-group>
 
 			</b-navbar-nav>
@@ -67,7 +62,7 @@
 						class="mr-2"
 						size="sm"
 						@click="saveFile"
-						v-b-tooltip.hover title="另存为"><i class="fas fa-save" /></b-button>
+						v-b-tooltip.hover title="保存"><i class="fas fa-save" /></b-button>
 
 					<b-button
 						class="mr-2"
@@ -87,9 +82,9 @@
 			:title="$t('modal.prompt')"
 			size="sm"
 			@ok="changeMode"
-			@cancel="backToMode"
+			@cancel="saveFileBtn"
 			:ok-title="$t('modal.ok')"
-			:cancel-title="$t('modal.cancel')"
+			:cancel-title="$t('robot.code.save')"
 			cancel-variant="link">
 			{{$t('modal.message')}}
 		</b-modal>
@@ -137,9 +132,6 @@ export default {
 		}
 	},
 	methods: {
-		changeVideoShow() {
-			return this.$store.commit('updateIsShow');
-		},
 		changeLocale(msg) {
 			 this.$i18n.locale = msg;
 		},
@@ -159,6 +151,10 @@ export default {
 			} else {
 				this.mode = 'blockly'
 			}
+		},
+		saveFileBtn() {
+			this.saveFile();
+			this.changeMode();
 		},
 		saveFile() {
 			const electron = this.$electron;

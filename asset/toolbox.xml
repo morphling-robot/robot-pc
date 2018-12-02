@@ -352,84 +352,123 @@
       </value>
     </block>
   </category>
-  <category name="状态">
+  <category name="机器人状态" colour="#5C68A6">
     <block type="state_battery"></block>
     <block type="state_attitude"></block>
   </category>
-  <category name="基本动作">
+  <category name="基本动作" colour="#A8815C">>
     <block type="go_forward">
-      <field name="attitude">spider</field>
+      <field name="attitude">"gecko"</field>
     </block>
     <block type="go_backward">
-      <field name="attitude">spider</field>
+      <field name="attitude">"gecko"</field>
     </block>
     <block type="turn_left">
-      <field name="attitude">spider</field>
+      <field name="attitude">"gecko"</field>
     </block>
     <block type="turn_right">
-      <field name="attitude">spider</field>
+      <field name="attitude">"gecko"</field>
+    </block>
+    <block type="rotate_pitch">
+      <field name="attitude">"spider"</field>
+    </block>
+    <block type="rotate_roll">
+      <field name="attitude">"spider"</field>
     </block>
   </category>
-  <category name="动作组">
-    <block type="goto_gecko"></block>
-    <block type="goto_gecko_take_waving"></block>
-    <block type="goto_gecko_take_acceleration"></block>
-    <block type="goto_gecko_take_contractions"></block>
-    <block type="goto_spider"></block>
-    <block type="goto_spider_take_waving"></block>
-    <block type="goto_spider_take_acceleration"></block>
-    <block type="goto_puppy"></block>
-    <block type="goto_puppy_take_nodding"></block>
-    <block type="goto_puppy_take_wagging"></block>
-    <block type="goto_puppy_take_waving"></block>
-    <block type="goto_puppy_take_sitting"></block>
-    <block type="goto_insect"></block>
-    <block type="goto_insect_take_waving"></block>
-    <block type="goto_insect_take_hance"></block>
-    <block type="go_upstairs"></block>
-    <block type="go_downstairs"></block>
-    <block type="get_dancing"></block>
+  <category name="扩展动作组" colour="#818181">
+    <block type="goto_shape">
+      <field name="attitude">"gecko"</field>
+    </block>
+    <block type="gecko_show">
+      <field name="action">"shake_hand"</field>
+    </block>
+    <block type="spider_show">
+      <field name="action">"rotate_body"</field>
+    </block>
+    <block type="stick_show">
+      <field name="action">"arch_body"</field>
+    </block>
+    <block type="dog_show">
+      <field name="action">"nod_head"</field>
+    </block>
+    <block type="dance"></block>
+      <field name="dance_number">"seeweed"</field>
   </category>
-  <category name="激光传感器">
-    <block type="set_sensor">
-      <field name="num">1</field>
-    </block>
-    <block type="get_sensor_get_distance"></block>
-    <block type="get_remora">
-      <field name="NAME">true</field>
-    </block>
+  <category name="激光传感器" colour="#5C5C5C">
+    <block type="laser_distance"></block>
+    <block type="laser_state"></block>
   </category>
-  <category name="力矩传感器">
-    <block type="set_leg">
-      <field name="num">1</field>
+  <category name="力矩传感器"  colour="#3E80E0">
+    <block type="torque_value">
+      <field name="leg_number">1</field>
     </block>
-    <block type="get_legcurrent"></block>
-    <block type="get_legstate">
-      <field name="NAME">true</field>
+    <block type="land_state">
+      <field name="leg_number">1</field>
     </block>
   </category>
-  <category name="全色灯">
-    <block type="light_on_rgb">
-      <field name="R">0</field>
-      <field name="G">0</field>
-      <field name="B">0</field>
+
+  <category name="触摸传感器" colour="#FEAC16">
+    <block type="touch_type">
+      <field name="trunk_number">1</field>
     </block>
-    <block type="light_on_time"></block>
+    <block type="touch_state">
+      <field name="trunk_number">1</field>
+    </block>
   </category>
-  <category name="MP3">
-    <block type="start_introducing"></block>
+
+  <category name="腿上LED灯" colour="#5B8CA5">
+    <block type="leds_mode">
+      <field name="leg_number">1</field>
+      <field name="mode">5</field>
+    </block>
+    <block type="leds_on_time">
+      <field name="leg_number">1</field>
+    </block>
+    <block type="led_color">
+      <field name="leg_number">1</field>
+      <field name="led_number">1</field>
+    </block>
+    <block type="classic_style">
+      <field name="style">"morning"</field>
+    </block>
   </category>
-  <category name="舵机控制">
-    <block type="get_servo_state"></block>
-    <block type="set_servo_speed"></block>
+  <category name="mp3语音模块" colour="#A55BA5">
+    <block type="introduction"></block>
+    <block type="robot_say"></block>
+    <block type="robot_play">
+    <field name="music">"camel"</field>
+    </block>
+  </category>
+  <category name="机器人部件控制" colour="#A8815C">>
+    <block type="set_leg_position">
+      <field name="leg_number">1</field>
+    </block>
+    <block type="set_leg_joints">
+      <field name="leg_number">1</field>
+    </block>
+    <block type="change_gecko_shape"></block>
+    <block type="change_spider_shape"></block>
+    <block type="change_stick_shape"></block>
+    <block type="change_dog_shape"></block>
+  </category>
+  <category name="舵机控制" colour="#A55B7A">
+    <block type="set_servo_mode">
+      <field name="mode">1</field>
+    </block>
+    <block type="set_servo_angle">
+      <field name="angle">135</field>
+      <field name="step">1</field>
+    </block>
+    <block type="set_wheel_speed">
+      <field name="speed">500</field>
+    </block>
+    <block type="set_servo_id">
+      <field name="new_id">1</field>
+    </block>
+    <block type="ping_state"></block>
     <block type="get_servo_angle"></block>
     <block type="get_servo_mode"></block>
-    <block type="set_servo_mode">
-      <field name="mode">轮子</field>
-    </block>
-    <block type="set_body">
-      <field name="part">leg</field>
-    </block>
   </category>
   <sep></sep>
   <category name="Variables" colour="#A65C81" custom="VARIABLE"></category>

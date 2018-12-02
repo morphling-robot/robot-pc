@@ -11,10 +11,36 @@
 		<b-container
 			id="app-view-container"
 			fluid>
-      <side-view :width="sidebarWidth" v-if="sidebarWidth !== 0" />
+      <side-view :width="sidebarWidth" v-if="sidebarWidth !== 0" style="left: 60px" />
+      <div id="side-toolbar">
+        <b-button
+						class="ml-2 my-2"
+            @click="changeVideoShow"
+						size="sm" title="机器人控制台"><i class="fas fa-robot" /></b-button>
+        <b-button
+						class="ml-2 my-4"
+            v-b-modal.robotModal
+						size="sm" :title="$t('robot.connect.label')"><i class="fab fa-connectdevelop"></i></b-button>
+        <b-button
+						class="ml-2 my-4"
+            v-b-modal.networkModal
+						size="sm" :title="$t('robot.network.label')"><i class="fas fa-chalkboard-teacher"></i></b-button>
+        <b-button
+						class="ml-2 my-4"
+            v-b-modal.actionModal
+						size="sm" :title="$t('robot.action.label')"><i class="fas fa-tachometer-alt"></i></b-button>
+        <b-button
+						class="ml-2 my-4"
+            v-b-modal.codeModal
+						size="sm" title="代码"><i class="fas fa-code"></i></b-button>
+        <b-button
+						class="ml-2 my-4"
+            v-b-modal.videoModal
+						size="sm" :title="$t('robot.video.label')"><i class="fas fa-video"></i></b-button>
+      </div>
       <div id="router-view-container"
         :style="{
-          left: `${sidebarWidth}px`
+          left: `${60 + sidebarWidth}px`
         }">
         <router-view></router-view>
       </div>
@@ -62,6 +88,11 @@ export default {
     sidebarWidth() {
       return this.$store.state.robot.isShow ? 340 : 0;
     }
+  },
+  methods: {
+    changeVideoShow() {
+			return this.$store.commit('updateIsShow');
+		},
   },
   mounted() {
     const aaa = new MouseEvent("click");
@@ -210,4 +241,18 @@ export default {
     margin: 0;
   }
 }
+
+#side-toolbar {
+  width: 60px;
+  height: 100%;
+  background: #343a40;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding-top: 50px;
+  button {
+    width: 35px;
+  }
+}
+
 </style>

@@ -18,12 +18,14 @@
 			</b-form-checkbox>
 		</b-col>
 	</b-row>
-	<div id="adjust" @click.stop="pointTarget = -1" >
+	<div id="adjust" @mouseleave="pointTarget = -1">
 		<span class="point" v-for="(servo, index) in frame" :key="index"
 			:style="styleObject[index]" @mouseenter.stop.prevent="pointTarget = index">
-			<div @mouseenter.stop.prevent="pointTarget = index" @click.stop.prevent
+			<span class="number">{{index + 1}}</span><br />
+			<span>{{Math.round(servo.angle * 10) / 10}}</span>
+			<div id="operation" @mouseenter.stop.prevent="pointTarget = index" @click.stop.prevent
 				class="tooltip bs-tooltip-top" v-if="pointTarget == index" style="position: absolute;top: -90px;left: -225px; display: block;opacity:1">
-				<div class="arrow" style="left:224px"></div>
+				<div class="arrow" style="left:233px"></div>
 				<div class="tooltip-inner">
 					<div class="mt-2">
 						<b-row class="mx-0">
@@ -64,13 +66,13 @@ export default {
 	data() {
 		return {
 			styleObject: null,
-			min: 0,
+			min: -100,
 			max: 100,
 			pointTarget: -1,
 			options: [
 				'有阻尼', '无阻尼', '锁死'
 			],
-			follow: false,
+			follow: true,
 			speed: 10
 		}
 	},
@@ -102,18 +104,35 @@ export default {
 
 	.point {
 		display: inline-block;
-		height: 10px;
-		width: 10px;
-		border-radius: 50%;
-		background-color: #000000;
+		height: 30px;
+		width: 31px;
+		background-color: #000;
 		position: absolute;
+		color: #fff;
+		font-size: 11px;
+		text-align: center;
+
+		.number {
+			color: #efdada;
+		}
 	}
 
-	.tooltip-inner {
-		width: 450px;
-		max-width: 450px;
-		height: 80px;
+	#msg {
+		.tooltip-inner {
+			width: 30px;
+			height: 30px;
+		}
 	}
+
+	#operation {
+
+		.tooltip-inner {
+			width: 450px;
+			max-width: 450px;
+			height: 80px;
+		}
+	}
+
 
 }
 </style>

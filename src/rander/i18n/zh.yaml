@@ -29,7 +29,7 @@ robot:
   code:
     label: '代码'
     run: '运行'
-    save: '另存为'
+    save: '保存'
     delete: '删除'
   action:
     label: '动作'
