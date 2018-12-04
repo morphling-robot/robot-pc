@@ -8,13 +8,14 @@
 		@ok="getActionsList"
 		hide-footer
 		cancel-variant="link">
-		<div slot="modal-header" class="w-100" @click="isShow = true;">
+		<div slot="modal-header" class="w-100">
 			<div style="display: inline-block" @click.stop>
 				<h5 class="modal-title">{{$t('robot.action.label')}} -&gt; 
 					<span v-if="isShow" style="display: inline-block;width: 7rem">{{actionList[actionIndex].name}}</span>
 					<b-form-input
 						size="sm"
 						v-if="!isShow" style="display: inline-block;width: 7rem"
+						@blur.native="isShow = true;"
 						v-model="actionList[actionIndex].name"
 						type="text"></b-form-input>
 						<b-btn
@@ -193,8 +194,6 @@ export default {
 		// 	this.$refs.actionModalRef.show();
 		// });
 		this.getActionsList();
-
-		this.origin = cloneObj(this.actionList);
 	},
 	methods: {
 		// hideProgress() {
@@ -202,16 +201,13 @@ export default {
 		// },
 		getActionsList() {
 			this.$api.getActionsList().then(data => {
-				const container = [];
-
-				this.actionList = data;
-
 				
-				this.actionList.forEach(action => {
-					container.push(Object.assign({}, action));
-				});
+				if (data) {
 
-				this.origin = container;
+					this.actionList = data;
+				}
+
+				this.origin = cloneObj(this.actionList);
 			});
 		},
 		tempCreateAction() {
@@ -323,6 +319,10 @@ export default {
 		hasChanged() {
 			const keyList = Object.keys(this.actionList[this.actionIndex]);
 			let flag = false;
+
+			if (this.origin.length === 0) {
+				return;
+			}
 
 			keyList.forEach(key => {
 				if (!this.origin[this.actionIndex][key]) {
