@@ -5,7 +5,7 @@
 		no-close-on-backdrop
 		size="lg"
 		centered
-		@ok="getActionsList"
+		@show="getActionsList"
 		hide-footer
 		cancel-variant="link">
 		<div slot="modal-header" class="w-100">
@@ -49,7 +49,7 @@
 					size="sm"
 					:total-rows="actionList.length"
 					v-model="currentActionPage"
-					:limit="3"
+					:limit="5"
 					:per-page="10" />
 					<action-progress class="mb-2" id="action-speed" :value="speed"
 						:min="0" :max="10"
@@ -94,13 +94,15 @@
 								:total-rows="selectedFrameList.length"
 								v-model="frameIndex"
 								:per-page="1"
-								:limit="5" />
+								:limit="11" />
 						</b-col>
 					</b-row>
 					<b-row>
 						<adjuster
 							ref="adjuster"
-							class="adjuster" :frame="selectedFrame"/>
+							class="adjuster"
+							:frame="selectedFrame"
+							/>
 					</b-row>
 				</b-col>
 			</b-row>
@@ -152,7 +154,8 @@ export default {
 						[{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":88},{"angle":77}],
 						[{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":88},{"angle":77}],
 						[{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":88},{"angle":77}],
-					]
+					],
+					speedList: [10, 10, 10, 10, 10]
 				},
 				{
 					id: 2,
@@ -162,7 +165,8 @@ export default {
 						[{"angle":23},{"angle":33},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":88},{"angle":77}],
 						[{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":88},{"angle":77}],
 						[{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":88},{"angle":77}],
-					]
+					],
+					speedList: [10, 10, 10, 10]
 				},
 				{
 					id: 3,
@@ -173,7 +177,8 @@ export default {
 						[{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":88},{"angle":77}],
 						[{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":88},{"angle":77}],
 						[{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":88},{"angle":77}],
-					]
+					],
+					speedList: [10, 10, 10, 10, 10]
 				}
 			],
 			origin: [],
@@ -203,7 +208,6 @@ export default {
 			this.$api.getActionsList().then(data => {
 				
 				if (data) {
-
 					this.actionList = data;
 				}
 
@@ -223,7 +227,7 @@ export default {
 		},
 		getAction(index) {
 			this.$api.getActions({
-				index: this.actionList[index].name + '/user',
+				index: this.actionList[index].name,
 				config: {
 					auth: {
 						username: this.$store.state.user.token,
@@ -231,16 +235,26 @@ export default {
 					}
 				}
 			}).then(data => {
-				this.actionList[index].frameList = data.frameList; //真奇怪
+				Object.assign(this.actionList[index], data);
+			});
+		},
+		createAction(index) {
+			const { name } = this.actionList[index];
+			this.$api.createActions({
+				index: name,
+				data: {
+					name: name,
+					body: this.currentAction
+				}
 			});
 		},
 		updateAction(index) {
 			const { name } = this.actionList[index];
-			return this.$api.updateActions({
+			this.$api.updateActions({
 				index: name,
 				data: {
 					name: name,
-					body: this.selectedFrameList
+					body: this.currentAction
 				}
 			});
 		},
@@ -273,34 +287,26 @@ export default {
 		},
 		runAction(row) {
 			const { name } = row.item;
-      this.$api.postInstructs({
+      this.$api.runUserAction({
         data: {
-          instruct_type: 3002,
-          para: name
+					name,
+					speed: this.speed
         }
 			});
 		},
-		getFrame() {
-			this.$api.postInstructs({
-        data: {
-          instruct_type: 2000,
-          para: name
-        }
-			}).then(data => {
-				// this.selectedFrameList[this.frameIndex - 1] = data;
-			})
-		},
 		insertFrame() {
-			let { frameList } = this.actionList[this.actionIndex];
-			frameList = frameList.splice(this.frameIndex, 0, frameList[this.frameIndex - 1]); //复制当前状态
-			this.frameIndex = this.frameIndex + 1;
+			this.$api
+				.getFrame()
+				.then(data => {
+					let { frameList, speedList } = this.actionList[this.actionIndex];
+					frameList = frameList.splice(this.frameIndex, 0, data.frameList);
+					speedList = frameList.splice(this.frameIndex, 0, data.speedList);
+					this.frameIndex = this.frameIndex + 1;
+				})
 		},
 		deleteFrame() {
 			let { frameList } = this.actionList[this.actionIndex];
 			frameList = frameList.splice(this.frameIndex - 1, 1);
-		},
-		changeFrameIndex(item, index, event) {
-			this.frameIndex = index;
 		},
 		updatespeed(changed) {
 			this.speed = changed; 
@@ -317,40 +323,67 @@ export default {
 			return this.actionList[this.actionIndex];
 		},
 		hasChanged() {
-			const keyList = Object.keys(this.actionList[this.actionIndex]);
-			let flag = false;
+			// const keyList = Object.keys(this.actionList[this.actionIndex]);
+			// let flag = false;
 
-			if (this.origin.length === 0) {
-				return;
+			// if (this.origin.length === 0) {
+			// 	return;
+			// }
+
+			// keyList.forEach(key => {
+			// 	if (!this.origin[this.actionIndex][key]) {
+			// 		flag = flag || true;
+
+			// 		return;
+			// 	}
+
+			// 	if (key === 'frameList') {
+			// 		const originFrameList = this.origin[this.actionIndex].frameList;
+			// 		const actionFrameList = this.actionList[this.actionIndex].frameList;
+
+			// 		actionFrameList.forEach((item, frameIndex) => {
+			// 			item.forEach((angleObj, angleIndex) => {
+			// 				// console.log(angleObj.angle,originFrameList[frameIndex][angleIndex].angle)
+			// 				if (angleObj.angle !== originFrameList[frameIndex][angleIndex].angle) {
+			// 					flag = flag || true;
+			// 				}
+			// 			})
+			// 		});
+			// 	}else if (this.origin[this.actionIndex][key] !== this.actionList[this.actionIndex][key]) {
+			// 		flag = flag || true;
+			// 	}
+
+			// });
+
+			// return flag;
+			return false;
+		}
+	},
+	watch: {
+		frameIndex (newIndex, oldIndex) {
+			let start = null;
+			let end = null;
+			if (newIndex > oldIndex) {
+				start = oldIndex;
+				end = newIndex;
+			} else {
+				start = newIndex;
+				end = oldIndex;
 			}
 
-			keyList.forEach(key => {
-				if (!this.origin[this.actionIndex][key]) {
-					flag = flag || true;
+			const action = this.actionList[this.actionIndex];console.log(action);
+			const frameSlice = action.frameList.slice(start, end + 1);
+			const speedSlice = action.speedList.slice(start, end + 1);
 
-					return;
+			this.$api.runActionSlice({
+				data: {
+					body: {
+						frameList: frameSlice,
+						speedList: speedSlice
+					},
+					speed: this.speed
 				}
-
-				if (key === 'frameList') {
-					const originFrameList = this.origin[this.actionIndex].frameList;
-					const actionFrameList = this.actionList[this.actionIndex].frameList;
-
-					actionFrameList.forEach((item, frameIndex) => {
-						item.forEach((angleObj, angleIndex) => {
-							// console.log(angleObj.angle,originFrameList[frameIndex][angleIndex].angle)
-							if (angleObj.angle !== originFrameList[frameIndex][angleIndex].angle) {
-								flag = flag || true;
-							}
-						})
-					});
-				}else if (this.origin[this.actionIndex][key] !== this.actionList[this.actionIndex][key]) {
-					flag = flag || true;
-				}
-
-			});
-
-			return flag;
-
+			})
 		}
 	}
 }

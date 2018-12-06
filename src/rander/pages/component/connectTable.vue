@@ -143,39 +143,39 @@ export default {
 			this.ipList = result;
 		},
 		search() {
-			// this.getNetworkInterfaceList();
-			// this.getIpList();console.log(this.ipList);
+			this.getNetworkInterfaceList();
+			this.getIpList();console.log(this.ipList);
 
-			// this.robotList = [];
-			// this.ipList.forEach(ip => {
-			// 	axios.get(`http://${ip}:5000/v1/states`, { timeout: 5000 })
-			// 				.then(r => {
-			// 					console.log(r);
-			// 					this.robotList.push({
-			// 						ip,
-			// 						serialNumber: 'TEST'
-			// 					});
-			// 				}).catch(r => console.log(r));
+			this.robotList = [];
+			this.ipList.forEach(ip => {
+				axios.get(`http://${ip}:5000/v1/states`, { timeout: 5000 })
+							.then(r => {
+								console.log(r);
+								this.robotList.push({
+									ip,
+									serialNumber: 'TEST'
+								});
+							}).catch(r => console.log(r));
+			});
+
+			// const dgram = this.$electron.remote.require("dgram");
+			// const socket = dgram.createSocket("udp4");
+
+			// socket.bind(function () {
+			// 	socket.setBroadcast(true);
 			// });
 
-			const dgram = this.$electron.remote.require("dgram");
-			const socket = dgram.createSocket("udp4");
+			// var message = new Buffer(this.robotName);
+			// 	socket.send(message, 0, message.length, 10000, '255.255.255.255', function(err, bytes) {
+			// 	socket.close();
+			// });
 
-			socket.bind(function () {
-				socket.setBroadcast(true);
-			});
-
-			var message = new Buffer(this.robotName);
-				socket.send(message, 0, message.length, 10000, '255.255.255.255', function(err, bytes) {
-				socket.close();
-			});
-
-			socket.on('message', function (msg) {
-				this.robotList.push({
-					ip,
-					serialNumber: 'TEST'
-				});
-			});
+			// socket.on('message', function (msg) {
+			// 	this.robotList.push({
+			// 		ip,
+			// 		serialNumber: 'TEST'
+			// 	});
+			// });
 		},
 		connect(row) {
 			const event = new CustomEvent('connect');

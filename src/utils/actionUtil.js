@@ -1,5 +1,5 @@
-export const strToObject = ({ name, body }) => {
-	return Object.assign({}, this.strToAction(body), { name });// consider using assign to update a action in action-dialog.vue
+export const strToObject = ({ name, body }) => {const a = Object.assign({}, strToAction(body), { name }); console.log(a);
+	return Object.assign({}, strToAction(body), { name });// consider using assign to update a action in action-dialog.vue
 }
 
 export const objectToStr = ({ name, body }) => {
@@ -50,9 +50,15 @@ export const strToAction = str => {
 }
 
 export const actionToStr = action => {
-	let result = '';
+	let result = '';console.log(action)
 
-	action.forEach(frame => {
+	action.speedList.forEach(servo => {
+		result = result + servo.speed + ' ';
+	})
+
+	result + '\n';
+
+	action.frameList.forEach(frame => {
 		frame.forEach(servo => {
 			result = result + servo.angle + ' ';
 		});

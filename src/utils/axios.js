@@ -122,7 +122,7 @@ const apiList = {
 		const axiosData = actionUtil.objectToStr(data);
 
 		return api.robot
-			.post(`${prefix}/actions/${index}`, axiosData, axiosConfig)
+			.post(`${prefix}/actions/`, axiosData, axiosConfig)
 			.then(({ data }) => {
 				return data;
 			})
@@ -177,6 +177,34 @@ const apiList = {
 				return data;
 			})
 			.catch(error => console.log(error));
+		},
+		robotControl({ data: type, config }) {
+			this
+				.postInstructs({
+					data: {
+						instruct_type: robotControlCodeList[type],
+						para1: null,
+						para2: null
+					},
+					config
+				})
+				.then(({ data }) => {
+					return data;
+				})
+				.catch(error => console.log(error));
+		},
+		getFrame({ data, config }) {
+		this
+			.postInstructs({
+				data: {
+					instruct_type: 2001,
+				},
+				config
+			})
+			.then(({ data }) => {
+				return data;
+			})
+			.catch(error => console.log(error));
 	},
 	runActionSlice({ data, config }) {
 		this
@@ -193,13 +221,58 @@ const apiList = {
 			})
 			.catch(error => console.log(error));
 	},
-	robotControl({ data: type, config }) {
+	runSysAction({ data, config }) {
 		this
 			.postInstructs({
 				data: {
-					instruct_type: robotControlCodeList[type],
-					para1: null,
-					para2: null
+					instruct_type: 3001,
+					para1: data.name,
+					para2: data.speed
+				},
+				config
+			})
+			.then(({ data }) => {
+				return data;
+			})
+			.catch(error => console.log(error));
+	},
+	runUserAction({ data, config }) {
+		this
+			.postInstructs({
+				data: {
+					instruct_type: 3002,
+					para1: data.name,
+					para2: data.speed
+				},
+				config
+			})
+			.then(({ data }) => {
+				return data;
+			})
+			.catch(error => console.log(error));
+	},
+	runSysCode({ data, config }) {
+		this
+			.postInstructs({
+				data: {
+					instruct_type: 4001,
+					para1: actionUtil.actionToStr(data.body),
+					para2: data.speed
+				},
+				config
+			})
+			.then(({ data }) => {
+				return data;
+			})
+			.catch(error => console.log(error));
+	},
+	runUserCode({ data, config }) {
+		this
+			.postInstructs({
+				data: {
+					instruct_type: 4002,
+					para1: actionUtil.actionToStr(data.body),
+					para2: data.speed
 				},
 				config
 			})

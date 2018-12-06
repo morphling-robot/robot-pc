@@ -48,10 +48,10 @@ export default {
     }
   },
   mounted() {
-    const throttle = setInterval(
-      this.updateRobotStatus,
-      this.statusUpdateCycle
-    );
+    // const throttle = setInterval(
+    //   this.updateRobotStatus,
+    //   this.statusUpdateCycle
+    // );
   }
 };
 </script>
