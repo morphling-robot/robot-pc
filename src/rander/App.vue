@@ -7,6 +7,7 @@
     <code-modal />
 		<connect-modal />
 		<network-modal />
+    <engine-modal />
 
 		<b-container
 			id="app-view-container"
@@ -18,25 +19,29 @@
             @click="changeVideoShow"
 						size="sm" title="机器人控制台"><i class="fas fa-robot" /></b-button>
         <b-button
-						class="ml-2 my-4"
+						class="ml-2 my-2"
             v-b-modal.robotModal
-						size="sm" :title="$t('robot.connect.label')"><i class="fab fa-connectdevelop"></i></b-button>
+						size="sm" :title="$t('robot.connect.label')"><i class="fas fa-link"></i></b-button>
         <b-button
-						class="ml-2 my-4"
+						class="ml-2 my-2"
             v-b-modal.networkModal
-						size="sm" :title="$t('robot.network.label')"><i class="fas fa-chalkboard-teacher"></i></b-button>
+						size="sm" :title="$t('robot.network.label')"><i class="fas fa-wifi"></i></b-button>
         <b-button
-						class="ml-2 my-4"
+						class="ml-2 my-2"
             v-b-modal.actionModal
 						size="sm" :title="$t('robot.action.label')"><i class="fas fa-tachometer-alt"></i></b-button>
         <b-button
-						class="ml-2 my-4"
+						class="ml-2 my-2"
             v-b-modal.codeModal
 						size="sm" title="代码"><i class="fas fa-code"></i></b-button>
         <b-button
-						class="ml-2 my-4"
+						class="ml-2 my-2"
             v-b-modal.videoModal
 						size="sm" :title="$t('robot.video.label')"><i class="fas fa-video"></i></b-button>
+        <b-button
+						class="ml-2 my-2"
+            v-b-modal.engineModal
+						size="sm" :title="$t('robot.engine.calibration')"><i class="fas fa-wrench"></i></b-button>
       </div>
       <div id="router-view-container"
         :style="{
@@ -63,6 +68,7 @@ import CodeModal from "./pages/Modal/code-dialog.vue";
 import ConnectModal from "./pages/Modal/connect-dialog.vue";
 import NetworkModal from "./pages/Modal/network-dialog.vue";
 import PromptModal from "./pages/Modal/prompt-dialog.vue";
+import EngineModal from "./pages/Modal/engine-dialog.vue";
 
 export default {
   name: "app",
@@ -76,7 +82,8 @@ export default {
     CodeModal,
     ConnectModal,
     NetworkModal,
-    PromptModal
+    PromptModal,
+    EngineModal
   },
   data() {
     return {

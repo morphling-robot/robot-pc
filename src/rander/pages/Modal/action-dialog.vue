@@ -11,15 +11,15 @@
 		<div slot="modal-header" class="w-100">
 			<div style="display: inline-block" @click.stop>
 				<h5 class="modal-title">{{$t('robot.action.label')}} -&gt; 
-					<span v-if="isShow" style="display: inline-block;width: 7rem">{{actionList[actionIndex].name}}</span>
+					<span v-if="isShow" style="display: inline-block;width: 7em">{{actionList[actionIndex].name}}</span>
 					<b-form-input
 						size="sm"
-						v-if="!isShow" style="display: inline-block;width: 7rem"
+						v-if="!isShow" style="display: inline-block;width: 7em"
 						@blur.native="isShow = true;"
 						v-model="actionList[actionIndex].name"
 						type="text"></b-form-input>
 						<b-btn
-							@click="isShow = false" 
+							@click="isShow = false" size="sm"
 							variant="success">
 							<i class="fas fa-pencil-alt"></i>
 						</b-btn>
@@ -83,6 +83,18 @@
 							</b-button>
 						</template>
 					</b-table>
+					<b-button size="sm" @click.stop="run()" v-if="!runed">
+						<i class="fas fa-play" />
+					</b-button>
+					<b-button size="sm" @click.stop="pause()" v-if="runed">
+						<i class="fas fa-pause-circle"></i>
+					</b-button>
+					<b-button size="sm" @click.stop="reset()">
+						<i class="fas fa-sync-alt"></i>
+					</b-button>
+					<b-button size="sm" @click.stop="stop()">
+						<i class="fas fa-power-off"></i>
+					</b-button>
 				</b-col>
 				<b-col cols="8">
 					<b-row>
@@ -141,6 +153,7 @@ export default {
 	},
 	data() {
 		return {
+			runed: true,
 			actionIndex: 0,
 			frameIndex: 0,
 			currentActionPage: 0,
@@ -287,11 +300,35 @@ export default {
 		},
 		runAction(row) {
 			const { name } = row.item;
-      this.$api.runUserAction({
-        data: {
-					name,
-					speed: this.speed
-        }
+			this.$api.robotControl({
+				data: {
+							name,
+							speed: this.speed
+				}
+			});
+		},
+		run() {
+			this.runed = true;
+
+			this.$api.robotControl({
+				data: 'continue'
+			});
+		},
+		pause() {
+			this.runed = false;
+
+			this.$api.robotControl({
+				data: 'pause'
+			});
+		},
+		reset() {
+			this.$api.robotControl({
+				data: 'reset'
+			});
+		},
+		stop() {
+			this.$api.robotControl({
+				data: 'stop'
 			});
 		},
 		insertFrame() {

@@ -27,6 +27,20 @@
 			]"
 			:current-page="currentPage"
 			:per-page="perPage">
+      <template slot="codeName" slot-scope="row">
+        <span v-if="isShow" style="display: inline-block;width: 14em">{{row.item.codeName}}</span>
+        <b-form-input
+          size="sm"
+          v-if="!isShow" style="display: inline-block;width: 14em"
+          @blur.native="isShow = true;"
+          v-model="row.item.codeName"
+          type="text"></b-form-input>
+          <b-btn
+            @click="isShow = false" size="sm"
+            variant="success">
+            <i class="fas fa-pencil-alt"></i>
+          </b-btn>
+      </template>
 			<template slot="action" slot-scope="row">
 				<b-button size="sm" @click.stop="runCode(row)">
 					<i class="fas fa-play" />
@@ -39,7 +53,18 @@
 				</b-button>
 			</template>
 		</b-table>
-
+    <b-button size="sm" @click.stop="run()" v-if="!runed">
+      <i class="fas fa-play" />
+    </b-button>
+    <b-button size="sm" @click.stop="pause()" v-if="runed">
+      <i class="fas fa-pause-circle"></i>
+    </b-button>
+    <b-button size="sm" @click.stop="reset()">
+      <i class="fas fa-sync-alt"></i>
+    </b-button>
+    <b-button size="sm" @click.stop="stop()">
+      <i class="fas fa-power-off"></i>
+    </b-button>
 	</div>
 </template>
 
@@ -47,6 +72,8 @@
 export default {
   data() {
     return {
+      isShow: true,
+      runed: true,
       codeList: [
         {
           codeName: "ABCDE-FGHIJ-KLMNO"
@@ -105,6 +132,30 @@ export default {
         }
       });
     },
+    run() {
+			this.runed = true;
+
+			this.$api.robotControl({
+				data: 'continue'
+			});
+		},
+		pause() {
+			this.runed = false;
+
+			this.$api.robotControl({
+				data: 'pause'
+			});
+		},
+		reset() {
+			this.$api.robotControl({
+				data: 'reset'
+			});
+		},
+		stop() {
+			this.$api.robotControl({
+				data: 'stop'
+			});
+		},
     saveCode(row) {
       const { codeName } = row.item;
       this.$api

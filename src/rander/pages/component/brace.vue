@@ -74,7 +74,8 @@ export default {
       }
     },
     setTheme () {
-      let themeObj = themelist.themesByName[this.theme]
+      let themeObj = themelist.themesByName[this.theme];
+      editor.getSession().setTabSize(2);
       if (themeObj) {
         require('brace/theme/' + themeObj.name)
         editor.setTheme(themeObj.theme)

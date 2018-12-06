@@ -1,9 +1,9 @@
 <template>
     <b-row>
-        <b-col cols="1"  class="px-0 text-center">
+        <b-col cols="1"  class="text-center">
             <i class="fas fa-minus-circle" @click="savePosition($event, value - 1 * max / 100)"></i>
         </b-col>
-        <b-col class="px-0">
+        <b-col class="pr-0">
             <b-progress :id="id" :min="min" :max="max" show-progress style="height:15px;margin-top: 4px"
                 @mousemove.native.prevent="changeValue" @mouseup.native.prevent="init" @mouseleave.native.prevent="init">
                 <b-progress-bar ref="bar" variant="primary" :value="value">{{computedValue}}</b-progress-bar>
@@ -12,7 +12,7 @@
                     @mousedown.prevent="setStartX($event, computedValue)"></div>
             </b-progress>
         </b-col>
-        <b-col cols="1" class="px-0 text-center">
+        <b-col cols="1" class="text-center">
             <i class="fas fa-plus-circle" @click="savePosition($event, value + 1 * max / 100)"></i>
         </b-col>
     </b-row>

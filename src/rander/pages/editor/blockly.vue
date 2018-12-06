@@ -19,7 +19,7 @@
 				</blockly>
 			</b-col>
 			<b-col cols="6" style="padding-right:2px"
-				v-if="showCode">
+				v-show="showCode">
 				<brace
 					class="brace-editor"
 					:editable="false"

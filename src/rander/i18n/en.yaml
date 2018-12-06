@@ -42,6 +42,8 @@ robot:
       jump: 'To'
   video:
     label: 'Video'
+  engine:
+    calibration: 'calibration'
 
 user:
   label: 'User'

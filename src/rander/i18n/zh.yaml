@@ -40,6 +40,8 @@ robot:
       jump: '到'
   video:
     label: '录像'
+  engine:
+    calibration: '舵机标定'
 
 user:
   label: '用户'

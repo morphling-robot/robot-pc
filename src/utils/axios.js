@@ -178,22 +178,22 @@ const apiList = {
 			})
 			.catch(error => console.log(error));
 		},
-		robotControl({ data: type, config }) {
-			this
-				.postInstructs({
-					data: {
-						instruct_type: robotControlCodeList[type],
-						para1: null,
-						para2: null
-					},
-					config
-				})
-				.then(({ data }) => {
-					return data;
-				})
-				.catch(error => console.log(error));
-		},
-		getFrame({ data, config }) {
+	robotControl({ data: type, config }) {
+		this
+			.postInstructs({
+				data: {
+					instruct_type: robotControlCodeList[type],
+					para1: null,
+					para2: null
+				},
+				config
+			})
+			.then(({ data }) => {
+				return data;
+			})
+			.catch(error => console.log(error));
+	},
+	getFrame({ data, config }) {
 		this
 			.postInstructs({
 				data: {
@@ -316,7 +316,6 @@ const apiList = {
 			.postInstructs({
 				data: {
 					instruct_type: 6000,
-					para1: actionUtil.actionToStr(data.body),
 					para2: data.id
 				},
 				config
