@@ -71,7 +71,7 @@ export default {
         },
         changeValue($event) {
             if (this.isDrag) {
-                const newValue = this.startValue + this.max * (($event.clientX - this.startX)/ this.progressLength);
+                const newValue = this.startValue + this.computedMax * (($event.clientX - this.startX) / this.progressLength);
                 this.savePosition($event, Math.ceil(newValue * 10) / 10);
             }
         },

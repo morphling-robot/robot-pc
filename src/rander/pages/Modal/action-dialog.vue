@@ -11,10 +11,10 @@
 		<div slot="modal-header" class="w-100">
 			<div style="display: inline-block" @click.stop>
 				<h5 class="modal-title">{{$t('robot.action.label')}} -&gt; 
-					<span v-if="isShow" style="display: inline-block;width: 7em">{{actionList[actionIndex].name}}</span>
+					<span v-if="isShow" style="display: inline-block;min-width: 7em">{{actionList[actionIndex].name}}</span>
 					<b-form-input
 						size="sm"
-						v-if="!isShow" style="display: inline-block;width: 7em"
+						v-if="!isShow" style="display: inline-block;min-width: 7em"
 						@blur.native="isShow = true;"
 						v-model="actionList[actionIndex].name"
 						type="text"></b-form-input>
