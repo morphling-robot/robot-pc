@@ -219,18 +219,20 @@ export default {
 			);
 		},
 		createCode() {
-			this.$api.createCode({
-				data: {
-					name: this.$store.state.editor.fileName,
-					body: this.$store.state.editor.python.code
-				},
-				config: {
-          auth: {
-            username: this.$store.state.user.token,
-            password: ''
-          }
-        }
-			});
+			window.prompt('请输入文件名', 'untitle', name => {
+        this.$api.createCode({
+					data: {
+						name,
+						body: this.$store.state.editor.python.code
+					},
+					config: {
+						auth: {
+							username: this.$store.state.user.token,
+							password: ''
+						}
+					}
+				});
+      });
 		},
 	},
 	watch: {

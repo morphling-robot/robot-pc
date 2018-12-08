@@ -1,6 +1,6 @@
 const state = {
 	isConnected: false,
-	updateCycle: 2 * 1000,
+	updateCycle: 10 * 1000,
 	env: {
 		ip: null,
 		serialNumber: null,

@@ -73,7 +73,6 @@ export default {
 				{ text: '无阻尼', value: 'free' },
 				{ text: '锁死', value: 'lock', }
 			],
-			aaa: 'free',
 			follow: true
 		}
 	},
@@ -84,17 +83,19 @@ export default {
 			servo.angle = changedValue;
 			const message = {
 				angle: changedValue,
+				speed: this.frameSpeed.speed,
 				index
 			};console.log(message);
-			this.$emit('angle-changed', message);
+			if (this.follow) {
+				this.$emit('angle-changed', message);
+			}
 		},
 		updateSpeed(changed) {
 			this.frameSpeed.speed = changed;
 			this.$emit('speed-changed', changed);
 		},
 		updateDamper(newMode, index) {console.log(newMode, index);
-			this.damperModeList[2].mode = newMode;
-			this.$emit('damper-changed', {
+			this.$emit('mode-changed', {
 				index,
 				mode: newMode
 			});
@@ -102,11 +103,6 @@ export default {
 	},
 	created() {
 		this.styleObject = genStyleObjectFromMap(adjusterMap);
-	},
-	watch: {
-		aaa() {
-			console.log(this.damperModeList);
-		}
 	}
 }
 </script>

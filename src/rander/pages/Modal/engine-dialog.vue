@@ -53,11 +53,12 @@ export default {
             arr.forEach((item, index) => {
                 this.setList.push(index + 1);
 
-                this.$api.calibrateServo({
-                    data: {
-                        id: index + 1
-                    }
-                });
+            });
+
+            this.$api.calibrateServo({
+                data: {
+                    id: 121
+                }
             });
         }
     },

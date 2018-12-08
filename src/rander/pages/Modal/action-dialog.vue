@@ -39,8 +39,29 @@
 				</b-col>
 				<b-col></b-col>
 				<b-col cols="auto">
+					<b-input-group
+						size="sm">
+						<b-input-group-prepend>
+							<b-btn
+								@click="setAllServo"
+								variant="success"><i
+									class="fas fa-sync-alt" />
+							</b-btn>
+						</b-input-group-prepend>
+						<b-dropdown
+							split
+							:text="selectedMode.text"
+							size="sm">
+							<b-dropdown-item
+								v-for="(mode, index) in modeList"
+								:key="index"
+								@click="changeSelectedMode(mode)">
+								{{mode.text}}
+							</b-dropdown-item>
+						</b-dropdown>
 					<b-button size="sm" variant="primary" @click="insertFrame">插入一帧</b-button>
 					<b-button size="sm" variant="danger" @click="deleteFrame">删除该帧</b-button>
+					</b-input-group>
 				</b-col>
 			</b-row>
 			<b-row style="height: auto">
@@ -165,6 +186,12 @@ export default {
 			actionIndex: 0,
 			frameIndex: 0,
 			currentActionPage: 0,
+			selectedMode: { text: '无阻尼', value: 'free'},
+			modeList: [
+				{ text: '有阻尼', value: 'damp'},
+				{ text: '无阻尼', value: 'free'},
+				{ text: '锁定  ', value: 'lock'},
+			],
 			damperModeList: damperMode,
 			actionList: [
 				{
@@ -287,6 +314,7 @@ export default {
 			});
 		},
 		changeActionIndex(item, index, event) {
+			this.getAction(index);
 			const electron = this.$electron;
 			const { dialog } = electron.remote;
 
@@ -299,11 +327,9 @@ export default {
 				if (btnIndex === 0) {
 					this.updateAction(this.actionIndex).then(() => {
 						this.actionIndex = index;
-						this.getAction(index);
 					});
 				} else if (btnIndex === 1) {
 					this.actionIndex = index;
-					this.getAction(index);
 				}
 			});
 		},
@@ -317,21 +343,21 @@ export default {
 			});
 		},
 		changeServoAngle(e) {console.log(e);
-			// this.$api.changeServoAngle({
-			// 	data: {
-			// 		angle: e.angle,
-			// 		speed: this.speed,
-			// 		id: e.index
-			// 	}
-			// });
+			this.$api.changeServoAngle({
+				data: {
+					angle: e.angle,
+					speed: e.speed,
+					id: e.index
+				}
+			});
 		},
 		changeServoMode(e) {console.log(e);
-			// this.$api.changeServoMode({
-			// 	data: {
-			// 		mode: ,
-			// 		id: 
-			// 	}
-			// })
+			this.$api.changeServoMode({
+				data: {
+					mode: e.mode,
+					id: e.index
+				}
+			})
 		},
 		updateFrameSpeed(e) {
 			console.log(e)
@@ -376,6 +402,17 @@ export default {
 		},
 		updatespeed(changed) {
 			this.speed = changed; 
+		},
+		changeSelectedMode(mode) {
+			this.selectedMode = mode;
+		},
+		setAllServo() {
+			this.$api.changeServoMode({
+				data: {
+					id: 121,
+					mode: this.selectedMode.value
+				}
+			})
 		}
 	},
 	computed: {

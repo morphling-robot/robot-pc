@@ -93,12 +93,14 @@ export default {
     getCodeList() {
       this.$api.getCodeList().then(data => (this.codeList = data));
     },
-    createCode(name) {
-      this.$api.createCode({
-        data: {
-          name: "name",
-          body: this.$store.state.editor.python.content
-        }
+    createCode() {
+      window.prompt('请输入文件名', 'untitle', name => {
+        this.$api.createCode({
+          data: {
+            name,
+            body: this.$store.state.editor.python.content
+          }
+        });
       });
     },
     // updateCode(row) {

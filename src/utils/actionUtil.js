@@ -43,6 +43,14 @@ export const strToAction = str => {
 		frameList.push(frame);
 	});
 
+	try {
+		if (frameList.length != speedList.length) {
+			throw Error(`frameList length not equal to speedList, ${frameList.length}frame but ${speedList.length}speed`);
+		}
+	} catch (error) {
+		console.log(error);
+	}
+	
 	return {
 		frameList,
 		speedList
