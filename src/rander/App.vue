@@ -93,7 +93,7 @@ export default {
   },
   computed: {
     sidebarWidth() {
-      return this.$store.state.robot.isShow ? 340 : 0;
+      return this.$store.state.robot.isShow ? 0 : 340;
     }
   },
   methods: {

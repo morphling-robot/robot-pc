@@ -114,8 +114,11 @@
 							ref="adjuster"
 							class="adjuster"
 							:frame="selectedFrame"
-							:servoMode="damperModeList"
-							@angle-changed=""
+							:damperModeList="damperModeList"
+							:frameSpeed="currentAction.speedList[frameIndex]"
+							@angle-changed="changeServoAngle"
+							@mode-changed="changeServoMode"
+							@speed-changed="updateFrameSpeed"
 							/>
 					</b-row>
 				</b-col>
@@ -130,7 +133,7 @@ import ActionProgress from '@/utils/Progress.vue';
 import adjusterMap from '../component/adjusterMap.yaml';
 import genStyleObjectFromMap from '@/utils/genStyleObjectFromMap';
 import cloneObj from '@/utils/cloneObject.js';
-import { constants } from 'http2';
+
 const emptyFrame = Array(17);
 emptyFrame.fill({"angle": 0});
 
@@ -174,7 +177,7 @@ export default {
 						[{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":88},{"angle":77}],
 						[{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":88},{"angle":77}],
 					],
-					speedList: [10, 10, 10, 10, 10]
+					speedList: [{ speed: 10 }, { speed: 10 }, { speed: 10 }, { speed: 10 }, { speed: 10 }]
 				},
 				{
 					id: 2,
@@ -185,7 +188,7 @@ export default {
 						[{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":88},{"angle":77}],
 						[{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":88},{"angle":77}],
 					],
-					speedList: [10, 10, 10, 10]
+					speedList: [{ speed: 10 }, { speed: 10 }, { speed: 10 }, { speed: 10 }]
 				},
 				{
 					id: 3,
@@ -197,7 +200,7 @@ export default {
 						[{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":88},{"angle":77}],
 						[{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":56},{"angle":12},{"angle":23},{"angle":34},{"angle":45},{"angle":88},{"angle":77}],
 					],
-					speedList: [10, 10, 10, 10, 10]
+					speedList: [{ speed: 10 }, { speed: 10 }, { speed: 10 }, { speed: 10 }, { speed: 10 }]
 				}
 			],
 			origin: [],
@@ -313,22 +316,25 @@ export default {
 				}
 			});
 		},
-		changeServoAngle(e) {
-			this.$api.changeServoAngle({
-				data: {
-					angle: e.angle,
-					speed: this.speed,
-					id: e.index
-				}
-			});
+		changeServoAngle(e) {console.log(e);
+			// this.$api.changeServoAngle({
+			// 	data: {
+			// 		angle: e.angle,
+			// 		speed: this.speed,
+			// 		id: e.index
+			// 	}
+			// });
 		},
-		changeServoMode(e) {
-			this.$api.changeServoMode({
-				data: {
-					mode: ,
-					id: 
-				}
-			})
+		changeServoMode(e) {console.log(e);
+			// this.$api.changeServoMode({
+			// 	data: {
+			// 		mode: ,
+			// 		id: 
+			// 	}
+			// })
+		},
+		updateFrameSpeed(e) {
+			console.log(e)
 		},
 		run() {
 			this.runed = true;

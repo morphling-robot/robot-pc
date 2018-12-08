@@ -5,9 +5,9 @@
 					速率：
 		</b-col>
 		<b-col>
-			<action-progress id="progress" :value="speed"
-				:min="min" :max="max"
-				@update-progress="updatespeed" pointTarget="1"></action-progress>
+			<action-progress id="progress" :value="frameSpeed.speed"
+				:min="1" :max="10"
+				@update-progress="updateSpeed($event)" pointTarget="1"></action-progress>
 		</b-col>
 		<b-col class="d-flex justify-content-end" cols="3">
 			<b-form-checkbox
@@ -23,7 +23,7 @@
 			:style="styleObject[index]" @mouseenter.stop.prevent="pointTarget = index">
 			<span class="number">{{index + 1}}</span><br />
 			<span>{{Math.round(servo.angle * 10) / 10}}</span>
-			<div id="operation" @mouseenter.stop.prevent="pointTarget = index" @click.stop.prevent
+			<div id="operation" @mouseenter.stop.prevent="pointTarget = index" @click.stop
 				class="tooltip bs-tooltip-top" v-if="pointTarget == index" style="position: absolute;top: -90px;left: -225px; display: block;opacity:1">
 				<div class="arrow" style="left:233px"></div>
 				<div class="tooltip-inner">
@@ -42,9 +42,9 @@
 							label="阻尼:">
 							<b-form-radio-group
 								size="sm"
-								v-model="aaa"
+								v-model="damperModeList[index].mode"
 								:options="options"
-								@change="updateDamper"
+								@change="updateDamper($event, index)"
 								plain />
 						</b-form-group>
 					</div>
@@ -74,12 +74,11 @@ export default {
 				{ text: '锁死', value: 'lock', }
 			],
 			aaa: 'free',
-			follow: true,
-			speed: 10
+			follow: true
 		}
 	},
 	components: {ActionProgress},
-	props: ['frame', 'damperModeList'],
+	props: ['frame', 'damperModeList', 'frameSpeed'],
 	methods: {
 		updateAngle(changedValue, servo, index) {
 			servo.angle = changedValue;
@@ -89,12 +88,16 @@ export default {
 			};console.log(message);
 			this.$emit('angle-changed', message);
 		},
-		updatespeed(changed) {
-			this.speed = changed;
+		updateSpeed(changed) {
+			this.frameSpeed.speed = changed;
+			this.$emit('speed-changed', changed);
 		},
-		updateDamper(a, b, c, d) {
-			console.log(a, b, c ,d);
-			this.$emit('damper-changed', 111);
+		updateDamper(newMode, index) {console.log(newMode, index);
+			this.damperModeList[2].mode = newMode;
+			this.$emit('damper-changed', {
+				index,
+				mode: newMode
+			});
 		}
 	},
 	created() {
