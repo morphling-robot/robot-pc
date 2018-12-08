@@ -134,11 +134,11 @@ import adjusterMap from '../component/adjusterMap.yaml';
 import genStyleObjectFromMap from '@/utils/genStyleObjectFromMap';
 import cloneObj from '@/utils/cloneObject.js';
 
-const emptyFrame = Array(17);
-emptyFrame.fill({"angle": 0});
+const damperMode = [];
 
-const damperMode = Array(17);
-damperMode.fill({mode: 'free'});
+for (let i = 0; i < 17; i++) {
+	damperMode.push({mode: 'free'});
+}
 
 function actionFactory() {
 	const newArr = [];

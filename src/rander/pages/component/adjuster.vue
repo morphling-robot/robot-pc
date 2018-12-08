@@ -65,8 +65,8 @@ export default {
 	data() {
 		return {
 			styleObject: null,
-			min: -100,
-			max: 100,
+			min: -180,
+			max: 180,
 			pointTarget: -1,
 			options: [
 				{ text: '有阻尼', value: 'damp' },
