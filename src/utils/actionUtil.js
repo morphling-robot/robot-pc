@@ -1,4 +1,4 @@
-export const strToObject = ({ name, body }) => {const a = Object.assign({}, strToAction(body), { name }); console.log(a);
+export const strToObject = ({ name, body }) => {
 	return Object.assign({}, strToAction(body), { name });// consider using assign to update a action in action-dialog.vue
 }
 

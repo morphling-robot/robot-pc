@@ -114,6 +114,8 @@
 							ref="adjuster"
 							class="adjuster"
 							:frame="selectedFrame"
+							:servoMode="damperModeList"
+							@angle-changed=""
 							/>
 					</b-row>
 				</b-col>
@@ -131,6 +133,9 @@ import cloneObj from '@/utils/cloneObject.js';
 import { constants } from 'http2';
 const emptyFrame = Array(17);
 emptyFrame.fill({"angle": 0});
+
+const damperMode = Array(17);
+damperMode.fill({mode: 'free'});
 
 function actionFactory() {
 	const newArr = [];
@@ -157,6 +162,7 @@ export default {
 			actionIndex: 0,
 			frameIndex: 0,
 			currentActionPage: 0,
+			damperModeList: damperMode,
 			actionList: [
 				{
 					id: 1,
@@ -300,12 +306,29 @@ export default {
 		},
 		runAction(row) {
 			const { name } = row.item;
-			this.$api.robotControl({
+			this.$api.runUserAction ({
 				data: {
-							name,
-							speed: this.speed
+					name,
+					speed: this.speed
 				}
 			});
+		},
+		changeServoAngle(e) {
+			this.$api.changeServoAngle({
+				data: {
+					angle: e.angle,
+					speed: this.speed,
+					id: e.index
+				}
+			});
+		},
+		changeServoMode(e) {
+			this.$api.changeServoMode({
+				data: {
+					mode: ,
+					id: 
+				}
+			})
 		},
 		run() {
 			this.runed = true;

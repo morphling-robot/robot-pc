@@ -33,7 +33,7 @@
 							<b-col>
 								<action-progress :id="`progress-${index}`" :value="servo.angle"
 									:min="min" :max="max"
-									@update-progress="updateAngle($event, servo)" :pointTarget="pointTarget"></action-progress>
+									@update-progress="updateAngle($event, servo, index)" :pointTarget="pointTarget"></action-progress>
 							</b-col>
 						</b-row>
 						<b-form-group
@@ -42,8 +42,9 @@
 							label="阻尼:">
 							<b-form-radio-group
 								size="sm"
-								v-model="servo.damper"
+								v-model="aaa"
 								:options="options"
+								@change="updateDamper"
 								plain />
 						</b-form-group>
 					</div>
@@ -57,8 +58,6 @@
 <script>
 import adjusterMap from '../component/adjusterMap.yaml';
 import genStyleObjectFromMap from '@/utils/genStyleObjectFromMap';
-import { throws } from 'assert';
-import { constants } from 'http2';
 
 import ActionProgress from '@/utils/Progress.vue';
 
@@ -70,24 +69,41 @@ export default {
 			max: 100,
 			pointTarget: -1,
 			options: [
-				'有阻尼', '无阻尼', '锁死'
+				{ text: '有阻尼', value: 'damp' },
+				{ text: '无阻尼', value: 'free' },
+				{ text: '锁死', value: 'lock', }
 			],
+			aaa: 'free',
 			follow: true,
 			speed: 10
 		}
 	},
 	components: {ActionProgress},
-	props: ['frame'],
+	props: ['frame', 'damperModeList'],
 	methods: {
-		updateAngle(changedValue, servo) {
+		updateAngle(changedValue, servo, index) {
 			servo.angle = changedValue;
+			const message = {
+				angle: changedValue,
+				index
+			};console.log(message);
+			this.$emit('angle-changed', message);
 		},
 		updatespeed(changed) {
 			this.speed = changed;
+		},
+		updateDamper(a, b, c, d) {
+			console.log(a, b, c ,d);
+			this.$emit('damper-changed', 111);
 		}
 	},
 	created() {
 		this.styleObject = genStyleObjectFromMap(adjusterMap);
+	},
+	watch: {
+		aaa() {
+			console.log(this.damperModeList);
+		}
 	}
 }
 </script>
