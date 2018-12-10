@@ -6,14 +6,58 @@
 		hide-footer
         @hidden="emptySetList"
 		no-close-on-backdrop>
-        <b-button @click="allSelect">
-            全部标定
-        </b-button>
-        <div id="content">
+        <b-row>
+            <b-col>
+                <b-button @click="allSelect" size="sm">
+                    全部标定
+                </b-button>
+            </b-col>
+            <b-col cols="auto">
+                 <b-form-slider v-model="speed"
+                    trigger-change-event :min="1" :max="100" :step="1" @change="updateSpeed"></b-form-slider>
+                <span style="display: inline-block;width: 4em;text-align: center">{{speed}}</span>
+            </b-col>
+            <b-col cols="3">
+                <b-input-group
+                    size="sm">
+                    <b-input-group-prepend>
+                        <b-btn
+                            @click="setAllServo"
+                            variant="success"><i
+                                class="fas fa-sync-alt" />
+                        </b-btn>
+                    </b-input-group-prepend>
+                    <b-dropdown
+                        split
+                        :text="selectedMode.text"
+                        size="sm">
+                        <b-dropdown-item
+                            v-for="(mode, index) in modeList"
+                            :key="index"
+                            @click="changeSelectedMode(mode)">
+                            {{mode.text}}
+                        </b-dropdown-item>
+                    </b-dropdown>
+                </b-input-group>
+            </b-col>
+            <b-col cols="2">
+                 <b-form-checkbox
+                    v-model="follow"
+                    :value="true"
+                    :unchecked-value="false">
+                    跟随
+                </b-form-checkbox>
+            </b-col>
+        </b-row>
+       
+        <div id="content"  @mouseleave="pointTarget = -1">
             <span class="point" v-for="(item, index) in styleObject" :key="index"
                 :style="styleObject[index]" @click="resetPoint(index - 0 + 1)"
-                :class="{'active': setList.indexOf(index - 0 + 1) !== -1}">
+                :class="{'active': setList.indexOf(index - 0 + 1) !== -1}" @mouseenter.stop.prevent="pointTarget = index">
                 <span class="number">{{index - 0 + 1}}</span><br />
+                <engine  @mouseenter.stop.prevent="pointTarget = index"  v-if="pointTarget == index"
+				    :servo="frame[index]" :index="index" @angle-changed="updateAngle"
+                    :damperModeList="damperModeList" :disabled="follow" />
             </span>
         </div>
 	</b-modal>
@@ -23,13 +67,37 @@
 import adjusterMap from '../component/adjusterMap.yaml';
 import genStyleObjectFromMap from '@/utils/genStyleObjectFromMap';
 
+import Engine from '../component/engine.vue';
+
+const damperMode = [];
+
+for (let i = 0; i < 17; i++) {
+	damperMode.push({mode: 'free'});
+}
+
 export default {
     data() {
         return {
             styleObject: null,
-            setList: []
+            setList: [],
+            pointTarget: -1,
+            frame: [{"angle":13},{"angle":23},{"angle":34},
+                {"angle":45},{"angle":56},{"angle":12},{"angle":23},
+                {"angle":34},{"angle":45},{"angle":56},{"angle":12},
+                {"angle":23},{"angle":34},{"angle":45},{"angle":56},
+                {"angle":88},{"angle":77}],
+            speed: 10,
+            selectedMode: { text: '无阻尼', value: 'free'},
+            modeList: [
+				{ text: '有阻尼', value: 'damp'},
+				{ text: '无阻尼', value: 'free'},
+				{ text: '锁定  ', value: 'lock'},
+            ],
+            follow: true,
+            damperModeList: damperMode
         }
     },
+    components: {Engine},
     methods: {
         resetPoint(index) {
             if (this.setList.indexOf(index) === -1) {
@@ -40,6 +108,9 @@ export default {
                 });
 
                 this.setList.push(index);
+
+                this.getCurrentFrame();
+
             }
         },
         emptySetList() {
@@ -49,18 +120,53 @@ export default {
             const arr = new Array(17).fill(0);
             this.setList = [];
 
-
-            arr.forEach((item, index) => {
-                this.setList.push(index + 1);
-
-            });
-
             this.$api.calibrateServo({
                 data: {
                     id: 121
                 }
             });
-        }
+            arr.forEach((item, index) => {
+                this.setList.push(index + 1);
+
+            });
+
+            this.getCurrentFrame();
+        },
+        getCurrentFrame() {
+            this.$api.getFrame().then((data) => {
+                this.frame = data;
+            });
+        },
+        updateAngle(value) {
+			const message = Object.assign({
+				speed: this.speed	
+			}, value);
+			
+			// 连接口
+			if (this.follow) {
+				this.$api.changeServoAngle({
+					data: message
+				});
+			}
+        },
+        updateSpeed() {
+
+        },
+        setAllServo() {
+			this.$api.changeServoMode({
+				data: {
+					id: 121,
+					mode: this.selectedMode.value
+				}
+            });
+            
+            this.damperModeList.forEach(item => {
+                item.mode = this.selectedMode.value;
+            });
+        },
+        changeSelectedMode(mode) {
+			this.selectedMode = mode;
+		}
     },
     created() {
 		this.styleObject = genStyleObjectFromMap(adjusterMap);

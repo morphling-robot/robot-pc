@@ -98,7 +98,11 @@ export default {
   },
   methods: {
     changeVideoShow() {
-			return this.$store.commit('updateIsShow');
+      this.$store.commit('updateIsShow');
+      
+      this.$nextTick(() => {
+				window.dispatchEvent(new CustomEvent('resize'));
+			});
 		},
   },
   mounted() {

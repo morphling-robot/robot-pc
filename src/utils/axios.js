@@ -82,6 +82,8 @@ const apiList = {
 			.catch(error => console.log(error));
 	},
 	updateCode({ index, data, config: axiosConfig }) {
+		const axiosData = data;
+		
 		return api.robot
 			.put(`${prefix}/codes/${index}`, axiosData, axiosConfig)
 			.then(({ data }) => {
@@ -122,7 +124,7 @@ const apiList = {
 		const axiosData = actionUtil.objectToStr(data);
 
 		return api.robot
-			.post(`${prefix}/actions/`, axiosData, axiosConfig)
+			.post(`${prefix}/actions`, axiosData, axiosConfig)
 			.then(({ data }) => {
 				return data;
 			})
@@ -139,7 +141,7 @@ const apiList = {
 			.catch(error => console.log(error));
 	},
 	updateActions({ index, data, config: axiosConfig }) {  //调试put接口
-		axiosData = actionUtil.objectToStr(data);
+		const axiosData = actionUtil.objectToStr(data);
 
 		return api.robot
 			.put(`${prefix}/actions/${index}`, axiosData, axiosConfig)

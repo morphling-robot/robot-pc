@@ -14,7 +14,7 @@
 					<span v-if="isShow" style="display: inline-block;min-width: 7em">{{actionList[actionIndex].name}}</span>
 					<b-form-input
 						size="sm"
-						v-if="!isShow" style="display: inline-block;min-width: 7em"
+						v-if="!isShow" style="display: inline-block;min-width: 7em;width: auto"
 						@blur.native="isShow = true;"
 						v-model="actionList[actionIndex].name"
 						type="text"></b-form-input>
@@ -28,8 +28,6 @@
 			<div style="display: inline-block; float: right">
 				<button type="button" aria-label="Close" class="close" @click="$refs.actionModalRef.hide()">×</button>
 			</div>
-			
-			
 		</div>
 		<div style="height: 550px;position: relative;">
 			<b-row style="width: 100%;margin-bottom: 15px;">
@@ -72,9 +70,10 @@
 					v-model="currentActionPage"
 					:limit="5"
 					:per-page="10" />
-					<action-progress class="mb-2" id="action-speed" :value="speed"
-						:min="0" :max="10"
-						@update-progress="updatespeed($event)" pointTarget="1"></action-progress>
+					<b-form-slider v-model="speed"
+						class="mb-2"
+						trigger-change-event :min="1" :max="100" :step="1"></b-form-slider>
+					<span style="display: inline-block;text-align: center;margin-right: -2em">{{speed}}</span>
 					<b-table
 						id="action-table"
 						small
@@ -87,13 +86,13 @@
 							{ key: 'operate', label: '', class: 'operate' }
 						]"
 						:current-page="currentActionPage"
-						:per-page="10"
+						:per-page="8"
 						@row-clicked="changeActionIndex">
 						<template slot="name" slot-scope="row">
 							<a v-b-tooltip.hover.left :title="row.value" style="cursor: pointer; color: #0000ff">{{row.value}}</a>
 						</template>
 						<template slot="operate" slot-scope="row">
-							<b-button size="sm" @click.stop="updateAction(row.index)" v-if="row.index === actionIndex && hasChanged">
+							<b-button size="sm" @click.stop="updateAction(row)" v-if="row.item.id === actionList[actionIndex].id && hasChanged">
 								<i class="fas fa-save"></i>
 							</b-button>
 							<b-button size="sm" @click.stop="deleteAction(row)">
@@ -135,11 +134,8 @@
 							ref="adjuster"
 							class="adjuster"
 							:frame="selectedFrame"
+							:frameSpeed="currentAction.speedList[frameIndex - 1]"
 							:damperModeList="damperModeList"
-							:frameSpeed="currentAction.speedList[frameIndex]"
-							@angle-changed="changeServoAngle"
-							@mode-changed="changeServoMode"
-							@speed-changed="updateFrameSpeed"
 							/>
 					</b-row>
 				</b-col>
@@ -155,25 +151,26 @@ import adjusterMap from '../component/adjusterMap.yaml';
 import genStyleObjectFromMap from '@/utils/genStyleObjectFromMap';
 import cloneObj from '@/utils/cloneObject.js';
 
-const damperMode = [];
-
-for (let i = 0; i < 17; i++) {
-	damperMode.push({mode: 'free'});
-}
-
 function actionFactory() {
 	const newArr = [];
 
 	for (let i = 0; i < 17; i++) {
-		newArr.push({"angle":10});
+		newArr.push({"angle": 10});
 	}
 
 	return {
 		name: '新动作',
 		frameList: [
 			newArr
-		]
+		],
+		speedList: [{speed: 10}]
 	}
+}
+
+const damperMode = [];
+
+for (let i = 0; i < 17; i++) {
+	damperMode.push({mode: 'free'});
 }
 
 export default {
@@ -184,7 +181,7 @@ export default {
 		return {
 			runed: true,
 			actionIndex: 0,
-			frameIndex: 0,
+			frameIndex: 1,
 			currentActionPage: 0,
 			selectedMode: { text: '无阻尼', value: 'free'},
 			modeList: [
@@ -192,7 +189,6 @@ export default {
 				{ text: '无阻尼', value: 'free'},
 				{ text: '锁定  ', value: 'lock'},
 			],
-			damperModeList: damperMode,
 			actionList: [
 				{
 					id: 1,
@@ -230,11 +226,11 @@ export default {
 					speedList: [{ speed: 10 }, { speed: 10 }, { speed: 10 }, { speed: 10 }, { speed: 10 }]
 				}
 			],
-			origin: [],
+			origin: null,
 			styleObject: {},
-			tempPosition: -1,
 			isShow: true,
-			speed: 0.1
+			speed: 1,
+			damperModeList: damperMode
 		}
 	},
 	mounted() {
@@ -250,29 +246,25 @@ export default {
 		this.getActionsList();
 	},
 	methods: {
-		// hideProgress() {
-		// 	this.$refs.adjuster.pointTarget = -1;
-		// },
 		getActionsList() {
 			this.$api.getActionsList().then(data => {
 				
 				if (data) {
 					this.actionList = data;
+
+					this.origin = cloneObj(this.actionList[this.actionIndex]);
 				}
 
-				this.origin = cloneObj(this.actionList);
 			});
 		},
 		tempCreateAction() {
-			this.tempPosition = this.actionList.length;
+			const newAction = actionFactory();
 
-			this.actionList.push(actionFactory());
+			this.actionList.unshift(newAction);
+			this.actionIndex = 0;
+			this.origin = cloneObj(newAction);
 
-			this.origin.push({});
-
-			this.actionIndex = this.tempPosition;
-
-			this.currentActionPage = Math.ceil(this.actionList.length / 10);
+			this.createAction(this.actionIndex);
 		},
 		getAction(index) {
 			this.$api.getActions({
@@ -284,7 +276,10 @@ export default {
 					}
 				}
 			}).then(data => {
-				Object.assign(this.actionList[index], data);
+				const result = Object.assign(this.actionList[index], data);
+
+
+				this.origin = cloneObj(result);
 			});
 		},
 		createAction(index) {
@@ -297,8 +292,9 @@ export default {
 				}
 			});
 		},
-		updateAction(index) {
-			const { name } = this.actionList[index];
+		updateAction(row) {
+			const { name } = row.item;
+
 			this.$api.updateActions({
 				index: name,
 				data: {
@@ -311,10 +307,11 @@ export default {
 			const { name } = row.item;
 			this.$api.deleteActions({
 				index: name
+			}).then(() => {
+				this.getActionsList();
 			});
 		},
 		changeActionIndex(item, index, event) {
-			this.getAction(index);
 			const electron = this.$electron;
 			const { dialog } = electron.remote;
 
@@ -331,6 +328,10 @@ export default {
 				} else if (btnIndex === 1) {
 					this.actionIndex = index;
 				}
+
+				this.frameIndex = 1;
+
+				this.getAction(index);
 			});
 		},
 		runAction(row) {
@@ -342,23 +343,23 @@ export default {
 				}
 			});
 		},
-		changeServoAngle(e) {console.log(e);
-			this.$api.changeServoAngle({
-				data: {
-					angle: e.angle,
-					speed: e.speed,
-					id: e.index
-				}
-			});
-		},
-		changeServoMode(e) {console.log(e);
-			this.$api.changeServoMode({
-				data: {
-					mode: e.mode,
-					id: e.index
-				}
-			})
-		},
+		// changeServoAngle(e) {console.log(e);
+		// 	this.$api.changeServoAngle({
+		// 		data: {
+		// 			angle: e.angle,
+		// 			speed: e.speed,
+		// 			id: e.index
+		// 		}
+		// 	});
+		// },
+		// changeServoMode(e) {console.log(e);
+		// 	this.$api.changeServoMode({
+		// 		data: {
+		// 			mode: e.mode,
+		// 			id: e.index
+		// 		}
+		// 	})
+		// },
 		updateFrameSpeed(e) {
 			console.log(e)
 		},
@@ -400,9 +401,6 @@ export default {
 			let { frameList } = this.actionList[this.actionIndex];
 			frameList = frameList.splice(this.frameIndex - 1, 1);
 		},
-		updatespeed(changed) {
-			this.speed = changed; 
-		},
 		changeSelectedMode(mode) {
 			this.selectedMode = mode;
 		},
@@ -412,7 +410,11 @@ export default {
 					id: 121,
 					mode: this.selectedMode.value
 				}
-			})
+			});
+
+			this.damperModeList.forEach(item => {
+                item.mode = this.selectedMode.value;
+            });
 		}
 	},
 	computed: {
@@ -426,40 +428,44 @@ export default {
 			return this.actionList[this.actionIndex];
 		},
 		hasChanged() {
-			// const keyList = Object.keys(this.actionList[this.actionIndex]);
-			// let flag = false;
+			if (!this.origin || !this.actionList[this.actionIndex]) {
+				return;
+			}
 
-			// if (this.origin.length === 0) {
-			// 	return;
-			// }
+			const keyList = Object.keys(this.actionList[this.actionIndex]);
+			let flag = false;
+			keyList.forEach(key => {
+				if (!this.origin[key]) {
+					flag = flag || true;
 
-			// keyList.forEach(key => {
-			// 	if (!this.origin[this.actionIndex][key]) {
-			// 		flag = flag || true;
+					return;
+				}
 
-			// 		return;
-			// 	}
+				const originFrameList = this.origin[key];
+				const actionFrameList = this.actionList[this.actionIndex][key];
 
-			// 	if (key === 'frameList') {
-			// 		const originFrameList = this.origin[this.actionIndex].frameList;
-			// 		const actionFrameList = this.actionList[this.actionIndex].frameList;
+				if (key === 'frameList') {
 
-			// 		actionFrameList.forEach((item, frameIndex) => {
-			// 			item.forEach((angleObj, angleIndex) => {
-			// 				// console.log(angleObj.angle,originFrameList[frameIndex][angleIndex].angle)
-			// 				if (angleObj.angle !== originFrameList[frameIndex][angleIndex].angle) {
-			// 					flag = flag || true;
-			// 				}
-			// 			})
-			// 		});
-			// 	}else if (this.origin[this.actionIndex][key] !== this.actionList[this.actionIndex][key]) {
-			// 		flag = flag || true;
-			// 	}
+					actionFrameList.forEach((item, frameIndex) => {
+						item.forEach((angleObj, angleIndex) => {
+							if (angleObj.angle - 0 !== originFrameList[frameIndex][angleIndex].angle - 0) {
+								flag = flag || true;
+							}
+						})
+					});
+				}else if (key === 'speedList') {
+					actionFrameList.forEach((item, frameIndex) => {
+						if (item.speed - 0 !== originFrameList[frameIndex].speed - 0) {
+							flag = flag || true;
+						}
+					});
+				} else if (originFrameList !== actionFrameList) {
+					flag = flag || true;
+				}
 
-			// });
+			});
 
-			// return flag;
-			return false;
+			return flag;
 		}
 	},
 	watch: {

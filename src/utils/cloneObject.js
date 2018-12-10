@@ -4,12 +4,16 @@ export default function cloneObj(obj) {
 
         const keyList = Object.keys(obj);
 
+        if (keyList.length === 0) {
+           return obj;
+        }
+
         keyList.forEach(key => {
             newObj[key] = cloneObj(obj[key]);
         });
 
         return newObj;
-    }else if (Array.isArray(obj)) {
+    } else if (Array.isArray(obj)) {
         const newObj = [];
 
         obj.forEach(item => {

@@ -15,6 +15,10 @@ import 'videojs-record/dist/css/videojs.record.css';
 import './style.less'
 import axios from '@/utils/axios';
 
+
+import bFormSlider from 'vue-bootstrap-slider';
+import 'bootstrap-slider/dist/css/bootstrap-slider.css'
+
 Blockly.prompt = function (message, defaultValue, callback) {
 	app.$root.$emit('bv::show::modal', 'prompt-modal');
 
@@ -33,6 +37,7 @@ Vue.use(VueRouter);
 Vue.use(BootstrapVue);
 Vue.use(VueElectron);
 Vue.use(axios);
+Vue.use(bFormSlider);
 
 const app = new Vue(Object.assign({ store, router, i18n }, App));
 

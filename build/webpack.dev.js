@@ -25,6 +25,6 @@ module.exports = Object.assign({}, webpackBase, {
 		host: 'localhost',
 		hotClient: {
 			validTargets: ["electron-renderer"],
-		},
+		}
 	}
 });

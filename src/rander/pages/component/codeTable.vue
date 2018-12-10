@@ -45,7 +45,7 @@
 				<b-button size="sm" @click.stop="runCode(row)">
 					<i class="fas fa-play" />
 				</b-button>
-				<b-button size="sm" @click.stop="saveCode(row)">
+				<b-button size="sm" @click.stop="updateCode(row)">
 					<i class="fas fa-save" />
 				</b-button>
 				<b-button size="sm" @click.stop="deleteCode(row)">
@@ -103,15 +103,16 @@ export default {
         });
       });
     },
-    // updateCode(row) {
-    // 	const { codeName } = row.item;
-    // 	this.$api.updateCode(codeName, {
-    // 		data: {
-    // 			name: codeName,
-    // 			body: this.$store.state.editor.python.content
-    // 		}
-    // 	});
-    // },
+    updateCode(row) {
+    	const { codeName } = row.item;
+    	this.$api.updateCode({
+        index: codeName,
+    		data: {
+          name: codeName,
+    			body: this.$store.state.editor.python.content
+    		}
+    	});
+    },
     deleteCode(row) {
       const { codeName } = row.item;
       this.$api.deleteCode({
@@ -158,14 +159,14 @@ export default {
 				data: 'stop'
 			});
 		},
-    saveCode(row) {
-      const { codeName } = row.item;
-      this.$api
-        .getCode({
-          index: codeName
-        })
-        .then(e => console.log(e));
-    }
+    // saveCode(row) {
+    //   const { codeName } = row.item;
+    //   this.$api
+    //     .getCode({
+    //       index: codeName
+    //     })
+    //     .then(e => console.log(e));
+    // }
   },
   mounted() {
     this.getCodeList();
