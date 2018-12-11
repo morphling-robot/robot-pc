@@ -70,6 +70,7 @@ export default {
 		updateBlocklyModel(blockStr) {
 			if (this.flag) {
 				this.$store.commit('blocklyUpdateCode', blockStr);
+				this.$store.commit('blocklyUpdateContent', blockStr);
 				this.flag = false;
 				setTimeout(() => {
 					this.flag = true;
@@ -79,6 +80,7 @@ export default {
 		updatePythonModel(code) {
 			this.python = code;
 			this.$store.commit('pythonUpdateCode', code);
+			this.$store.commit('pythonUpdateContent', code);
 		}
 	},
 	computed: {

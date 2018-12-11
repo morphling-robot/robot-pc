@@ -8,7 +8,7 @@
                     <b-col cols="2">角度：</b-col>
                     <b-col>
                         <b-form-slider v-model="servo.angle"
-                            trigger-change-event :min="min" :max="max" :step="0.1" @change="updateAngle($event, index + 1)"></b-form-slider>
+                            trigger-change-event :min="min" :max="max" :step="0.1" @slideStop="updateAngle($event, index - 0 + 1)"></b-form-slider>
                             <span style="display: inline-block;width: 5em">{{servo.angle}}</span>
                     </b-col>
                 </b-row>
@@ -60,10 +60,10 @@ export default {
 				}
 			});
         },
-        updateAngle(obj, index) {
+        updateAngle(newValue, index) {
 			const message = {
-				angle: obj.newValue,
-				index
+				angle: newValue,
+				id: index
             };
 			
             this.$emit('angle-changed', message);

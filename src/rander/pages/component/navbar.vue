@@ -46,9 +46,8 @@
 						buttons
 						size="sm"
 						style="margin: 0px;"
-						v-model="mode"
-						name="radiosBtnDefault"
-						@change="isShow = true">
+						v-model="editorMode"
+						name="radiosBtnDefault">
 						<b-form-radio value="blockly"><i class="fas fa-cubes mr-1" />方块文件</b-form-radio>
 						<b-form-radio value="python"><i class="fab fa-python mr-1" />Python</b-form-radio>
 					</b-form-radio-group>
@@ -77,7 +76,7 @@
 				</b-nav-form>
 			</b-navbar-nav>
 		</b-navbar>
-		<b-modal
+		<!-- <b-modal
 			v-model="isShow"
 			:title="$t('modal.prompt')"
 			size="sm"
@@ -87,7 +86,7 @@
 			:cancel-title="$t('robot.code.save')"
 			cancel-variant="link">
 			{{$t('modal.message')}}
-		</b-modal>
+		</b-modal> -->
 	</div>
 
 </template>
@@ -95,7 +94,7 @@
 <script>
 const blocklyFilter = {
 	name: "block",
-	extensions: ["bk", "py"]
+	extensions: ["bk"]
 };
 const pythonFilter = {
 	name: "python",
@@ -107,7 +106,6 @@ export default {
 	name: "navbar",
 	data() {
 		return {
-			mode: 'blockly',
 			fileName: '',
 			ipcRenderer: null,
 			isShow: false,
@@ -117,8 +115,15 @@ export default {
 		this.fileName = '无标题';
 	},
 	computed: {
-		editorMode() {
-			return this.$store.state.editor.mode;
+		editorMode: {
+			get() {
+				return this.$store.state.editor.mode;
+			},
+			set(value) {
+				this.$store.commit('modeUpdate', value);
+
+				this.$router.push(value);
+			}
 		},
 		loggenInUsername() {
 			const name = this.$store.state.user.name;
@@ -141,17 +146,9 @@ export default {
 		updateUserStatus(id, username) {
 			this.$store.commit("updateUserStatus", { id, username });
 		},
-		changeMode() {
-			// this.mode = a;
-			this.$router.push(this.mode);
-		},
-		backToMode() {
-			if (this.mode === 'blockly') {
-				this.mode = 'python'
-			} else {
-				this.mode = 'blockly'
-			}
-		},
+		// changeMode(a) {
+			
+		// },
 		saveFileBtn() {
 			this.saveFile();
 			this.changeMode();
@@ -163,7 +160,6 @@ export default {
 			const fs = electron.remote.require("fs");
 			let text = "";
 			const filters = [];
-			console.log(this.$route.path);
 			switch (this.$route.path) {
 				case "/python":
 				text = this.$store.state.editor.python.code;

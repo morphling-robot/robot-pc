@@ -28,7 +28,7 @@
 			:current-page="currentPage"
 			:per-page="perPage">
       <template slot="codeName" slot-scope="row">
-        <span v-if="isShow" style="display: inline-block;width: 14em">{{row.item.codeName}}</span>
+        <b-link v-if="isShow" style="display: inline-block;min-width: 7em" @click="setCodeToModify(row)">{{row.item.codeName}}</b-link>
         <b-form-input
           size="sm"
           v-if="!isShow" style="display: inline-block;width: 14em"
@@ -89,7 +89,26 @@ export default {
 	methods: {
 		init() {
 			this.getCodeList();
-		},
+    },
+    setCodeToModify(row) {
+      const { codeName } = row.item;
+      this.$api
+        .getCode({
+          index: codeName
+        })
+        .then(code => {
+
+          this.$store.commit('pythonUpdateCode', code.body);
+          this.$store.commit('pythonUpdateContent', code.body);
+
+          this.$router.push("python");
+
+          this.$emit('close-dialog');
+
+          this.$store.commit('modeUpdate', 'python');
+        });
+
+    },
     getCodeList() {
       this.$api.getCodeList().then(data => (this.codeList = data));
     },

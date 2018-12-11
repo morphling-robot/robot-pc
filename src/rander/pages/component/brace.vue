@@ -97,6 +97,8 @@ export default {
     editor.setFontSize(this.fontsize);
     editor.getSession().on('change', this.emitCode);
     editor.setReadOnly(!this.editable);
+
+    this.updateCode(this.code);
   },
   watch: {
     code() {

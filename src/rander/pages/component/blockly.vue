@@ -45,7 +45,7 @@ export default {
   data() {
     return {
       content: Blockly.Xml.textToDom(
-        '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
+        this.blockStr === '' ? '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>' : this.blockStr
       ),
       editor: null
     };

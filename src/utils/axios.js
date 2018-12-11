@@ -195,7 +195,7 @@ const apiList = {
 			})
 			.catch(error => console.log(error));
 	},
-	getFrame({ data, config }) {
+	getFrame({ config }) {
 		this
 			.postInstructs({
 				data: {

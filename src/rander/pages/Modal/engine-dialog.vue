@@ -133,8 +133,11 @@ export default {
             this.getCurrentFrame();
         },
         getCurrentFrame() {
-            this.$api.getFrame().then((data) => {
-                this.frame = data;
+            this.$api.getFrame().then(data => {
+                if (data) {
+
+                    this.frame = data;
+                }
             });
         },
         updateAngle(value) {
@@ -167,6 +170,9 @@ export default {
         changeSelectedMode(mode) {
 			this.selectedMode = mode;
 		}
+    },
+    mounted(){
+        this.getCurrentFrame();
     },
     created() {
 		this.styleObject = genStyleObjectFromMap(adjusterMap);

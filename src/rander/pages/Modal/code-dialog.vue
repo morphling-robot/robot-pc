@@ -6,7 +6,7 @@
 		:title="$t('robot.code.label')"
 		hide-footer
 		no-close-on-backdrop>
-		<code-table style="height: 540px;"/>
+		<code-table style="height: 540px;" @close-dialog="$refs.codeModalRef.hide()" />
 	</b-modal>
 </template>
 
