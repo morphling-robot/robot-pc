@@ -8,7 +8,8 @@ const state = {
 	python: {
 		content: '',
 		code: ''
-	}
+	},
+	codeList: []
 };
 
 const mutations = {
@@ -31,6 +32,9 @@ const mutations = {
 	},
 	updateFileName(state, payload) {
 		state.fileName = payload;
+	},
+	getCodeList(state, payload) {
+		state.codeList = payload;
 	}
 };
 

@@ -31,7 +31,7 @@
         <b-link v-if="isShow" style="display: inline-block;min-width: 7em" @click="setCodeToModify(row)">{{row.item.codeName}}</b-link>
         <b-form-input
           size="sm"
-          v-if="!isShow" style="display: inline-block;width: 14em"
+          v-if="!isShow" style="display: inline-block;width: 12em"
           @blur.native="isShow = true;"
           v-model="row.item.codeName"
           type="text"></b-form-input>
@@ -74,18 +74,18 @@ export default {
     return {
       isShow: true,
       runed: true,
-      codeList: [
-        {
-          codeName: "ABCDE-FGHIJ-KLMNO"
-        }
-      ],
+      // codeList: [
+      //   {
+      //     codeName: "ABCDE-FGHIJ-KLMNO"
+      //   }
+      // ],
       currentPage: 1,
       perPage: 5
     };
 	},
 	mounted() {
 		this.init();
-	},
+  },
 	methods: {
 		init() {
 			this.getCodeList();
@@ -110,7 +110,11 @@ export default {
 
     },
     getCodeList() {
-      this.$api.getCodeList().then(data => (this.codeList = data));
+      this.$api.getCodeList().then(data => {
+
+        // this.codeList = data
+        this.$store.commit('getCodeList', data);
+      });
     },
     createCode() {
       window.prompt('请输入文件名', 'untitle', name => {
@@ -123,14 +127,18 @@ export default {
       });
     },
     updateCode(row) {
-    	const { codeName } = row.item;
-    	this.$api.updateCode({
-        index: codeName,
-    		data: {
-          name: codeName,
-    			body: this.$store.state.editor.python.content
-    		}
-    	});
+      const { codeName } = row.item;
+       this.$api.getCode({
+          index: codeName
+        }).then(code => {
+          this.$api.updateCode({
+            index: codeName,
+            data: {
+              name: codeName,
+              body: code.body
+            }
+          });
+        });
     },
     deleteCode(row) {
       const { codeName } = row.item;
@@ -193,6 +201,9 @@ export default {
   computed: {
     content() {
       return this.$store.state.editor.python.code;
+    },
+    codeList() {
+      return this.$store.state.editor.codeList;
     }
   }
 };

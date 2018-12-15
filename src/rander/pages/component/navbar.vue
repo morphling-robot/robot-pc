@@ -216,7 +216,7 @@ export default {
 		},
 		createCode() {
 			window.prompt('请输入文件名', 'untitle', name => {
-        this.$api.createCode({
+				this.$api.createCode({
 					data: {
 						name,
 						body: this.$store.state.editor.python.code
@@ -227,8 +227,14 @@ export default {
 							password: ''
 						}
 					}
+				}).then(() => {
+					this.$api.getCodeList().then(data => {
+
+						// this.codeList = data
+						this.$store.commit('getCodeList', data);
+					});
 				});
-      });
+			});
 		},
 	},
 	watch: {
