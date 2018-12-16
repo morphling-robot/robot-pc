@@ -195,15 +195,15 @@ const apiList = {
 			})
 			.catch(error => console.log(error));
 	},
-	getFrame({ config }) {
-		this
+	getFrame(config) {
+		return this
 			.postInstructs({
 				data: {
 					instruct_type: 2001,
 				},
 				config
 			})
-			.then(({ data }) => {
+			.then((data) => {
 				return data;
 			})
 			.catch(error => console.log(error));

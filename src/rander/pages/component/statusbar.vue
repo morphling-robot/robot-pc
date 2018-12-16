@@ -24,7 +24,7 @@ export default {
       return this.$store.state.robot.updateCycle;
     },
     msg() {
-      return this.$store.state.user.id ? '已登录' : '未登录'
+      return this.$store.state.user.token ? '已登录' : '未登录'
     }
   },
   methods: {
@@ -32,6 +32,7 @@ export default {
       this.$api
         .getStates()
         .then(payload => {
+          console.log(payload);
           this.$store.commit("updateRobotStatus", payload);
         })
         .catch(err => {

@@ -51,12 +51,17 @@
 			small
 			:items="robotList"
 			:fields="[
+				{key: 'id', label: 'ID'},
 				{ key: 'ip', label: 'IP' },
-				{ key: 'serialNumber', label: 'SN'},
+				{ key: 'power', label: 'POWER'},
+				{key: 'state', label: 'ConnectState'},
 				{ key: 'connect', label: 'Action'}
 			]"
 			:current-page="currentPage"
 			:per-page="perPage">
+			<template slot="state" slot-scope="row">
+				<span>{{row.item.ip === connectedRobot ? 'on' : 'off'}}</span>
+			</template>
 			<template slot="connect" slot-scope="row">
 				<b-button size="sm" @click.stop="connect(row)">
 					<i class="fas fa-exchange-alt" />
@@ -96,6 +101,11 @@ export default {
 			perPage: 5,
 			robotName: ''
     	};
+	},
+	computed: {
+		connectedRobot() {
+			return this.$store.state.robot.status ? this.$store.state.robot.status.ip : '';
+		}
 	},
 	mounted() {
 		// const { ipcRenderer } = this.$electron;
@@ -144,16 +154,20 @@ export default {
 		},
 		search() {
 			this.getNetworkInterfaceList();
-			this.getIpList();console.log(this.ipList);
+			this.getIpList();
 
 			this.robotList = [];
-				let ip = '192.168.43.108';
+				let ip = '192.168.43.63';
 				axios.get(`http://${ip}:5000/v1/states`, { timeout: 5000 })
 					.then(r => {
 						this.robotList.push({
-							ip,
-							serialNumber: 'TEST'
+							id: r.data.robot_id,
+							ip: r.data.ip,
+							power: r.data.power,
+							state: 'off'
 						});
+
+						this.updateRobotStatus();
 					}).catch(r => console.log(r));
 			// this.ipList.forEach(ip => {
 			// 	axios.get(`http://${ip}:5000/v1/states`, { timeout: 5000 })
@@ -184,12 +198,35 @@ export default {
 			// 	});
 			// });
 		},
+		updateRobotStatus() {
+			this.$api
+				.getStates()
+				.then(payload => {
+					if (payload) {
+
+						this.$store.commit("updateRobotStatus", payload);
+					}
+				})
+				.catch(err => {
+				console.log(err);
+				this.$store.commit("updateRobotStatus", {
+					ip: null,
+					posture: null,
+					power: null,
+					robotId: null,
+					ssid: null,
+					robotState: null
+				});
+				});
+			},
 		connect(row) {
 			const event = new CustomEvent('connect');
 
 			event.baseURL = `http://${row.item.ip}:5000`;
 
 			window.dispatchEvent(event);
+
+			row.item.state = 'on';
 		}
 	}
 };

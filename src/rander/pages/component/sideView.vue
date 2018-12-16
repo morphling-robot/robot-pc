@@ -20,9 +20,9 @@
 				width: `${width}px`
 			}">
 			<b-tabs card>
-				<b-tab :title="$t('robot.connect.label')" no-body active>
+				<!-- <b-tab :title="$t('robot.connect.label')" no-body active>
 					<connect-table />
-				</b-tab>
+				</b-tab> -->
 				<b-tab :title="$t('robot.code.label')" no-body>
 					<code-table />
 				</b-tab>

@@ -5,8 +5,9 @@
 		ref="robotModalRef"
 		:title="$t('robot.connect.label')"
 		hide-footer
+		@show="show"
 		no-close-on-backdrop>
-		<connect-table style="height: 540px;"/>
+		<connect-table ref="connect" style="height: 540px;"/>
 	</b-modal>
 </template>
 
@@ -19,6 +20,11 @@ export default {
   data() {
     return {
 
+		}
+	},
+	methods: {
+		show() {
+			this.$refs.connect.search();
 		}
 	},
 	components: {

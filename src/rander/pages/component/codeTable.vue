@@ -3,10 +3,25 @@
 		class="py-3"
 		id="filter">
 		<b-row>
-			<b-col cols="auto">
+			<b-col cols="auto" id="toolbar">
 				<b-button
 					@click="getCodeList"
-					size="sm"><i class="fas fa-sync-alt" /></b-button>
+					size="sm" v-b-tooltip.hover title="刷新"><i class="fas fa-sync-alt" /></b-button>
+        <b-button size="sm" @click.stop="run()" v-if="!runed"
+          v-b-tooltip.hover title="启动">
+          <i class="far fa-play-circle"></i><br/>
+        </b-button>
+        <b-button size="sm" @click.stop="pause()" v-if="runed"
+        v-b-tooltip.hover title="暂停">
+          <i class="far fa-pause-circle"></i><br/>
+        </b-button>
+        <!-- <b-button size="sm" @click.stop="reset()">
+          <i class="fas fa-sync-alt"></i>
+        </b-button> -->
+        <b-button size="sm" @click.stop="stop()"
+        v-b-tooltip.hover title="停止">
+          <i class="far fa-stop-circle"></i><br/>
+        </b-button>
 			</b-col>
 			<b-col></b-col>
 			<b-col cols="auto">
@@ -53,18 +68,6 @@
 				</b-button>
 			</template>
 		</b-table>
-    <b-button size="sm" @click.stop="run()" v-if="!runed">
-      <i class="fas fa-play" />
-    </b-button>
-    <b-button size="sm" @click.stop="pause()" v-if="runed">
-      <i class="fas fa-pause-circle"></i>
-    </b-button>
-    <b-button size="sm" @click.stop="reset()">
-      <i class="fas fa-sync-alt"></i>
-    </b-button>
-    <b-button size="sm" @click.stop="stop()">
-      <i class="fas fa-power-off"></i>
-    </b-button>
 	</div>
 </template>
 
@@ -208,3 +211,4 @@ export default {
   }
 };
 </script>
+

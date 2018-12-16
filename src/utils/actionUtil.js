@@ -58,20 +58,20 @@ export const strToAction = str => {
 }
 
 export const actionToStr = action => {
-	let result = '';console.log(action)
+	let result = '';
 
 	action.speedList.forEach(servo => {
 		result = result + servo.speed + ' ';
 	})
 
-	result + '\n';
+	result = result + '\n';
 
 	action.frameList.forEach(frame => {
 		frame.forEach(servo => {
 			result = result + servo.angle + ' ';
 		});
 
-		result + '\n';
+		result = result + '\n';
 	});
 
 	return result;

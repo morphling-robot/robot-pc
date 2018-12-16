@@ -32,7 +32,20 @@
 		<div style="height: 550px;position: relative;">
 			<b-row style="width: 100%;margin-bottom: 15px;">
 				<b-col cols="4">
-					<b-button size="sm" variant="success" @click="getActionsList"><i class="fas fa-sync-alt" /></b-button>
+					<b-button size="sm" @click="getActionsList" v-b-tooltip.hover title="刷新">
+						<i class="fas fa-sync-alt" /></b-button>
+					<b-button size="sm" @click.stop="run()" v-if="!runed" v-b-tooltip.hover title="启动">
+						<i class="far fa-play-circle"></i>
+					</b-button>
+					<b-button size="sm" @click.stop="pause()" v-if="runed" v-b-tooltip.hover title="暂停">
+						<i class="far fa-pause-circle"></i>
+					</b-button>
+					<!-- <b-button size="sm" @click.stop="reset()">
+						<i class="fas fa-sync-alt"></i>
+					</b-button> -->
+					<b-button size="sm" @click.stop="stop()" v-b-tooltip.hover title="停止">
+						<i class="far fa-stop-circle"></i>
+					</b-button>
 					<b-button size="sm" variant="success" @click="tempCreateAction">创建动作</b-button>
 				</b-col>
 				<b-col></b-col>
@@ -92,29 +105,19 @@
 							<a v-b-tooltip.hover.left :title="row.value" style="cursor: pointer; color: #0000ff">{{row.value}}</a>
 						</template>
 						<template slot="operate" slot-scope="row">
-							<b-button size="sm" @click.stop="updateAction(row)" v-if="row.item.id === actionList[actionIndex].id && hasChanged">
-								<i class="fas fa-save"></i>
-							</b-button>
-							<b-button size="sm" @click.stop="deleteAction(row)">
-								<i class="fas fa-trash-alt" />
-							</b-button>
-							<b-button size="sm" @click.stop="runAction(row)">
-								<i class="fas fa-play" />
-							</b-button>
+							<span>
+								<b-button size="sm" @click.stop="updateAction(row)" v-if="row.item.id === actionList[actionIndex].id && hasChanged">
+									<i class="fas fa-save"></i>
+								</b-button>
+								<b-button size="sm" @click.stop="deleteAction(row)">
+									<i class="fas fa-trash-alt" />
+								</b-button>
+								<b-button size="sm" @click.stop="runAction(row)">
+									<i class="fas fa-play" />
+								</b-button>
+							</span>
 						</template>
 					</b-table>
-					<b-button size="sm" @click.stop="run()" v-if="!runed">
-						<i class="fas fa-play" />
-					</b-button>
-					<b-button size="sm" @click.stop="pause()" v-if="runed">
-						<i class="fas fa-pause-circle"></i>
-					</b-button>
-					<b-button size="sm" @click.stop="reset()">
-						<i class="fas fa-sync-alt"></i>
-					</b-button>
-					<b-button size="sm" @click.stop="stop()">
-						<i class="fas fa-power-off"></i>
-					</b-button>
 				</b-col>
 				<b-col cols="8">
 					<b-row>
@@ -262,6 +265,7 @@ export default {
 
 			this.actionList.unshift(newAction);
 			this.actionIndex = 0;
+			this.frameIndex = 0;
 			this.origin = cloneObj(newAction);
 
 			this.createAction(this.actionIndex);
@@ -291,6 +295,8 @@ export default {
 					body: this.currentAction
 				}
 			});
+
+			this.getAction(index);
 		},
 		updateAction(row) {
 			const { name } = row.item;
@@ -390,10 +396,16 @@ export default {
 		insertFrame() {
 			this.$api
 				.getFrame()
-				.then(data => {
-					let { frameList, speedList } = this.actionList[this.actionIndex];
-					frameList = frameList.splice(this.frameIndex, 0, data.frameList);
-					speedList = frameList.splice(this.frameIndex, 0, data.speedList);
+				.then((data) => {
+					console.log(data)
+					// let { frameList, speedList } = this.actionList[this.actionIndex];
+					// frameList = frameList.splice(this.frameIndex, 0, data.frameList);
+					// speedList = frameList.splice(this.frameIndex, 0, data.speedList);
+					// this.frameIndex = this.frameIndex + 1;
+					let frame = this.actionList[this.actionIndex].frameList[this.frameIndex];
+					console.log(this.frameIndex);
+					frame.splice(this.frameIndex + 1, 0, data.angle_list);
+
 					this.frameIndex = this.frameIndex + 1;
 				})
 		},
@@ -480,7 +492,7 @@ export default {
 				end = oldIndex;
 			}
 
-			const action = this.actionList[this.actionIndex];console.log(action);
+			const action = this.actionList[this.actionIndex];
 			const frameSlice = action.frameList.slice(start, end + 1);
 			const speedSlice = action.speedList.slice(start, end + 1);
 
@@ -513,6 +525,7 @@ export default {
 #action-table {
 	.operate {
 		width: 113px;
+		text-align: right;
 	}
 
 	.action-name {
