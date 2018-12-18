@@ -43,25 +43,31 @@
 			:current-page="currentPage"
 			:per-page="perPage">
       <template slot="codeName" slot-scope="row">
-        <b-link v-if="isShow" style="display: inline-block;min-width: 7em" @click="setCodeToModify(row)">{{row.item.codeName}}</b-link>
-        <b-form-input
-          size="sm"
-          v-if="!isShow" style="display: inline-block;width: 12em"
-          @blur.native="isShow = true;"
-          v-model="row.item.codeName"
-          type="text"></b-form-input>
-          <b-btn
+        <b-link v-if="isShow" style="display: inline-block;min-width: 7em">{{row.item.codeName}}</b-link>
+         <b-btn
+            v-if="isShow"
             @click="isShow = false" size="sm"
             variant="success">
             <i class="fas fa-pencil-alt"></i>
+          </b-btn>
+        <b-form-input
+          size="sm"
+          v-if="!isShow" style="display: inline-block;width: 12em"
+          v-model="row.item.codeName"
+          type="text"></b-form-input>
+         <b-btn
+            v-if="!isShow"
+            @click="setCodeToModify(row)" size="sm"
+            variant="success">
+            <i class="fas fa-save" />
           </b-btn>
       </template>
 			<template slot="action" slot-scope="row">
 				<b-button size="sm" @click.stop="runCode(row)">
 					<i class="fas fa-play" />
 				</b-button>
-				<b-button size="sm" @click.stop="updateCode(row)">
-					<i class="fas fa-save" />
+				<b-button size="sm" @click.stop="setCodeToModify(row)">
+					<i class="fas fa-folder-open" />
 				</b-button>
 				<b-button size="sm" @click.stop="deleteCode(row)">
 					<i class="fas fa-trash-alt" />

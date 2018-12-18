@@ -1,15 +1,15 @@
 <template>
   <div class="w-100">
 	<b-row class="mx-0">
-		<b-col cols="2">
-					速率：
+		<b-col cols="3" style="text-align: right" class="pr-0">
+					帧速率：
 		</b-col>
-		<b-col>
+		<b-col class="pr-0">
 			<b-form-slider v-model="frameSpeed.speed"
 				trigger-change-event :min="1" :max="100" :step="1" @change="updateSpeed"></b-form-slider>
 			<span style="display: inline-block;width: 4em;text-align: center">{{frameSpeed.speed}}</span>
 		</b-col>
-		<b-col class="d-flex justify-content-end" cols="3">
+		<b-col class="d-flex justify-content-end pl-0" cols="2">
 			<b-form-checkbox
 				v-model="follow"
 				:value="true"
@@ -26,7 +26,7 @@
 			<engine  @mouseenter.stop.prevent="pointTarget = index"  v-if="pointTarget == index"
 				:servo="changedFrame[index]" :index="index"
 				@angle-changed="updateAngle"
-				:damperModeList="damperModeList" :disabled="follow" />
+				:damperModeList="damperModeList" />
 		</span>
 	</div>
   </div>
@@ -70,6 +70,22 @@ export default {
 	computed: {
 		changedFrame() {
 			return this.frame;
+		}
+	},
+	watch: {
+		follow() {
+			if (this.follow) {
+				this.$api.changeServoMode({
+					data: {
+						id: 121,
+						mode: 'lock'
+					}
+				}).then(() => {
+
+					this.$emit('mode-init');
+				});
+
+			}
 		}
 	},
 	created() {

@@ -12,6 +12,9 @@
 				<b-dropdown-item @click="changeLocale('en')">
 					{{$t('navbar.English')}}
 				</b-dropdown-item>
+				<!-- <b-dropdown-item @click="createFile">
+					新建
+				</b-dropdown-item> -->
 				<b-dropdown-item @click="saveFile">
 					保存
 				</b-dropdown-item>

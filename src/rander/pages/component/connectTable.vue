@@ -162,8 +162,10 @@ export default {
 				axios.get(`http://${ip}:5000/v1/states`, { timeout: 5000 })
 					.then(r => {
 						this.robotList.push({
-							ip,
-							serialNumber: 'TEST'
+							id: r.data.robot_id,
+							ip: r.data.ip,
+							power: r.data.power,
+							state: 'off'
 						});
 					}).catch(r => console.log(r));
 			});
@@ -214,6 +216,8 @@ export default {
 			event.baseURL = `http://${row.item.ip}:5000`;
 
 			window.dispatchEvent(event);
+			
+			this.updateRobotStatus();
 
 			row.item.state = 'on';
 		}

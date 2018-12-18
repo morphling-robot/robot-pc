@@ -284,7 +284,7 @@ const apiList = {
 			.catch(error => console.log(error));
 	},
 	changeServoMode({ data: servo, config }) {
-		this
+		return this
 			.postInstructs({
 				data: {
 					instruct_type: 5001,

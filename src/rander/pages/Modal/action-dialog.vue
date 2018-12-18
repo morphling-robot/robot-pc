@@ -55,8 +55,7 @@
 						<b-input-group-prepend>
 							<b-btn
 								@click="setAllServo"
-								variant="success"><i
-									class="fas fa-sync-alt" />
+								variant="success"><i class="fas fa-cog"></i>
 							</b-btn>
 						</b-input-group-prepend>
 						<b-dropdown
@@ -83,10 +82,13 @@
 					v-model="currentActionPage"
 					:limit="5"
 					:per-page="10" />
-					<b-form-slider v-model="speed"
-						class="mb-2"
-						trigger-change-event :min="1" :max="100" :step="1"></b-form-slider>
-					<span style="display: inline-block;text-align: center;margin-right: -2em">{{speed}}</span>
+					<div style="width: 130%">
+						速度：
+						<b-form-slider v-model="speed"
+							class="mb-2"
+							trigger-change-event :min="1" :max="100" :step="1"></b-form-slider>
+						<span style="display: inline-block;width: 2em;text-align: center">{{speed}}</span>
+					</div>
 					<b-table
 						id="action-table"
 						small
@@ -139,6 +141,7 @@
 							:frame="selectedFrame"
 							:frameSpeed="currentAction.speedList[frameIndex - 1]"
 							:damperModeList="damperModeList"
+							@mode-init="initModeList"
 							/>
 					</b-row>
 				</b-col>
@@ -173,7 +176,7 @@ function actionFactory() {
 const damperMode = [];
 
 for (let i = 0; i < 17; i++) {
-	damperMode.push({mode: 'free'});
+	damperMode.push({mode: 'lock'});
 }
 
 export default {
@@ -182,6 +185,7 @@ export default {
 	},
 	data() {
 		return {
+			temp: false,
 			runed: true,
 			actionIndex: 0,
 			frameIndex: 1,
@@ -232,7 +236,7 @@ export default {
 			origin: null,
 			styleObject: {},
 			isShow: true,
-			speed: 1,
+			speed: 10,
 			damperModeList: damperMode
 		}
 	},
@@ -249,6 +253,16 @@ export default {
 		this.getActionsList();
 	},
 	methods: {
+		initModeList() {
+			this.$api
+				.getFrame()
+				.then((data) => {
+					if (data) {
+
+						this.damperModeList = data.mode_list;
+					}
+				})
+		},
 		getActionsList() {
 			this.$api.getActionsList().then(data => {
 				
@@ -261,14 +275,22 @@ export default {
 			});
 		},
 		tempCreateAction() {
-			const newAction = actionFactory();
-
-			this.actionList.unshift(newAction);
-			this.actionIndex = 0;
-			this.frameIndex = 0;
-			this.origin = cloneObj(newAction);
-
-			this.createAction(this.actionIndex);
+			this.$api
+				.getFrame()
+				.then((data) => {
+					
+					this.damperModeList = data.mode_list;
+					const newAction = {
+						name: '新动作',
+						frameList: data.angle_list,
+						speedList: [{speed: 10}]
+					};
+					this.actionList.unshift(newAction);
+					this.actionIndex = 0;
+					this.frameIndex = 0;
+					this.origin = null;
+					this.temp = true;
+				})
 		},
 		getAction(index) {
 			this.$api.getActions({
@@ -282,12 +304,13 @@ export default {
 			}).then(data => {
 				const result = Object.assign(this.actionList[index], data);
 
+				this.temp = false;
+
 
 				this.origin = cloneObj(result);
 			});
 		},
-		createAction(index) {
-			const { name } = this.actionList[index];
+		createAction(name) {
 			this.$api.createActions({
 				index: name,
 				data: {
@@ -301,13 +324,19 @@ export default {
 		updateAction(row) {
 			const { name } = row.item;
 
-			this.$api.updateActions({
-				index: name,
-				data: {
-					name: name,
-					body: this.currentAction
-				}
-			});
+			if (this.temp) {
+				this.createAction(name);
+			} else {
+
+				this.$api.updateActions({
+					index: name,
+					data: {
+						name: name,
+						body: this.currentAction
+					}
+				});
+			}
+
 		},
 		deleteAction(row) {
 			const { name } = row.item;
@@ -321,24 +350,33 @@ export default {
 			const electron = this.$electron;
 			const { dialog } = electron.remote;
 
-			dialog.showMessageBox({
-				type: 'warning',
-				title: '提示',
-				message: '当前有未保存修改, 直接切换可能造成修改丢失!',
-				buttons: ['保存', '跳转']
-			}, (btnIndex) => {
-				if (btnIndex === 0) {
-					this.updateAction(this.actionIndex).then(() => {
+			if (this.hasChanged && index !== this.actionIndex) {
+
+				dialog.showMessageBox({
+					type: 'warning',
+					title: '提示',
+					message: '当前有未保存修改, 直接切换可能造成修改丢失!',
+					buttons: ['保存', '跳转']
+				}, (btnIndex) => {
+					if (btnIndex === 0) {
+						this.updateAction(this.actionIndex).then(() => {
+							this.actionIndex = index;
+						});
+					} else if (btnIndex === 1) {
 						this.actionIndex = index;
-					});
-				} else if (btnIndex === 1) {
-					this.actionIndex = index;
-				}
+					}
+	
+					this.frameIndex = 1;
+	
+					this.getAction(index);
+				});
+			} else {
+				this.actionIndex = index;
 
+				
 				this.frameIndex = 1;
+			}
 
-				this.getAction(index);
-			});
 		},
 		runAction(row) {
 			const { name } = row.item;
@@ -406,6 +444,8 @@ export default {
 					console.log(this.frameIndex);
 					frame.splice(this.frameIndex + 1, 0, data.angle_list);
 
+					this.damperModeList = data.mode_list;
+
 					this.frameIndex = this.frameIndex + 1;
 				})
 		},
@@ -441,7 +481,7 @@ export default {
 		},
 		hasChanged() {
 			if (!this.origin || !this.actionList[this.actionIndex]) {
-				return;
+				return true;
 			}
 
 			const keyList = Object.keys(this.actionList[this.actionIndex]);
@@ -496,15 +536,26 @@ export default {
 			const frameSlice = action.frameList.slice(start, end + 1);
 			const speedSlice = action.speedList.slice(start, end + 1);
 
-			this.$api.runActionSlice({
+			this.$api.changeServoMode({
 				data: {
-					body: {
-						frameList: frameSlice,
-						speedList: speedSlice
-					},
-					speed: this.speed
+					id: 121,
+					mode: 'lock'
 				}
-			})
+			}).then(() => {
+
+				this.$api.runActionSlice({
+					data: {
+						body: {
+							frameList: frameSlice,
+							speedList: speedSlice
+						},
+						speed: this.speed
+					}
+				});
+				
+				this.initModeList();
+			});
+
 		}
 	}
 }

@@ -26,33 +26,6 @@ export default {
     msg() {
       return this.$store.state.user.token ? '已登录' : '未登录'
     }
-  },
-  methods: {
-    updateRobotStatus() {
-      this.$api
-        .getStates()
-        .then(payload => {
-          console.log(payload);
-          this.$store.commit("updateRobotStatus", payload);
-        })
-        .catch(err => {
-          console.log(err);
-          this.$store.commit("updateRobotStatus", {
-            ip: null,
-            posture: null,
-            power: null,
-            robotId: null,
-            ssid: null,
-            robotState: null
-          });
-        });
-    }
-  },
-  mounted() {
-    // const throttle = setInterval(
-    //   this.updateRobotStatus,
-    //   this.statusUpdateCycle
-    // );
   }
 };
 </script>

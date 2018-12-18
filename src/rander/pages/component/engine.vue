@@ -18,7 +18,6 @@
                     label="阻尼:">
                     <b-form-radio-group
                         size="sm"
-                        :disabled="disabled"
                         v-model="damperModeList[index].mode"
                         :options="options"
                         @change="updateDamper($event, index + 1)"
@@ -38,7 +37,7 @@
 // }
 
 export default {
-    props: ['servo', 'index', 'damperModeList', 'disabled'],
+    props: ['servo', 'index', 'damperModeList'],
     data() {
 		return {
 			min: -180,
