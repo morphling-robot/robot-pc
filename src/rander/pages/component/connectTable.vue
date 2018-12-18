@@ -157,27 +157,16 @@ export default {
 			this.getIpList();
 
 			this.robotList = [];
-				let ip = '192.168.43.63';
+			
+			this.ipList.forEach(ip => {
 				axios.get(`http://${ip}:5000/v1/states`, { timeout: 5000 })
 					.then(r => {
 						this.robotList.push({
-							id: r.data.robot_id,
-							ip: r.data.ip,
-							power: r.data.power,
-							state: 'off'
+							ip,
+							serialNumber: 'TEST'
 						});
-
-						this.updateRobotStatus();
 					}).catch(r => console.log(r));
-			// this.ipList.forEach(ip => {
-			// 	axios.get(`http://${ip}:5000/v1/states`, { timeout: 5000 })
-			// 		.then(r => {
-			// 			this.robotList.push({
-			// 				ip,
-			// 				serialNumber: 'TEST'
-			// 			});
-			// 		}).catch(r => console.log(r));
-			// });
+			});
 
 			// const dgram = this.$electron.remote.require("dgram");
 			// const socket = dgram.createSocket("udp4");

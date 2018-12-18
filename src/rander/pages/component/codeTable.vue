@@ -102,7 +102,6 @@ export default {
         .then(code => {
 
           this.$store.commit('pythonUpdateCode', code.body);
-          this.$store.commit('pythonUpdateContent', code.body);
 
           this.$router.push("python");
 
@@ -124,7 +123,7 @@ export default {
         this.$api.createCode({
           data: {
             name,
-            body: this.$store.state.editor.python.content
+            body: this.$store.state.editor.python.code
           }
         });
       });

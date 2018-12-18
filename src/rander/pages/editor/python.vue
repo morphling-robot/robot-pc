@@ -30,12 +30,11 @@ export default {
     },
     updatePythonModel(code) {
       this.$store.commit('pythonUpdateCode', code);
-      this.$store.commit('pythonUpdateContent', code);
     }
   },
   computed: {
     content() {
-      return this.$store.state.editor.python.content;
+      return this.$store.state.editor.python.code;
     }
   }
 }

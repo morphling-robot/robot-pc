@@ -209,7 +209,8 @@ export default {
 						console.log(filename);
 						const data = fs.readFileSync(filename, "utf8");
 						console.log(route);
-						this.$store.commit(`${route}UpdateContent`, data);
+						this.$store.commit(`${route}UpdateCode`, data);
+						this.$store.commit(`${route}UpdateOpendState`, true);
 					}, 100);
 				}
 			);

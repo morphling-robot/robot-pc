@@ -80,10 +80,20 @@ export default {
     this.editor = this.render("blocklyDiv", toolbox);
     this.editor.addChangeListener(this.updateCode);
   },
+  computed: {
+    isOpenFile() {
+      return this.$store.state.editor.blockly.isFileOpen;
+    }
+  },
   watch: {
     blockStr() {
-      const xml = Blockly.Xml.textToDom(this.blockStr);
-      Blockly.Xml.clearWorkspaceAndLoadFromXml(xml, this.editor);
+      if (this.isOpenFile) {
+        const xml = Blockly.Xml.textToDom(this.blockStr);
+        Blockly.Xml.clearWorkspaceAndLoadFromXml(xml, this.editor);
+
+
+         this.$store.commit(`blocklyUpdateOpendState`, false);
+      }
     },
     locale() {
       this.changeLocale(this.locale);

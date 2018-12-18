@@ -2,11 +2,11 @@ const state = {
 	mode: 'blockly',
 	fileName: '',
 	blockly: {
-		content: '',
+		isFileOpen: false,
 		code: ''
 	},
 	python: {
-		content: '',
+		isFileOpen: false,
 		code: ''
 	},
 	codeList: []
@@ -18,14 +18,14 @@ const mutations = {
 			state.mode = payload;
 		}
 	},
-	blocklyUpdateContent(state, payload) {
-		state.blockly.content = payload;
+	blocklyUpdateOpendState(state, payload) {
+		state.blockly.isFileOpen = payload;
 	},
 	blocklyUpdateCode(state, payload) {
 		state.blockly.code = payload;
 	},
-	pythonUpdateContent(state, payload) {
-		state.python.content = payload;
+	pythonUpdateOpenedState(state, payload) {
+		state.python.isFileOpen = payload;
 	},
 	pythonUpdateCode(state, payload) {
 		state.python.code = payload;

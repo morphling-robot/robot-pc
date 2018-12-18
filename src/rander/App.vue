@@ -145,7 +145,7 @@ export default {
       }
 
       setTimeout(() => {
-        this.$store.commit("pythonUpdateContent", "");
+        this.$store.commit("pythonUpdateCode", "");
       }, 100);
     });
 
@@ -156,7 +156,7 @@ export default {
 
       setTimeout(() => {
         this.$store.commit(
-          "blocklyUpdateContent",
+          "blocklyUpdateCode",
           '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
         );
       }, 100);
@@ -186,7 +186,8 @@ export default {
             console.log(filename);
             const data = fs.readFileSync(filename, "utf8");
             console.log(data);
-            this.$store.commit(`${route}UpdateContent`, data);
+            this.$store.commit(`${route}UpdateCode`, data);
+            this.$store.commit(`${route}UpdateOpendState`, true);
           }, 100);
         }
       );
