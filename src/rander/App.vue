@@ -88,7 +88,6 @@ export default {
   data() {
     return {
       file: null,
-      // sidebarWidth: 340
     };
   },
   computed: {

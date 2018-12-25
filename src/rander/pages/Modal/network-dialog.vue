@@ -43,10 +43,23 @@
 				v-model="password" />
 		</b-form-group>
 		<b-row>
-			<b-col />
+			<b-col>
+				<p v-if="prompt.isShow" class="mb-0">
+					<span v-if="prompt.isSuccess === 0">
+						<i class="fas fa-sync-alt animated rotateIn infinite" /> 网络连接中......
+					</span>
+					<span v-if="prompt.isSuccess === 1" class="text-success">
+						<i class="far fa-check-circle" /> 网络连接成功!
+					</span>
+					<span v-if="prompt.isSuccess === -1" class="text-danger">
+						<i class="far fa-times-circle" /> 网络连接失败!
+					</span>
+				</p>
+			</b-col>
 			<b-col cols="auto">
 				<b-button
-					@click="setNetwork"
+					variant="success"
+					@click="setNetwork" :disabled="prompt.isShow && prompt.isSuccess === 0"
 					size="sm">{{$t('robot.network.connect')}}</b-button>
 			</b-col>
 		</b-row>
@@ -54,6 +67,13 @@
 </template>
 
 <script>
+function initPrompt() {
+	return {
+		isShow: false,
+		isSuccess: 0,
+	};
+}
+
 export default {
 	data() {
 		return {
@@ -62,7 +82,8 @@ export default {
 				'ORCHANGE_5G'
 			],
 			selectedSSID: null,
-			password: 'P@ssw0rd'
+			password: 'P@ssw0rd',
+			prompt: initPrompt()
 		}
 	},
 	mounted() {
@@ -81,18 +102,26 @@ export default {
 			this.selectedSSID = ssid;
 		},
 		getNetworkList() {
+			this.prompt = initPrompt();
+
 			this.$api.getNetworkList().then(data => {
 				this.ssidList = data;
 				this.changeSSID();
 			});
 		},
 		setNetwork() {
+			this.prompt.isShow = true;
+
 			this.$api.postNetwork({
 				data: {
 					ssid: this.selectedSSID,
 					password: this.password
 				}
-			});
+			}).then(() => {
+				this.prompt.isSuccess = 1;
+			}).catch(err => {
+				this.prompt.isSuccess = -1;
+			}) ;
 		}
 	}
 }

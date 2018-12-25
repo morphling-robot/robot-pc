@@ -15,9 +15,13 @@ import 'videojs-record/dist/css/videojs.record.css';
 import './style.less'
 import axios from '@/utils/axios';
 
+import changeConfirm from './plugin/changeConfirm'; 
+
 
 import bFormSlider from 'vue-bootstrap-slider';
-import 'bootstrap-slider/dist/css/bootstrap-slider.css'
+import 'bootstrap-slider/dist/css/bootstrap-slider.css';
+
+import 'animate.css';
 
 Blockly.prompt = function (message, defaultValue, callback) {
 	app.$root.$emit('bv::show::modal', 'prompt-modal');
@@ -38,6 +42,7 @@ Vue.use(BootstrapVue);
 Vue.use(VueElectron);
 Vue.use(axios);
 Vue.use(bFormSlider);
+Vue.use(changeConfirm);
 
 const app = new Vue(Object.assign({ store, router, i18n }, App));
 

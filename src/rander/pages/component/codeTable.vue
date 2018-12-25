@@ -57,7 +57,7 @@
           type="text"></b-form-input>
          <b-btn
             v-if="!isShow"
-            @click="setCodeToModify(row)" size="sm"
+            @click="updateCode(row)" size="sm"
             variant="success">
             <i class="fas fa-save" />
           </b-btn>
@@ -83,11 +83,6 @@ export default {
     return {
       isShow: true,
       runed: true,
-      // codeList: [
-      //   {
-      //     codeName: "ABCDE-FGHIJ-KLMNO"
-      //   }
-      // ],
       currentPage: 1,
       perPage: 5
     };
@@ -114,13 +109,14 @@ export default {
           this.$emit('close-dialog');
 
           this.$store.commit('modeUpdate', 'python');
+
+          this.$root.$emit('change-mode', 'python');
         });
 
     },
     getCodeList() {
       this.$api.getCodeList().then(data => {
 
-        // this.codeList = data
         this.$store.commit('getCodeList', data);
       });
     },
@@ -158,7 +154,9 @@ export default {
             password: ''
           }
         }
-      });
+      }).then(() => {
+        this.getCodeList();
+      })
     },
     runCode(row) {
       const { codeName } = row.item;
@@ -194,14 +192,6 @@ export default {
 				data: 'stop'
 			});
 		},
-    // saveCode(row) {
-    //   const { codeName } = row.item;
-    //   this.$api
-    //     .getCode({
-    //       index: codeName
-    //     })
-    //     .then(e => console.log(e));
-    // }
   },
   mounted() {
     this.getCodeList();

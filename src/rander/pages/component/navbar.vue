@@ -12,13 +12,13 @@
 				<b-dropdown-item @click="changeLocale('en')">
 					{{$t('navbar.English')}}
 				</b-dropdown-item>
-				<!-- <b-dropdown-item @click="createFile">
+				<b-dropdown-item @click="createFile">
 					新建
-				</b-dropdown-item> -->
+				</b-dropdown-item>
 				<b-dropdown-item @click="saveFile">
 					保存
 				</b-dropdown-item>
-				<b-dropdown-item @click="openFile">
+				<b-dropdown-item @click="operateFile">
 					打开
 				</b-dropdown-item>
 				<b-dropdown-item @click="createCode">
@@ -69,7 +69,7 @@
 					<b-button
 						class="mr-2"
 						size="sm"
-						@click="openFile"
+						@click="operateFile"
 						v-b-tooltip.hover title="打开"><i class="fas fa-folder-open" /></b-button>
 
 					<b-button
@@ -112,22 +112,13 @@ export default {
 			fileName: '',
 			ipcRenderer: null,
 			isShow: false,
+			editorMode: this.$store.state.editor.mode
 		}
 	},
 	mounted() {
 		this.fileName = '无标题';
 	},
 	computed: {
-		editorMode: {
-			get() {
-				return this.$store.state.editor.mode;
-			},
-			set(value) {
-				this.$store.commit('modeUpdate', value);
-
-				this.$router.push(value);
-			}
-		},
 		loggenInUsername() {
 			const name = this.$store.state.user.name;
 			if (name) {
@@ -149,9 +140,18 @@ export default {
 		updateUserStatus(id, username) {
 			this.$store.commit("updateUserStatus", { id, username });
 		},
-		// changeMode(a) {
-			
-		// },
+		createFile() {
+			const electron = this.$electron;
+			const { dialog } = electron.remote;
+			const ipcRenderer = electron.ipcRenderer;
+			const fs = electron.remote.require("fs");
+			let text = "";
+			const filters = [pythonFilter, blocklyFilter];
+
+			dialog.showSaveDialog({ properties: ["openFile"], filters }, filename => {
+				fs.writeFileSync(filename, text, "utf8");
+			});
+		},
 		saveFileBtn() {
 			this.saveFile();
 			this.changeMode();
@@ -207,16 +207,27 @@ export default {
 						route = "python";
 					}
 					this.$router.push(route);
+					this.$store.commit('modeUpdate', route);
+					this.editorMode = route;
 
 					setTimeout(() => {
-						console.log(filename);
 						const data = fs.readFileSync(filename, "utf8");
-						console.log(route);
 						this.$store.commit(`${route}UpdateCode`, data);
 						this.$store.commit(`${route}UpdateOpendState`, true);
 					}, 100);
 				}
 			);
+
+		},
+		operateFile() {
+			if (this.$store.state.editor.python.code !== '') {
+
+				this.$dialog.confirmChange().then(() => {
+					this.openFile();
+				})
+			} else {
+				this.openFile();
+			}
 		},
 		createCode() {
 			window.prompt('请输入文件名', 'untitle', name => {
@@ -234,7 +245,6 @@ export default {
 				}).then(() => {
 					this.$api.getCodeList().then(data => {
 
-						// this.codeList = data
 						this.$store.commit('getCodeList', data);
 					});
 				});
@@ -244,11 +254,40 @@ export default {
 	watch: {
 		fileName() {
 			this.$store.commit('updateFileName', this.fileName);
+		},
+		editorMode(newValue, oldValue) {
+
+			if (oldValue !== 'python' || this.$store.state.editor.python.code === '') {
+				this.$store.commit('modeUpdate', newValue);
+	
+				this.$router.push(newValue);
+
+				return;
+			}
+
+			if (this._isRestore) {
+				return this._isRestore = false;
+			}
+
+			this.$dialog.confirmChange().then(() => {
+
+				this.$store.commit('modeUpdate', newValue);
+	
+				this.$router.push(newValue);
+				
+			}, () => {
+				this._isRestore = true;
+				this.editorMode = oldValue;
+			});
 		}
 	},
 	mounted() {
 		const electron = this.$electron;
 		this.ipcRenderer = electron.ipcRenderer;
+		
+    	this.$root.$on('change-mode', (mode) => {
+			this.editorMode = mode;
+		});
 	}
 };
 </script>

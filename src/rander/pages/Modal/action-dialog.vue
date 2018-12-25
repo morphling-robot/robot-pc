@@ -250,7 +250,9 @@ export default {
 		// ipcRenderer.on('app-toggle-action-dialog', () => {
 		// 	this.$refs.actionModalRef.show();
 		// });
-		this.getActionsList();
+		this.getActionsList().then(() => {
+			this.origin = cloneObj(this.actionList[this.actionIndex]);
+		});
 	},
 	methods: {
 		initModeList() {
@@ -264,12 +266,10 @@ export default {
 				})
 		},
 		getActionsList() {
-			this.$api.getActionsList().then(data => {
+			return this.$api.getActionsList().then(data => {
 				
 				if (data) {
 					this.actionList = data;
-
-					this.origin = cloneObj(this.actionList[this.actionIndex]);
 				}
 
 			});
@@ -305,9 +305,6 @@ export default {
 				const result = Object.assign(this.actionList[index], data);
 
 				this.temp = false;
-
-
-				this.origin = cloneObj(result);
 			});
 		},
 		createAction(name) {
@@ -356,14 +353,15 @@ export default {
 					type: 'warning',
 					title: '提示',
 					message: '当前有未保存修改, 直接切换可能造成修改丢失!',
-					buttons: ['保存', '跳转']
+					buttons: ['跳转', '保存']
 				}, (btnIndex) => {
 					if (btnIndex === 0) {
-						this.updateAction(this.actionIndex).then(() => {
 							this.actionIndex = index;
-						});
-					} else if (btnIndex === 1) {
-						this.actionIndex = index;
+						} else if (btnIndex === 1) {
+							this.updateAction({
+								item: this.actionList[this.actionIndex]
+							});
+							this.actionIndex = index;
 					}
 	
 					this.frameIndex = 1;
@@ -435,13 +433,11 @@ export default {
 			this.$api
 				.getFrame()
 				.then((data) => {
-					console.log(data)
 					// let { frameList, speedList } = this.actionList[this.actionIndex];
 					// frameList = frameList.splice(this.frameIndex, 0, data.frameList);
 					// speedList = frameList.splice(this.frameIndex, 0, data.speedList);
 					// this.frameIndex = this.frameIndex + 1;
 					let frame = this.actionList[this.actionIndex].frameList[this.frameIndex];
-					console.log(this.frameIndex);
 					frame.splice(this.frameIndex + 1, 0, data.angle_list);
 
 					this.damperModeList = data.mode_list;
@@ -556,6 +552,9 @@ export default {
 				this.initModeList();
 			});
 
+		},
+		actionIndex(newValue) {
+			this.origin = cloneObj(this.actionList[newValue]);
 		}
 	}
 }

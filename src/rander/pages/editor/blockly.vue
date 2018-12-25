@@ -71,6 +71,7 @@ export default {
 			if (this.flag) {
 				this.$store.commit('blocklyUpdateCode', blockStr);
 				this.flag = false;
+				
 				setTimeout(() => {
 					this.flag = true;
 				}, this.cooldown) 

@@ -40,8 +40,7 @@ const apiList = {
 			.post(prefix + '/network', axiosData, axiosConfig)
 			.then(({ data }) => {
 				return data;
-			})
-			.catch(error => console.log(error));
+			});
 	},
 	getCodeList() {
 		return api.robot
@@ -337,8 +336,7 @@ const apiList = {
 			.post(prefix + '/token', axiosData, axiosConfig)
 			.then(({ data }) => {
 				return data;
-			})
-			.catch(error => console.log(error));
+			});
 	}
 };
 

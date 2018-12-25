@@ -6,7 +6,8 @@
 		ref="loginModalRef"
 		no-close-on-backdrop
 		centered
-		@ok="handleLogin()">
+		hide-footer
+		@shown="init">
 		<b-form-group
 			:label="$t('user.name')">
 			<b-form-input
@@ -19,15 +20,43 @@
 				size="sm"
 				v-model="password" />
 		</b-form-group>
+		<b-row>
+			<b-col>
+				<p v-if="prompt.isShow" class="mb-0">
+					<span v-if="prompt.isSuccess === 0">
+						<i class="fas fa-sync-alt animated rotateIn infinite" /> 用户登录中......
+					</span>
+					<span v-if="prompt.isSuccess === 1" class="text-success">
+						<i class="far fa-check-circle" /> 用户登录成功!
+					</span>
+					<span v-if="prompt.isSuccess === -1" class="text-danger">
+						<i class="far fa-times-circle" /> 用户登录失败!
+					</span>
+				</p>
+			</b-col>
+			<b-col cols="auto">
+				<b-button variant="success"
+					@click="handleLogin" :disabled="prompt.isShow && prompt.isSuccess === 0"
+					size="sm">{{$t('user.login')}}</b-button>
+			</b-col>
+		</b-row>
 	</b-modal>
 </template>
 
 <script>
+function initPrompt() {
+	return {
+		isShow: false,
+		isSuccess: 0,
+	};
+}
+
 export default {
 	data() {
 		return {
 			username: '',
 			password: '',
+			prompt: initPrompt()
 		};
 	},
 	mounted() {
@@ -46,6 +75,8 @@ export default {
 			this.$store.commit('updateUserStatus', { id, username });
 		},
 		handleLogin() {
+			this.prompt.isShow = true;
+
 			this.$api.createToken({
 				data: {
 					username: this.username,
@@ -53,7 +84,16 @@ export default {
 				}
 			}).then((data) => {
 				this.$store.commit('updateUserToken', data.token);
-			}).catch(e => console.log(e))
+
+				this.prompt.isSuccess = 1;
+			}).catch(e => {
+				this.prompt.isSuccess = -1;
+			});
+		},
+		init() {
+			this.username = '';
+			this.password = '';
+			this.prompt = initPrompt();
 		}
 	}
 }
