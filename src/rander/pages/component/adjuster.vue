@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import adjusterMap from '../component/adjusterMap.yaml';
+import adjusterMap from '../../config/adjusterMap.yaml';
 import genStyleObjectFromMap from '@/utils/genStyleObjectFromMap';
 
 import Engine from './engine.vue';

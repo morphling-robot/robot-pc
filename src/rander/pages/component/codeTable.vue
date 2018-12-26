@@ -27,7 +27,8 @@
 			<b-col cols="auto">
 				<b-pagination
 					size="sm"
-					:total-rows="2"
+          :limit="3"
+					:total-rows="codeList.length"
 					v-model="currentPage"
 					:per-page="perPage" />
 			</b-col>
@@ -201,6 +202,7 @@ export default {
       return this.$store.state.editor.python.code;
     },
     codeList() {
+      console.log(this.$store.state.editor.codeList);
       return this.$store.state.editor.codeList;
     }
   }

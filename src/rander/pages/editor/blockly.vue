@@ -30,7 +30,7 @@
 					:softwrap="'free'"
 					:selectionstyle="'text'"
 					:highlightline="true"
-					:code="python">
+					:code="python"> 
 				</brace>
 			</b-col>
 		</b-row>

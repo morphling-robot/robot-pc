@@ -153,7 +153,7 @@
 <script>
 import Adjuster from '../component/adjuster.vue';
 import ActionProgress from '@/utils/Progress.vue';
-import adjusterMap from '../component/adjusterMap.yaml';
+import adjusterMap from '../../config/adjusterMap.yaml';
 import genStyleObjectFromMap from '@/utils/genStyleObjectFromMap';
 import cloneObj from '@/utils/cloneObject.js';
 

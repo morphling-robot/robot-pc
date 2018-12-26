@@ -34,7 +34,10 @@ const mutations = {
 		state.fileName = payload;
 	},
 	getCodeList(state, payload) {
-		state.codeList = payload;
+
+		if (payload) {
+			state.codeList = payload;
+		}
 	}
 };
 

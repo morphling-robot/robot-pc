@@ -265,10 +265,6 @@ export default {
 				return;
 			}
 
-			if (this._isRestore) {
-				return this._isRestore = false;
-			}
-
 			this.$dialog.confirmChange().then(() => {
 
 				this.$store.commit('modeUpdate', newValue);
@@ -276,7 +272,6 @@ export default {
 				this.$router.push(newValue);
 				
 			}, () => {
-				this._isRestore = true;
 				this.editorMode = oldValue;
 			});
 		}

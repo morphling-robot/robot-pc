@@ -46,13 +46,13 @@
 			<b-col>
 				<p v-if="prompt.isShow" class="mb-0">
 					<span v-if="prompt.isSuccess === 0">
-						<i class="fas fa-sync-alt animated rotateIn infinite" /> 网络连接中......
+						<i class="fas fa-sync-alt animated rotateIn infinite" /> 配置网络中，请稍侯......
 					</span>
 					<span v-if="prompt.isSuccess === 1" class="text-success">
-						<i class="far fa-check-circle" /> 网络连接成功!
+						<i class="far fa-check-circle" /> 网络配置成功，机器人下次重启后将优先连接此网络
 					</span>
 					<span v-if="prompt.isSuccess === -1" class="text-danger">
-						<i class="far fa-times-circle" /> 网络连接失败!
+						<i class="far fa-times-circle" /> 网络配置失败，请检查wifi密码是否正确
 					</span>
 				</p>
 			</b-col>
@@ -120,7 +120,7 @@ export default {
 			}).then(() => {
 				this.prompt.isSuccess = 1;
 			}).catch(err => {
-				this.prompt.isSuccess = -1;
+				// this.prompt.isSuccess = -1;
 			}) ;
 		}
 	}

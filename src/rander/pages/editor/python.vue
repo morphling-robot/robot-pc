@@ -24,6 +24,11 @@ export default {
   components: {
     Brace
   },
+  data() {
+    return {
+      content: this.$store.state.editor.python.code
+    }
+  },
   methods: {
     onPythonUpdate(code) {
       this.updatePythonModel(code);
@@ -32,11 +37,11 @@ export default {
       this.$store.commit('pythonUpdateCode', code);
     }
   },
-  computed: {
-    content() {
-      return this.$store.state.editor.python.code;
-    }
-  }
+  // computed: {
+  //   content() {
+  //     return this.$store.state.editor.python.code;
+  //   }
+  // }
 }
 </script>
 

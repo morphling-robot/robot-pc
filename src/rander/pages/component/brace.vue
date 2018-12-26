@@ -129,17 +129,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less" scoped>
-// .ace-github {
-//   background-color: #343a40 !important;
-//   color: #ffffff !important;
-//   .ace_print-margin {
-//     background: inherit !important;
-//   }
-// }
-
-// .ace-github .ace_marker-layer .ace_active-line {
-//   background: rgb(134, 140, 135) !important;
-// }
-</style>

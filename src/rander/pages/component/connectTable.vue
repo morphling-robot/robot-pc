@@ -41,6 +41,7 @@
 			<b-col cols="auto">
 				<b-pagination
 					size="sm"
+					:limit="5"
 					:total-rows="robotList.length"
 					v-model="currentPage"
 					:per-page="perPage" />
@@ -199,15 +200,14 @@ export default {
 					}
 				})
 				.catch(err => {
-				console.log(err);
-				this.$store.commit("updateRobotStatus", {
-					ip: null,
-					posture: null,
-					power: null,
-					robotId: null,
-					ssid: null,
-					robotState: null
-				});
+					this.$store.commit("updateRobotStatus", {
+						ip: null,
+						posture: null,
+						power: null,
+						robotId: null,
+						ssid: null,
+						robotState: null
+					});
 				});
 			},
 		connect(row) {
