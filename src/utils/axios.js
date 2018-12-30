@@ -98,10 +98,7 @@ const apiList = {
 
 				data.forEach((item, index) => {
 					result.push({
-						id: index,
-						name: item,
-						frameList: [],
-						speedList: []
+						name: item
 					});
 				});
 
@@ -146,9 +143,7 @@ const apiList = {
 			.put(`${prefix}/actions/${index}`, axiosData, axiosConfig)
 			.then(({ data }) => {
 				return data;
-
-			})
-			.catch(error => console.log(error));
+			});
 	},
 	getStates() {
 		return api.robot
@@ -203,9 +198,19 @@ const apiList = {
 				config
 			})
 			.then((data) => {
-				return data;
-			})
-			.catch(error => console.log(error));
+				const frame = [], modeList = [];
+
+				data.angle_list.forEach((angle, index) => {
+					frame.push({angle});
+					modeList.push({
+						mode: data.mode_list[index]
+					})
+				});
+
+				return {
+					frame, modeList
+				};
+			});
 	},
 	runActionSlice({ data, config }) {
 		this
@@ -334,6 +339,20 @@ const apiList = {
 
 		return api.robot
 			.post(prefix + '/token', axiosData, axiosConfig)
+			.then(({ data }) => {
+				return data;
+			});
+	},
+	connectCamera() {
+		return api.robot
+			.post(prefix + '/network/camera')
+			.then(({ data }) => {
+				return data;
+			});
+	},
+	closeCamera() {
+		return api.robot
+			.get(prefix + '/camera/close')
 			.then(({ data }) => {
 				return data;
 			});

@@ -3,10 +3,17 @@ export const strToObject = ({ name, body }) => {
 }
 
 export const objectToStr = ({ name, body }) => {
-	return {
-		name,
-		body: actionToStr(body)
-	};
+	const result = {name};
+	
+	if (body) {
+		result.body = actionToStr(body);
+	}
+
+	if (body === '') {
+		result.body = '';
+	}
+
+	return result;
 }
 
 export const strToAction = str => {
@@ -60,6 +67,8 @@ export const strToAction = str => {
 export const actionToStr = action => {
 	let result = '';
 
+	console.log(action);
+	
 	action.speedList.forEach(servo => {
 		result = result + servo.speed + ' ';
 	})

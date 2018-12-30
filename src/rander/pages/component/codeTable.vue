@@ -1,9 +1,9 @@
 <template>
 	<div
-		class="py-3"
+		class="pb-3"
 		id="filter">
 		<b-row>
-			<b-col cols="auto" id="toolbar">
+			<b-col cols="auto" id="toolbar" 	class="pt-3">
 				<b-button
 					@click="getCodeList"
 					size="sm" v-b-tooltip.hover title="刷新"><i class="fas fa-sync-alt" /></b-button>
@@ -23,11 +23,11 @@
           <i class="far fa-stop-circle"></i><br/>
         </b-button>
 			</b-col>
-			<b-col></b-col>
-			<b-col cols="auto">
+			<b-col class="pt-3">
 				<b-pagination
 					size="sm"
           :limit="3"
+          align="right"
 					:total-rows="codeList.length"
 					v-model="currentPage"
 					:per-page="perPage" />
@@ -44,24 +44,26 @@
 			:current-page="currentPage"
 			:per-page="perPage">
       <template slot="codeName" slot-scope="row">
-        <b-link v-if="isShow" style="display: inline-block;min-width: 7em">{{row.item.codeName}}</b-link>
-         <b-btn
-            v-if="isShow"
-            @click="isShow = false" size="sm"
-            variant="success">
-            <i class="fas fa-pencil-alt"></i>
-          </b-btn>
-        <b-form-input
-          size="sm"
-          v-if="!isShow" style="display: inline-block;width: 12em"
-          v-model="row.item.codeName"
-          type="text"></b-form-input>
-         <b-btn
-            v-if="!isShow"
-            @click="updateCode(row)" size="sm"
-            variant="success">
-            <i class="fas fa-save" />
-          </b-btn>
+        <span v-if="row.item.codeName !== currentCode">
+          <b-link style="display: inline-block;min-width: 7em">{{row.item.codeName}}</b-link>
+          <b-btn
+              @click="startChangeName(row)" size="sm"
+              variant="success">
+              <i class="fas fa-pencil-alt"></i>
+            </b-btn>
+        </span>
+        <span v-if="row.item.codeName === currentCode">
+          <b-form-input
+            size="sm"
+            style="display: inline-block;width: 12em"
+            v-model="newName"
+            type="text"></b-form-input>
+          <b-btn
+              @click="updateCode(row)" size="sm"
+              variant="success">
+              <i class="fas fa-save" />
+            </b-btn>
+        </span>
       </template>
 			<template slot="action" slot-scope="row">
 				<b-button size="sm" @click.stop="runCode(row)">
@@ -82,19 +84,14 @@
 export default {
   data() {
     return {
-      isShow: true,
       runed: true,
       currentPage: 1,
-      perPage: 5
+      perPage: 11,
+      currentCode: null,
+      newName: ''
     };
-	},
-	mounted() {
-		this.init();
   },
 	methods: {
-		init() {
-			this.getCodeList();
-    },
     setCodeToModify(row) {
       const { codeName } = row.item;
       this.$api
@@ -121,28 +118,28 @@ export default {
         this.$store.commit('getCodeList', data);
       });
     },
-    createCode() {
-      window.prompt('请输入文件名', 'untitle', name => {
-        this.$api.createCode({
-          data: {
-            name,
-            body: this.$store.state.editor.python.code
-          }
-        });
-      });
+    startChangeName(row) {
+      this.isShow = false;
+      this.currentCode = row.item.codeName;
+
+      this.newName = row.item.codeName;
+
     },
     updateCode(row) {
       const { codeName } = row.item;
-       this.$api.getCode({
-          index: codeName
-        }).then(code => {
-          this.$api.updateCode({
-            index: codeName,
-            data: {
-              name: codeName,
-              body: code.body
-            }
-          });
+
+      if (codeName === this.newName || this.newName === '') {
+        this.currentCode = null;
+        
+				return;
+      }
+      
+       this.$api.updateCode({
+          index: codeName,
+          data: {
+            name: this.newName,
+            body: ''
+          }
         });
     },
     deleteCode(row) {
@@ -195,14 +192,18 @@ export default {
 		},
   },
   mounted() {
-    this.getCodeList();
+    // this.getCodeList(); 我觉得没啥用
+
+    this.$root.$on('get-data', this.getCodeList);
   },
+  destroyed() {
+		this.$root.$off('get-data', this.getCodeList);
+	},
   computed: {
     content() {
       return this.$store.state.editor.python.code;
     },
     codeList() {
-      console.log(this.$store.state.editor.codeList);
       return this.$store.state.editor.codeList;
     }
   }

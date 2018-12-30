@@ -9,24 +9,25 @@
 					<b-form-input
 						readonly
 						size="sm"
-						value="N/A" />
+						:value="connectedRobot.ip" />
 				</b-form-group>
 			</b-col>
 			<b-col>
 				<b-form-group
-					:label="$t('robot.connect.type')">
-					<b-form-input
-						size="sm"
-						v-model="robotName" />
-				</b-form-group>
-			</b-col>
-			<b-col>
-				<b-form-group
-					:label="$t('robot.connect.serialNumber')">
+					label="ID">
 					<b-form-input
 						readonly
 						size="sm"
-						value="N/A" />
+						:value="connectedRobot.robotId" />
+				</b-form-group>
+			</b-col>
+			<b-col>
+				<b-form-group
+					label="电量">
+					<b-form-input
+						size="sm"
+						readonly
+						v-model="connectedRobot.power" />
 				</b-form-group>
 			</b-col>
 		</b-row>
@@ -34,8 +35,11 @@
 		<b-row>
 			<b-col cols="auto">
 				<b-button
+					variant="success"
 					@click="search"
+					:disabled="isSearch"
 					size="sm"><i class="fas fa-search" /></b-button>
+				<span v-if="isSearch">搜索中......</span>
 			</b-col>
 			<b-col></b-col>
 			<b-col cols="auto">
@@ -61,7 +65,7 @@
 			:current-page="currentPage"
 			:per-page="perPage">
 			<template slot="state" slot-scope="row">
-				<span>{{row.item.ip === connectedRobot ? 'on' : 'off'}}</span>
+				<span>{{row.item.ip === connectedRobot.ip ? 'on' : 'off'}}</span>
 			</template>
 			<template slot="connect" slot-scope="row">
 				<b-button size="sm" @click.stop="connect(row)">
@@ -99,13 +103,14 @@ export default {
 			],
 			selectedIp: null,
 			currentPage: 1,
-			perPage: 5,
-			robotName: ''
+			perPage: 9,
+			robotName: '',
+			isSearch: false
     	};
 	},
 	computed: {
 		connectedRobot() {
-			return this.$store.state.robot.status ? this.$store.state.robot.status.ip : '';
+			return this.$store.state.robot.status ? this.$store.state.robot.status : {};
 		}
 	},
 	mounted() {
@@ -158,37 +163,40 @@ export default {
 			this.getIpList();
 
 			this.robotList = [];
+
+			this.isSearch = true;
 			
-			this.ipList.forEach(ip => {
+			this.ipList.forEach((ip, index) => {
+
 				axios.get(`http://${ip}:5000/v1/states`, { timeout: 5000 })
 					.then(r => {
 						this.robotList.push({
 							id: r.data.robot_id,
 							ip: r.data.ip,
-							power: r.data.power,
-							state: 'off'
+							power: r.data.power
 						});
-					}).catch(r => console.log(r));
+
+						if (index === this.ipList.length - 1) {
+							this.isSearch = false;
+						}
+					}).catch(r => {
+						if (index === this.ipList.length - 1) {
+							this.isSearch = false;
+						}
+				});
 			});
 
-			// const dgram = this.$electron.remote.require("dgram");
-			// const socket = dgram.createSocket("udp4");
-
-			// socket.bind(function () {
-			// 	socket.setBroadcast(true);
-			// });
-
-			// var message = new Buffer(this.robotName);
-			// 	socket.send(message, 0, message.length, 10000, '255.255.255.255', function(err, bytes) {
-			// 	socket.close();
-			// });
-
-			// socket.on('message', function (msg) {
-			// 	this.robotList.push({
-			// 		ip,
-			// 		serialNumber: 'TEST'
-			// 	});
-			// });
+			// axios.get(`http://192.168.43.108:5000/v1/states`, { timeout: 5000 })
+			// 		.then(r => {
+			// 			this.robotList.push({
+			// 				id: r.data.robot_id,
+			// 				ip: r.data.ip,
+			// 				power: r.data.power
+			// 			});
+			// 			this.isSearch = false;
+			// 		}).catch(r => {
+			// 			this.isSearch = false;
+			// 		});
 		},
 		updateRobotStatus() {
 			this.$api
@@ -211,15 +219,23 @@ export default {
 				});
 			},
 		connect(row) {
+
 			const event = new CustomEvent('connect');
 
 			event.baseURL = `http://${row.item.ip}:5000`;
 
 			window.dispatchEvent(event);
 			
-			this.updateRobotStatus();
+			this.$store.commit("updateRobotStatus", {
+				ip: row.item.ip,
+				posture: null,
+				power: null,
+				robotId: null,
+				ssid: null,
+				robotState: null
+			});
 
-			row.item.state = 'on';
+			this.updateRobotStatus();
 		}
 	}
 };

@@ -18,9 +18,9 @@
                     label="阻尼:">
                     <b-form-radio-group
                         size="sm"
-                        v-model="damperModeList[index].mode"
+                        v-model="damperMode.mode"
                         :options="options"
-                        @change="updateDamper($event, index + 1)"
+                        @change="updateDamper($event, index - 0 + 1)"
                         plain />
                 </b-form-group>
             </div>
@@ -30,14 +30,8 @@
 
 <script>
 
-// const damperMode = [];
-
-// for (let i = 0; i < 17; i++) {
-// 	damperMode.push({mode: 'free'});
-// }
-
 export default {
-    props: ['servo', 'index', 'damperModeList'],
+    props: ['servo', 'index', 'damperMode'],
     data() {
 		return {
 			min: -180,
@@ -47,7 +41,6 @@ export default {
 				{ text: '无阻尼', value: 'free' },
 				{ text: '锁死', value: 'lock', }
 			],
-			// damperModeList: damperMode,
 		}
     },
     methods: {
@@ -64,6 +57,8 @@ export default {
 				angle: newValue,
 				id: index
             };
+
+            this.damperMode.mode = 'lock';
 			
             this.$emit('angle-changed', message);
         }

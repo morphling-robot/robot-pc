@@ -12,7 +12,7 @@
 				<b-dropdown-item @click="changeLocale('en')">
 					{{$t('navbar.English')}}
 				</b-dropdown-item>
-				<b-dropdown-item @click="createFile">
+				<b-dropdown-item @click="createFileBtn">
 					新建
 				</b-dropdown-item>
 				<b-dropdown-item @click="saveFile">
@@ -79,17 +79,6 @@
 				</b-nav-form>
 			</b-navbar-nav>
 		</b-navbar>
-		<!-- <b-modal
-			v-model="isShow"
-			:title="$t('modal.prompt')"
-			size="sm"
-			@ok="changeMode"
-			@cancel="saveFileBtn"
-			:ok-title="$t('modal.ok')"
-			:cancel-title="$t('robot.code.save')"
-			cancel-variant="link">
-			{{$t('modal.message')}}
-		</b-modal> -->
 	</div>
 
 </template>
@@ -148,13 +137,22 @@ export default {
 			let text = "";
 			const filters = [pythonFilter, blocklyFilter];
 
-			dialog.showSaveDialog({ properties: ["openFile"], filters }, filename => {
+			dialog.showSaveDialog({ properties: ["openFile"], filters, title: 'Create' }, filename => {
 				fs.writeFileSync(filename, text, "utf8");
 			});
 		},
+		createFileBtn() {
+			if (this.$store.state.editor.python.code !== '') {
+
+				this.$dialog.confirmChange().then(() => {
+					this.createFile();
+				})
+			} else {
+				this.createFile();
+			}
+		},
 		saveFileBtn() {
 			this.saveFile();
-			this.changeMode();
 		},
 		saveFile() {
 			const electron = this.$electron;
@@ -180,7 +178,7 @@ export default {
 				break;
 			}
 
-			dialog.showSaveDialog({ properties: ["openFile"], filters }, filename => {
+			dialog.showSaveDialog({ properties: ["openFile"], filters, title: 'Save' }, filename => {
 				fs.writeFileSync(filename, text, "utf8");
 			});
 		},
@@ -280,9 +278,12 @@ export default {
 		const electron = this.$electron;
 		this.ipcRenderer = electron.ipcRenderer;
 		
-    	this.$root.$on('change-mode', (mode) => {
+    	this.$root.$on('change-mode', this.changeMode = (mode) => {
 			this.editorMode = mode;
 		});
+	},
+	destroyed() {
+		this.$root.$off('change-mode', this.changeMode);
 	}
 };
 </script>

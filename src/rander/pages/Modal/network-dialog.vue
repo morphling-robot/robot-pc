@@ -95,7 +95,6 @@ export default {
 		// 	this.$refs.networkModalRef.show();
 		// });
 		
-		this.getNetworkList();
 	},
 	methods: {
 		changeSSID(ssid = this.ssidList[0]) {

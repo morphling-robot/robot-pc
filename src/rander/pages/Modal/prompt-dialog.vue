@@ -4,10 +4,23 @@
 	:title="message"
 	size="sm"
 	cancel-variant="link"
-	@ok="invokeCallback"
 	@shown="init"
+	hide-footer
 	@hidden="clearPromptArgs">
 	<b-input v-model="value" />
+	<b-row class="pt-3">
+		<b-col>
+			<p v-if="isShow" class="mb-0 text-danger">
+				上传文件名不能重名！
+			</p>
+		</b-col>
+		<b-col cols="auto">
+			<b-button
+				variant="success"
+				@click="invokeCallback" :disabled="isShow"
+				size="sm">上传</b-button>
+		</b-col>
+	</b-row>
 </b-modal>
 
 </template>
@@ -20,13 +33,28 @@ export default {
 			value: ''
 		}
 	},
+	computed: {
+		codeList() {
+			return this.$store.state.editor.codeList.map(code => {
+				return code.codeName;
+			});
+		},
+		isShow() {
+			return this.codeList.indexOf(this.value) !== -1;
+		}
+	},
 	methods: {
 		init() {
 			this.message = window.promptArgs.message;
 			this.value = window.promptArgs.defaultValue;
 		},
 		invokeCallback() {
+			if (this.value === '') {
+				return;
+			}
+
 			window.promptArgs.callback(this.value);
+			this.value = '';
 		},
 		clearPromptArgs() {
 			delete window.promptArgs;

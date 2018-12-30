@@ -37,11 +37,14 @@ export default {
       this.$store.commit('pythonUpdateCode', code);
     }
   },
-  // computed: {
-  //   content() {
-  //     return this.$store.state.editor.python.code;
-  //   }
-  // }
+  mounted() {
+    this.$root.$on('change-mode', this.changeCode = () => {
+			this.content = this.$store.state.editor.python.code;
+		});
+  },
+  destroyed() {
+    this.$root.$off('change-mode', this.changeCode);
+  }
 }
 </script>
 
