@@ -37,10 +37,10 @@ export default {
 			min: -180,
 			max: 180,
 			options: [
-				{ text: '有阻尼', value: 'damp' },
-				{ text: '无阻尼', value: 'free' },
-				{ text: '锁死', value: 'lock', }
-			],
+				{ text: this.$t('robot.damp'), value: 'damp'},
+				{ text: this.$t('robot.free'), value: 'free'},
+				{ text: this.$t('robot.lock'), value: 'lock'},
+            ],
 		}
     },
     methods: {

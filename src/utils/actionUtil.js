@@ -67,8 +67,6 @@ export const strToAction = str => {
 export const actionToStr = action => {
 	let result = '';
 
-	console.log(action);
-	
 	action.speedList.forEach(servo => {
 		result = result + servo.speed + ' ';
 	})

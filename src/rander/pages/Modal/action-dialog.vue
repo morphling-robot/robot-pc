@@ -15,7 +15,7 @@
 					<span v-if="!isChangeName">
 						<span style="display: inline-block;width: 9em">{{currentAction}}</span>
 						 <b-btn
-							@click.stop="isChangeName = true" size="sm"
+							@click.stop="isChangeName = true; newActionName = currentAction" size="sm"
 							variant="success">
 							<i class="fas fa-pencil-alt"></i>
 						</b-btn>
@@ -28,7 +28,7 @@
 							type="text"></b-form-input>
 						<b-btn
 							@click.stop="updateActionName" size="sm"
-							variant="success">
+							variant="success" :disabled="isDuplicate">
 							<i class="fas fa-save" />
 						</b-btn>
 					</span>
@@ -80,6 +80,18 @@ export default {
 	computed: {
 		hasCurrentAction() {
 			return this.currentAction ? true : false;
+		},
+		actionList() {
+			return  this.$refs.actionTable.actionList.map(item => {
+				return item.name;
+			});
+		},
+		isDuplicate() {
+			if (this.newActionName === this.currentAction) {
+				return false;
+			}
+			
+			return this.actionList.indexOf(this.newActionName) !== -1;
 		}
 	},
 	methods: {
@@ -132,7 +144,7 @@ export default {
 
 			if (this.hasChanged) {
 
-                this.$dialog.updateName().then(() => {
+                this.$dialog.confirmChange(this.$t('modal.action')).then(() => {
 
                     this.updateAction(this.newActionName, '');
                     
@@ -160,8 +172,8 @@ export default {
 				}).then(() => {
 					this.isTemp = false;
 					this.isCopy = false;
-					this.currentAction = '';
-					this.currentAction = name;
+					
+					this.$refs.frameTable.getFrameList();
 
 					this.getActionsList();
 				});
@@ -170,6 +182,8 @@ export default {
 
 				this.updateAction('', {
 					frameList, speedList
+				}).then(() => {
+					this.$refs.frameTable.getFrameList();
 				});
 			}
 
@@ -182,9 +196,11 @@ export default {
 					body: body
 				}
 			}).then((data) => {
-				this.currentAction = name;
-				this.newActionName === '';
-				this.isChangeName = false;
+				if (name !== '') {
+					this.currentAction = name;
+					this.newActionName === '';
+					this.isChangeName = false;
+				}
 
 				this.getActionsList();
 			});

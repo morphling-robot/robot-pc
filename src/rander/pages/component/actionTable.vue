@@ -1,9 +1,10 @@
 <template>
     <div>
         <div>
-            <b-button size="sm" variant="success" @click="tempCreateAction">创建动作</b-button>
+            <b-button size="sm" variant="success" @click="tempCreateAction"
+                :disabled="isTemp || isCopy">{{$t('robot.action.create')}}</b-button>
             <b-button size="sm" variant="success" @click="CopyAction"
-                :disabled="!currentAction || isTemp || isCopy">复制动作</b-button>
+                :disabled="!currentAction || isTemp || isCopy">{{$t('robot.action.copy')}}</b-button>
         </div>
         <div class="mt-3">
             <b-pagination
@@ -13,7 +14,7 @@
                 :limit="5"
                 :per-page="10" />
             <div style="width: 110%">
-                速度：<br />
+                {{$t('robot.action.speed')}} <br />
                 <b-form-slider v-model="speed"
                     class="mb-2"
                     trigger-change-event :min="1" :max="100" :step="1"></b-form-slider>
@@ -51,15 +52,15 @@
                 </template>
             </b-table>
             <div class="mt-3">
-                <b-button size="sm" @click="getActionsList" v-b-tooltip.hover title="刷新">
+                <b-button size="sm" @click="getActionsList" v-b-tooltip.hover :title="$t('robot.refresh')">
                     <i class="fas fa-sync-alt" /></b-button>
-                <b-button size="sm" @click.stop="run()" v-if="!runed" v-b-tooltip.hover title="启动">
+                <b-button size="sm" @click.stop="run()" v-if="!runed" v-b-tooltip.hover :title="$t('robot.run')">
                     <i class="far fa-play-circle"></i>
                 </b-button>
-                <b-button size="sm" @click.stop="pause()" v-if="runed" v-b-tooltip.hover title="暂停">
+                <b-button size="sm" @click.stop="pause()" v-if="runed" v-b-tooltip.hover :title="$t('robot.pause')">
                     <i class="far fa-pause-circle"></i>
                 </b-button>
-                <b-button size="sm" @click.stop="stop()" v-b-tooltip.hover title="停止">
+                <b-button size="sm" @click.stop="stop()" v-b-tooltip.hover :title="$t('robot.stop')">
                     <i class="far fa-stop-circle"></i>
                 </b-button>
             </div>
@@ -132,7 +133,7 @@ export default {
 			return this.$api.getActionsList().then(data => {
 				
 				if (data) {
-					this.actionList = data;
+                    this.actionList = data;
 				}
 
 			});
@@ -144,7 +145,7 @@ export default {
 
 			if (this.hasChanged) {
 
-                this.$dialog.confirmChange().then(() => {
+                this.$dialog.confirmChange(this.$t('modal.file')).then(() => {
 
                     this.$emit('change-action', item.name);
                     
@@ -159,11 +160,11 @@ export default {
         },
         tempCreateAction() {
 
-            const name = 'a new action-1';
+            const name = 'a_new_action_1';
 
             if (this.hasChanged) {
 
-                this.$dialog.confirmChange().then(() => {
+                this.$dialog.confirmChange(this.$t('modal.file')).then(() => {
 
                     this.actionList.unshift({name});
 
@@ -184,11 +185,11 @@ export default {
                 return;
             }
 
-            const name = `a-${this.currentAction}-copy`;
+            const name = `a_${this.currentAction}_copy`;
 
             if (this.hasChanged) {
 
-                this.$dialog.confirmChange().then(() => {
+                this.$dialog.confirmChange(this.$t('modal.file')).then(() => {
 
                     this.actionList.unshift({name})
 

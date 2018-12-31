@@ -12,6 +12,7 @@ navbar:
   logout: 'logout'
   Chinese: 'Chinese'
   English: 'English'
+  blockly: 'Blockly'
 
 
 
@@ -23,36 +24,72 @@ robot:
     serialNumber: 'SN'
     search: 'Search'
     connect: 'Connect'
+    power: 'Power'
+    waiting: 'Searching......'
   network:
     label: 'Network'
     ssid: 'WIFI'
     password: 'Password'
     connect: 'Connect'
+    waiting: 'Configure the network, please wait a moment......'
+    fail: 'The network configuration is successful. The robot will connect to the network first after the next reboot'
+    success: 'Network configuration failed, please check whether the WiFi password is correct'
   code:
-    label: 'code'
+    label: 'Code'
     run: 'Run'
     save: 'Save'
     delete: 'Delete'
+    upload: 'Upload'
+    prompt: 'Upload file name can not be renamed!'
+    filename: 'Please enter name'
   action:
     label: 'Action'
     id: 'ID'
     name: 'Name'
+    create: 'Create Action'
+    copy: 'Copy Action'
+    speed: 'Rate:'
     frame:
       label: 'Frame'
       jump: 'To'
+      insert: 'Insert Frame'
+      delete: 'Delete Frame'
+      speed: 'Frame Rate:'
+      follow: 'Follow'
   video:
     label: 'Video'
   engine:
-    calibration: 'calibration'
+    calibration: 'Calibration'
+    all: 'All Calibration'
+  refresh: 'Refresh'
+  run: 'Run'
+  pause: 'Pause'
+  stop: 'Stop'
+  damp: 'Damp'
+  free: 'Free'
+  lock: 'Lock'
 
 user:
   label: 'User'
   login: 'Login'
   name: 'Username'
   password: 'Password'
+  waiting: 'Waiting......'
+  success: 'Success'
+  fail: 'Fail'
+  state:
+    login: 'Logged In'
+    unlogin: 'Not Logged In'
 
 modal: 
   prompt: 'Prompt'
-  message: 'Files are not saved. Switching mode directly will cause files to disappear!'
+  file: 'Files are not saved, direct switching mode will result in loss of file modification! Do you want to continue?'
+  action: 'When the action content has not been saved, direct modification of the name will result in failure?'
   ok: 'ok'
   cancel: 'cancel'
+
+file:
+  create: 'Create File'
+  save: 'Save File'
+  open: 'Open File'
+  upload: 'Upload Code'

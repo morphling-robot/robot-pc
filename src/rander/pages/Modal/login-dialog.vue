@@ -24,13 +24,13 @@
 			<b-col>
 				<p v-if="prompt.isShow" class="mb-0">
 					<span v-if="prompt.isSuccess === 0">
-						<i class="fas fa-sync-alt animated rotateIn infinite" /> 用户登录中......
+						<i class="fas fa-sync-alt animated rotateIn infinite" /> {{$t('user.waiting')}}
 					</span>
 					<span v-if="prompt.isSuccess === 1" class="text-success">
-						<i class="far fa-check-circle" /> 用户登录成功!
+						<i class="far fa-check-circle" /> {{$t('user.success')}}
 					</span>
 					<span v-if="prompt.isSuccess === -1" class="text-danger">
-						<i class="far fa-times-circle" /> 用户登录失败!
+						<i class="far fa-times-circle" /> {{$t('user.fail')}}
 					</span>
 				</p>
 			</b-col>

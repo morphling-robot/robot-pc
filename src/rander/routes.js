@@ -1,7 +1,7 @@
 import home from './pages/home';
 import blockly from './pages/editor/blockly';
 import python from './pages/editor/python';
-import test from './pages/component/test';
+// import test from './pages/component/video';
 
 export default [
 	{
@@ -17,8 +17,8 @@ export default [
 		path: '/blockly',
 		component: blockly
 	},
-	{
-		path: '/test',
-		component: test
-	}
+	// {
+	// 	path: '/test',
+	// 	component: test
+	// }
 ]

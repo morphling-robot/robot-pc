@@ -2,7 +2,7 @@
   <div class="w-100">
 	<b-row class="mx-0">
 		<b-col class="pr-0">
-			帧速率：<br />
+			{{$t('robot.action.frame.speed')}}<br />
 			<b-form-slider v-model="frameSpeed.speed"
 				trigger-change-event :min="1" :max="100" :step="1" @change="updateSpeed"></b-form-slider>
 			<span style="display: inline-block;width: 4em;text-align: center">{{frameSpeed.speed}}</span>
@@ -12,7 +12,7 @@
 				v-model="follow"
 				:value="true"
                 :unchecked-value="false"> 
-				跟随
+				{{$t('robot.action.frame.follow')}}
 			</b-form-checkbox>
 		</b-col>
 	</b-row>

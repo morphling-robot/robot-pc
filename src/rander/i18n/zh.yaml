@@ -12,6 +12,7 @@ navbar:
   logout: '注销'
   Chinese: '中文'
   English: '英文'
+  blockly: '方块文件'
 
 robot:
   label: '机器人'
@@ -21,36 +22,72 @@ robot:
     serialNumber: '序列号'
     search: '搜索'
     connect: '连接'
+    power: '电量'
+    waiting: '搜索中......'
   network:
     label: '网络'
     ssid: 'WIFI'
     password: '密码'
     connect: '连接'
+    waiting: '配置网络中，请稍侯......'
+    fail: '网络配置成功，机器人下次重启后将优先连接此网络'
+    success: '网络配置失败，请检查wifi密码是否正确'
   code:
     label: '代码'
     run: '运行'
     save: '保存'
     delete: '删除'
+    upload: '上传'
+    prompt: '上传文件名不能重名！'
+    filename: '请输入文件名'
   action:
     label: '动作'
     id: 'ID'
     name: '名称'
+    create: '创建动作'
+    copy: '复制动作'
+    speed: '速率：'
     frame:
       label: '帧'
       jump: '到'
+      insert: '插入一帧'
+      delete: '删除一帧'
+      speed: '帧速率：'
+      follow: '跟随'
   video:
     label: '录像'
   engine:
     calibration: '舵机标定'
+    all: '全部标定'
+  refresh: '刷新'
+  run: '启动'
+  pause: '暂停'
+  stop: '停止'
+  damp: '有阻尼'
+  free: '无阻尼'
+  lock: '锁定'
 
 user:
   label: '用户'
   login: '登录'
   name: '用户名'
   password: '密码'
+  waiting: '用户登录中......'
+  success: '用户登录成功!'
+  fail: '用户登录失败!'
+  state:
+    login: '已登录'
+    unlogin: '未登录'
 
 modal: 
   prompt: '提示'
-  message: '文件未保存，直接切换模式会导致文件消失！'
+  file: '文件未保存，直接切换模式会导致文件修改丢失!是否继续？'
+  action: '当动作内容有修改尚未保存，直接修改名称会造成修改失败！是否继续？'
   ok: '确定'
   cancel: '取消'
+
+file:
+  create: '新建文件'
+  save: '保存文件'
+  open: '打开文件'
+  upload: '上传代码'

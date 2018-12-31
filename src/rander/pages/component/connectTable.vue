@@ -23,7 +23,7 @@
 			</b-col>
 			<b-col>
 				<b-form-group
-					label="电量">
+					:label="$t('robot.connect.power')">
 					<b-form-input
 						size="sm"
 						readonly
@@ -39,7 +39,7 @@
 					@click="search"
 					:disabled="isSearch"
 					size="sm"><i class="fas fa-search" /></b-button>
-				<span v-if="isSearch">搜索中......</span>
+				<span v-if="isSearch">{{$t('robot.connect.waiting')}}</span>
 			</b-col>
 			<b-col></b-col>
 			<b-col cols="auto">

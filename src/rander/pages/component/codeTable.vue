@@ -6,20 +6,20 @@
 			<b-col cols="auto" id="toolbar" 	class="pt-3">
 				<b-button
 					@click="getCodeList"
-					size="sm" v-b-tooltip.hover title="刷新"><i class="fas fa-sync-alt" /></b-button>
+					size="sm" v-b-tooltip.hover :title="$t('robot.refresh')"><i class="fas fa-sync-alt" /></b-button>
         <b-button size="sm" @click.stop="run()" v-if="!runed"
-          v-b-tooltip.hover title="启动">
+          v-b-tooltip.hover :title="$t('robot.run')">
           <i class="far fa-play-circle"></i><br/>
         </b-button>
         <b-button size="sm" @click.stop="pause()" v-if="runed"
-        v-b-tooltip.hover title="暂停">
+        v-b-tooltip.hover :title="$t('robot.pause')">
           <i class="far fa-pause-circle"></i><br/>
         </b-button>
         <!-- <b-button size="sm" @click.stop="reset()">
           <i class="fas fa-sync-alt"></i>
         </b-button> -->
         <b-button size="sm" @click.stop="stop()"
-        v-b-tooltip.hover title="停止">
+        v-b-tooltip.hover :title="$t('robot.stop')">
           <i class="far fa-stop-circle"></i><br/>
         </b-button>
 			</b-col>
@@ -60,6 +60,7 @@
             type="text"></b-form-input>
           <b-btn
               @click="updateCode(row)" size="sm"
+              :disabled="isDuplicate && newName !== row.item.codeName"
               variant="success">
               <i class="fas fa-save" />
             </b-btn>
@@ -192,8 +193,6 @@ export default {
 		},
   },
   mounted() {
-    // this.getCodeList(); 我觉得没啥用
-
     this.$root.$on('get-data', this.getCodeList);
   },
   destroyed() {
@@ -205,7 +204,14 @@ export default {
     },
     codeList() {
       return this.$store.state.editor.codeList;
-    }
+    },
+    isDuplicate() {
+      const codeList = this.codeList.map(item => {
+        return item.codeName;
+      });
+
+			return codeList.indexOf(this.newName) !== -1;
+		}
   }
 };
 </script>

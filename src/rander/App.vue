@@ -17,7 +17,7 @@
         <b-button
 						class="ml-2 my-2"
             @click="changeVideoShow"
-						size="sm" title="机器人控制台"><i class="fas fa-robot" /></b-button>
+						size="sm" :title="$t('robot.label')"><i class="fas fa-robot" /></b-button>
         <b-button
 						class="ml-2 my-2"
             v-b-modal.robotModal
@@ -33,7 +33,7 @@
         <b-button
 						class="ml-2 my-2"
             v-b-modal.codeModal
-						size="sm" title="代码"><i class="fas fa-code"></i></b-button>
+						size="sm" :title="$t('robot.code.label')"><i class="fas fa-code"></i></b-button>
         <b-button
 						class="ml-2 my-2"
             v-b-modal.videoModal

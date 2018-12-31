@@ -24,7 +24,7 @@ export default {
       return this.$store.state.robot.updateCycle;
     },
     msg() {
-      return this.$store.state.user.token ? '已登录' : '未登录'
+      return this.$store.state.user.token ? this.$t('user.state.login') : this.$t('user.state.unlogin')
     }
   }
 };

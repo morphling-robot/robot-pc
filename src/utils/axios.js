@@ -68,8 +68,7 @@ const apiList = {
 			.post(`${prefix}/codes`, axiosData, axiosConfig)
 			.then(({ data }) => {
 				return data;
-			})
-			.catch(error => console.log(error));
+			});
 	},
 	deleteCode({ index, data, config: axiosConfig }) {
 		const axiosData = data;

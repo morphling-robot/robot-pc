@@ -11,14 +11,14 @@
 	<b-row class="pt-3">
 		<b-col>
 			<p v-if="isShow" class="mb-0 text-danger">
-				上传文件名不能重名！
+				{{$t('robot.code.prompt')}}
 			</p>
 		</b-col>
 		<b-col cols="auto">
 			<b-button
 				variant="success"
 				@click="invokeCallback" :disabled="isShow"
-				size="sm">上传</b-button>
+				size="sm">{{$t('robot.code.upload')}}</b-button>
 		</b-col>
 	</b-row>
 </b-modal>

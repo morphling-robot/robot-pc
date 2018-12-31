@@ -22,8 +22,8 @@
                             {{mode.text}}
                         </b-dropdown-item>
                     </b-dropdown>
-                    <b-button size="sm" variant="primary" @click="insertFrame" :disabled="!hasCurrentAction">插入一帧</b-button>
-                    <b-button size="sm" variant="danger" @click="deleteFrame" :disabled="!hasCurrentAction">删除该帧</b-button>
+                    <b-button size="sm" variant="primary" @click="insertFrame" :disabled="!hasCurrentAction">{{$t('robot.action.frame.insert')}}</b-button>
+                    <b-button size="sm" variant="danger" @click="deleteFrame" :disabled="!hasCurrentAction">{{$t('robot.action.frame.delete')}}</b-button>
                 </b-input-group>
             </b-col>
         </b-row>
@@ -71,11 +71,11 @@ export default {
         'isTemp', 'isCopy'],
     data() {
         return {
-            selectedMode: { text: '无阻尼', value: 'free'},
+            selectedMode: { text: this.$t('robot.free'), value: 'free'},
 			modeList: [
-				{ text: '有阻尼', value: 'damp'},
-				{ text: '无阻尼', value: 'free'},
-				{ text: '锁定  ', value: 'lock'},
+				{ text: this.$t('robot.damp'), value: 'damp'},
+				{ text: this.$t('robot.free'), value: 'free'},
+				{ text: this.$t('robot.lock'), value: 'lock'},
             ],
             frameIndex: 0,
             speedList: [],
@@ -132,19 +132,7 @@ export default {
             }
 
             if (newCurrent && !this.isTemp) {
-                this.getFrameList().then(() => {
-                    this.origin = cloneObj(this.frameList);
-
-                    this.$api.runActionSlice({
-                        data: {
-                            body: {
-                                frameList: [this.frameList[0]],
-                                speedList: [this.speedList[0]]
-                            },
-                            speed: this.selectedSpeed.speed
-                        }
-                    });
-                })
+                this.getFrameList();
             }
 
             if (this.isTemp) {
@@ -158,6 +146,9 @@ export default {
                             this.frameList = [frame];
                             this.ownModeList = modeListFactory('lock');
                         }
+                    }).catch(e => {
+                        this.speedList = [];
+                        this.frameList = [];
                     });
             }
         },
@@ -239,6 +230,18 @@ export default {
 
                 this.speedList = speedList;
                 this.frameList = frameList;
+
+                this.origin = cloneObj(this.frameList);
+
+                this.$api.runActionSlice({
+                    data: {
+                        body: {
+                            frameList: [this.frameList[0]],
+                            speedList: [this.speedList[0]]
+                        },
+                        speed: this.selectedSpeed.speed
+                    }
+                });
             });
         }
     }

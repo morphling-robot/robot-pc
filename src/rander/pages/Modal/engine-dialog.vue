@@ -4,12 +4,13 @@
 		size="lg"
 		:title="$t('robot.engine.calibration')"
 		hide-footer
+        @shown="getCurrentFrame"
         @hidden="emptySetList"
 		no-close-on-backdrop>
         <b-row>
             <b-col>
                 <b-button @click="allSelect" size="sm">
-                    全部标定
+                    {{$t('robot.engine.all')}}
                 </b-button>
             </b-col>
             <b-col cols="auto">
@@ -45,7 +46,7 @@
                     v-model="follow"
                     :value="true"
                     :unchecked-value="false">
-                    跟随
+                   {{$t('robot.action.frame.follow')}}
                 </b-form-checkbox>
             </b-col>
         </b-row>
@@ -57,7 +58,7 @@
                 <span class="number">{{index - 0 + 1}}</span><br />
                 <engine  @mouseenter.stop.prevent="pointTarget = index"  v-if="pointTarget == index"
 				    :servo="frame[index]" :index="index" @angle-changed="updateAngle"
-                    :damperModeList="damperModeList" :disabled="follow" />
+                    :damperMode="damperModeList[index]" :disabled="follow" />
             </span>
         </div>
 	</b-modal>
@@ -69,10 +70,14 @@ import genStyleObjectFromMap from '@/utils/genStyleObjectFromMap';
 
 import Engine from '../component/engine.vue';
 
-const damperMode = [];
+function modeListFactory(mode) {
+    const modeList = [];
 
-for (let i = 0; i < 17; i++) {
-	damperMode.push({mode: 'free'});
+    for (let i = 0; i < 17; i++) {
+        modeList.push({mode});
+    }
+
+    return modeList;
 }
 
 export default {
@@ -81,20 +86,16 @@ export default {
             styleObject: null,
             setList: [],
             pointTarget: -1,
-            frame: [{"angle":13},{"angle":23},{"angle":34},
-                {"angle":45},{"angle":56},{"angle":12},{"angle":23},
-                {"angle":34},{"angle":45},{"angle":56},{"angle":12},
-                {"angle":23},{"angle":34},{"angle":45},{"angle":56},
-                {"angle":88},{"angle":77}],
+            frame: [],
             speed: 10,
-            selectedMode: { text: '无阻尼', value: 'free'},
+            selectedMode: {text: this.$t('robot.free'), value: 'free'},
             modeList: [
-				{ text: '有阻尼', value: 'damp'},
-				{ text: '无阻尼', value: 'free'},
-				{ text: '锁定  ', value: 'lock'},
+				{ text: this.$t('robot.damp'), value: 'damp'},
+				{ text: this.$t('robot.free'), value: 'free'},
+				{ text: this.$t('robot.lock'), value: 'lock'},
             ],
             follow: true,
-            damperModeList: damperMode
+            damperModeList: modeListFactory('lock')
         }
     },
     components: {Engine},
@@ -136,7 +137,8 @@ export default {
             this.$api.getFrame().then(data => {
                 if (data) {
 
-                    this.frame = data;
+                    this.frame = data.frame;
+                    this.damperModeList = data.modeList;
                 }
             });
         },
@@ -163,16 +165,11 @@ export default {
 				}
             });
             
-            this.damperModeList.forEach(item => {
-                item.mode = this.selectedMode.value;
-            });
+            this.damperModeList = modeListFactory(this.selectedMode.value);
         },
         changeSelectedMode(mode) {
 			this.selectedMode = mode;
 		}
-    },
-    mounted(){
-        this.getCurrentFrame();
     },
     created() {
 		this.styleObject = genStyleObjectFromMap(adjusterMap);

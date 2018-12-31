@@ -13,16 +13,16 @@
 					{{$t('navbar.English')}}
 				</b-dropdown-item>
 				<b-dropdown-item @click="createFileBtn">
-					新建
+					{{$t('file.create')}}
 				</b-dropdown-item>
 				<b-dropdown-item @click="saveFile">
-					保存
+					{{$t('file.save')}}
 				</b-dropdown-item>
 				<b-dropdown-item @click="operateFile">
-					打开
+					{{$t('file.open')}}
 				</b-dropdown-item>
 				<b-dropdown-item @click="createCode">
-					上传
+					{{$t('file.upload')}}
 				</b-dropdown-item>
 			</b-dropdown>
 
@@ -51,7 +51,7 @@
 						style="margin: 0px;"
 						v-model="editorMode"
 						name="radiosBtnDefault">
-						<b-form-radio value="blockly"><i class="fas fa-cubes mr-1" />方块文件</b-form-radio>
+						<b-form-radio value="blockly"><i class="fas fa-cubes mr-1" />{{$t('navbar.blockly')}}</b-form-radio>
 						<b-form-radio value="python"><i class="fab fa-python mr-1" />Python</b-form-radio>
 					</b-form-radio-group>
 				</b-input-group>
@@ -64,18 +64,18 @@
 						class="mr-2"
 						size="sm"
 						@click="saveFile"
-						v-b-tooltip.hover title="保存"><i class="fas fa-save" /></b-button>
+						v-b-tooltip.hover :title="$t('file.save')"><i class="fas fa-save" /></b-button>
 
 					<b-button
 						class="mr-2"
 						size="sm"
 						@click="operateFile"
-						v-b-tooltip.hover title="打开"><i class="fas fa-folder-open" /></b-button>
+						v-b-tooltip.hover :title="$t('file.open')"><i class="fas fa-folder-open" /></b-button>
 
 					<b-button
 						size="sm"
 						@click="createCode"
-						v-b-tooltip.hover title="上传"><i class="fas fa-upload" /></b-button>
+						v-b-tooltip.hover :title="$t('file.upload')"><i class="fas fa-upload" /></b-button>
 				</b-nav-form>
 			</b-navbar-nav>
 		</b-navbar>
@@ -144,7 +144,7 @@ export default {
 		createFileBtn() {
 			if (this.$store.state.editor.python.code !== '') {
 
-				this.$dialog.confirmChange().then(() => {
+				this.$dialog.confirmChange(this.$t('modal.file')).then(() => {
 					this.createFile();
 				})
 			} else {
@@ -220,7 +220,7 @@ export default {
 		operateFile() {
 			if (this.$store.state.editor.python.code !== '') {
 
-				this.$dialog.confirmChange().then(() => {
+				this.$dialog.confirmChange(this.$t('modal.file')).then(() => {
 					this.openFile();
 				})
 			} else {
@@ -228,7 +228,7 @@ export default {
 			}
 		},
 		createCode() {
-			window.prompt('请输入文件名', 'untitle', name => {
+			window.prompt(this.$t('robot.code.filename'), 'untitle', name => {
 				this.$api.createCode({
 					data: {
 						name,
@@ -241,10 +241,18 @@ export default {
 						}
 					}
 				}).then(() => {
-					this.$api.getCodeList().then(data => {
+					// this.$api.getCodeList().then(data => {
 
-						this.$store.commit('getCodeList', data);
+					// 	this.$store.commit('getCodeList', data);
+					// });
+
+					const codeList = [].concat(this.$store.state.editor.codeList);
+
+					codeList.unshift({
+						codeName: name
 					});
+
+					this.$store.commit('getCodeList', codeList);
 				});
 			});
 		},
@@ -263,7 +271,7 @@ export default {
 				return;
 			}
 
-			this.$dialog.confirmChange().then(() => {
+			this.$dialog.confirmChange(this.$t('modal.file')).then(() => {
 
 				this.$store.commit('modeUpdate', newValue);
 	

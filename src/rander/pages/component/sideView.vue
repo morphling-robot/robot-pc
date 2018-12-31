@@ -4,14 +4,32 @@
 			width: `${width}px`
 		}"
 		style="position: absolute;top: 0;bottom: 0;">
-		<b-card
-			id="video-card"
-			no-body
+		<div
 			class="mb-2 rounded-0"
 			:style="{
-				height: `${videoCardHeight}px`
+				height: `${videoCardHeight}px`,
+				width: `100%`,
+				overflow: 'hidden'
 			}">
-		</b-card>
+			<b-card
+				id="video-card"
+				no-body
+				:class="{'hide': videoState && dialogState}"
+				:style="{
+					height: `${videoCardHeight}px`,
+					width: `100%`,
+					overflow: 'hidden'
+				}">
+			</b-card>
+			<test-video
+				id="video2"
+				ref="sideVideo"
+				:style="{
+					height: `${videoCardHeight}px`,
+					width: `100%`,
+					overflow: 'hidden'
+				}"></test-video>
+		</div>
 		<b-card
 			no-body
 			id="card-tabs"
@@ -32,7 +50,7 @@
 </template>
 
 <script>
-import TestVideo from "../component/test";
+import TestVideo from "../component/video";
 import CodeTable from '../component/codeTable';
 import ConnectTable from '../component/ConnectTable';
 
@@ -43,6 +61,14 @@ export default {
 		TestVideo,
 		CodeTable,
 		ConnectTable
+	},
+	computed: {
+		videoState() {
+			return this.$store.state.video.videoState === 'open';
+		},
+		dialogState() {
+			return this.$store.state.video.dialogState === 'close';
+		}
 	},
 	data() {
 		return {
@@ -63,6 +89,10 @@ export default {
 #card-tabs {
 	position: absolute;
 	bottom: 0px;
+}
+
+.hide {
+	display: none !important;
 }
 </style>
 
