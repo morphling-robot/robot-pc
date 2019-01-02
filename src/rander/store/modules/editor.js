@@ -24,7 +24,7 @@ const mutations = {
 	blocklyUpdateCode(state, payload) {
 		state.blockly.code = payload;
 	},
-	pythonUpdateOpenedState(state, payload) {
+	pythonUpdateOpendState(state, payload) {
 		state.python.isFileOpen = payload;
 	},
 	pythonUpdateCode(state, payload) {

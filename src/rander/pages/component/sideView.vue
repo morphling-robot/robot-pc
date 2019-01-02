@@ -21,14 +21,6 @@
 					overflow: 'hidden'
 				}">
 			</b-card>
-			<test-video
-				id="video2"
-				ref="sideVideo"
-				:style="{
-					height: `${videoCardHeight}px`,
-					width: `100%`,
-					overflow: 'hidden'
-				}"></test-video>
 		</div>
 		<b-card
 			no-body

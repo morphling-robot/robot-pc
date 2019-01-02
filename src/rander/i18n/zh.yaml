@@ -55,7 +55,12 @@ robot:
       speed: '帧速率：'
       follow: '跟随'
   video:
-    label: '录像'
+    label: '摄像头'
+    start: '开始录像'
+    end: '结束录像'
+    watch: '查看录像'
+    return: '查看摄像头'
+    save: '保存录像'
   engine:
     calibration: '舵机标定'
     all: '全部标定'
@@ -82,9 +87,10 @@ user:
 modal: 
   prompt: '提示'
   file: '文件未保存，直接切换模式会导致文件修改丢失!是否继续？'
-  action: '当动作内容有修改尚未保存，直接修改名称会造成修改失败！是否继续？'
+  action: '当前动作内容有修改尚未保存，直接修改名称会造成修改失败！是否继续？'
   ok: '确定'
   cancel: '取消'
+  open: '文件未保存，直接打开新文件会导致文件修改丢失!是否继续？'
 
 file:
   create: '新建文件'

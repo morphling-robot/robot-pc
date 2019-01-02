@@ -6,7 +6,6 @@ module.exports = {
   target: 'electron-renderer',
   entry: {
     app: [
-      'videojs-record/dist/css/videojs.record.css',
       'video.js/dist/video-js.min.css',
       './src/rander/index.js'
     ]

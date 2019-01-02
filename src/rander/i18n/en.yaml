@@ -58,6 +58,11 @@ robot:
       follow: 'Follow'
   video:
     label: 'Video'
+    start: 'Start Recording'
+    end: 'End Recording'
+    watch: 'Watch Record'
+    save: 'Save Record'
+    return: 'Video'
   engine:
     calibration: 'Calibration'
     all: 'All Calibration'
@@ -87,6 +92,7 @@ modal:
   action: 'When the action content has not been saved, direct modification of the name will result in failure?'
   ok: 'ok'
   cancel: 'cancel'
+  open: 'Files are not saved. Opening new files directly will result in loss of file modification! Do you want to continue?'
 
 file:
   create: 'Create File'

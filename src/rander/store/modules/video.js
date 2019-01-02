@@ -1,7 +1,15 @@
 const state = {
     videoState: 'open',
-    videoIp: '',
-    dialogState: 'close'
+    videoIp: 'rtmp://192.168.31.217/live/test',
+    dialogState: 'close',
+    large: {
+        height: 360
+    },
+    small: {
+        height: 240,
+        top: 0,
+        left: 60
+    }
 };
 
 const mutations = {

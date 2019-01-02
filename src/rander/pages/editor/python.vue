@@ -40,10 +40,15 @@ export default {
   mounted() {
     this.$root.$on('change-mode', this.changeCode = () => {
 			this.content = this.$store.state.editor.python.code;
-		});
+    });
+    
+    this.$root.$on('open-file', this.openFile = () => {
+      this.content = this.$store.state.editor.python.code;
+    });
   },
   destroyed() {
     this.$root.$off('change-mode', this.changeCode);
+    this.$root.$off('open-file', this.openFile);
   }
 }
 </script>

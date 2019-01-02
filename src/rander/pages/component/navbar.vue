@@ -144,7 +144,7 @@ export default {
 		createFileBtn() {
 			if (this.$store.state.editor.python.code !== '') {
 
-				this.$dialog.confirmChange(this.$t('modal.file')).then(() => {
+				this.$dialog.confirmChange(this.$t('modal.open')).then(() => {
 					this.createFile();
 				})
 			} else {
@@ -204,15 +204,18 @@ export default {
 					if (pythonReg.test(filename)) {
 						route = "python";
 					}
-					this.$router.push(route);
-					this.$store.commit('modeUpdate', route);
-					this.editorMode = route;
 
 					setTimeout(() => {
 						const data = fs.readFileSync(filename, "utf8");
 						this.$store.commit(`${route}UpdateCode`, data);
 						this.$store.commit(`${route}UpdateOpendState`, true);
+
+						this.$root.$emit('open-file');
 					}, 100);
+					
+					this.$router.push(route);
+					this.$store.commit('modeUpdate', route);
+					this.editorMode = route;
 				}
 			);
 

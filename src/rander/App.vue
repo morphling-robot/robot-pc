@@ -54,6 +54,10 @@
     <prompt-modal />
 
 		<Statusbar/>
+
+    <video-element />
+
+    <canvas></canvas>
 	</div>
 </template>
 
@@ -69,6 +73,7 @@ import ConnectModal from "./pages/Modal/connect-dialog.vue";
 import NetworkModal from "./pages/Modal/network-dialog.vue";
 import PromptModal from "./pages/Modal/prompt-dialog.vue";
 import EngineModal from "./pages/Modal/engine-dialog.vue";
+import VideoElement from "./pages/component/video.vue";
 
 export default {
   name: "app",
@@ -83,7 +88,8 @@ export default {
     ConnectModal,
     NetworkModal,
     PromptModal,
-    EngineModal
+    EngineModal,
+    VideoElement
   },
   data() {
     return {
@@ -182,9 +188,7 @@ export default {
           this.$router.push(route);
 
           setTimeout(() => {
-            console.log(filename);
             const data = fs.readFileSync(filename, "utf8");
-            console.log(data);
             this.$store.commit(`${route}UpdateCode`, data);
             this.$store.commit(`${route}UpdateOpendState`, true);
           }, 100);
@@ -195,7 +199,6 @@ export default {
     ipcRenderer.on("app-savefile", () => {
       let text = "";
       const filters = [];
-      console.log(this.$route.path);
       switch (this.$route.path) {
         case "/python":
           text = this.$store.state.editor.python.code;

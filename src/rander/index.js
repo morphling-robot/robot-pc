@@ -11,7 +11,6 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'video.js/dist/video-js.min.css';
-import 'videojs-record/dist/css/videojs.record.css';
 import './style.less'
 import axios from '@/utils/axios';
 

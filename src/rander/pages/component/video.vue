@@ -1,71 +1,65 @@
 <template>
-		<video :id="id" class="video-js vjs-default-skin">
-      <source src="http://vjs.zencdn.net/v/oceans.mp4" type="video/mp4">
-    </video>
+	<video id="video" class="video-js vjs-default-skin" :style="styleObj">
+    <source v-if="streamURL" :src="streamURL" type='rtmp/*'>
+  </video>
 </template>
 
 <script>
-// import videojs from 'videojs-record/dist/videojs.record.min.js';
-
-
 export default {
-  props: ['id'],
+  props: ['id', 'file'],
+  data() {
+    return {
+      player: null,
+      container: null
+    }
+  },
+  computed: {
+    isSmall() {
+      return this.$store.state.video.videoState === 'open' && this.$store.state.video.dialogState === 'close';
+    },
+    styleObj() {
+      const {small, large} = this.$store.state.video;
+
+      return this.isSmall ?  `position: relative;z-index:0;width: ${(this.$store.state.robot.isShow ? 0 : 340)}px;height: ${small.height}px;top: ${small.top}px;left: ${small.left}px` 
+        : `position: relative;z-index:10000;width: 640px;height: ${large.height}px;margin:90px auto`;
+    },
+    streamURL() {
+      // return `http://${this.$store.state.video.videoIp}:8080`;
+      return this.$store.state.video.videoIp;
+    }
+  },
+  watch: {
+    styleObj(newStylle) {
+      if (this.container) {
+        setTimeout(() => {
+          this.container.style = newStylle;
+        }, 100);
+      }
+    }
+  },
   mounted() {
-    var player = videojs(
-      this.id,
+    this.player = videojs(
+      video,
       {
         controls: true,
-        width: 640,
-        height: 360,
-        fluid: false,
-        plugins: {
-          record: {
-            audio: true,
-            video: true,
-            maxLength: 10,
-            debug: true,
-            videoMimeType: 'video/webm'
-            
-          }
-        }
+        fluid: false
       },
       function() {
-        // print version information at startup
-        var msg =
-          "Using video.js " +
-          videojs.VERSION +
-          " with videojs-record " +
-          videojs.getPluginVersion("record") +
-          " and recordrtc " +
-          RecordRTC.version;
-        videojs.log(msg);
-      }
-    );
+      });
+    this.container = document.getElementById('video');
 
-  player.on('play', function() { 
-      player.src( [
-// { type: "rtmp/mp4", src: "rtmp://mypath/mp4" },
-// { type: "rtmp/mp4", src: "rtmpt://mypath/mp4" },
-{ type: "video/mp4", src: "http://vjs.zencdn.net/v/oceans.mp4" }
-]);
-  });
-
-    player.on("deviceError", function() {
-      console.log("device error:", player.deviceErrorCode);
-    });
-    player.on("error", function(error) {
-      console.log("error:", error);
-    });
-    // user clicked the record button and started recording
-    player.on("startRecord", function() {
-      console.log("started recording!");
-    });
-    // user completed recording and stream is available
-    player.on("finishRecord", function() {
-      // the blob object contains the recorded data that
-      // can be downloaded by the user, stored on server etc.
-      console.log("finished recording: ", player.recordedData);
-    });
   }
 };
 </script>
+
+<style lang="less">
+#video {
+  .vjs-big-play-button {
+    z-index: 10000 !important;
+  }
+  video {
+    margin: 0px !important;
+    left: 0px !important;
+  }
+}
+</style>
