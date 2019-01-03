@@ -68,6 +68,7 @@ function modeListFactory(mode) {
 export default {
     name: 'frame-table',
     props: ['currentAction', 'frame', 'hasCurrentAction', 'frameModeList', 'tempCreateAction',
+        "actionSpeed", 'isEnd', 'isChangeName',
         'isTemp', 'isCopy'],
     data() {
         return {
@@ -81,7 +82,10 @@ export default {
             speedList: [],
             frameList: [],
             ownModeList: [],
-            origin: null
+            origin: null,
+            isChangeAction: false,
+            isInsert: false,
+            isDelete: false
         }
     },
     components: {Adjuster},
@@ -104,7 +108,7 @@ export default {
                 return false;
             }
 
-            if (this.isTemp || this.isCopy || !this.origin) {
+            if (this.isTemp || !this.origin) {
 				return true;
             }
 
@@ -125,14 +129,28 @@ export default {
     },
     watch: {
         currentAction(newCurrent, oldCurrent) {
-            this.frameIndex = 1;
+            if (this.isChangeName) {
+                this.$emit('editor-state', false);
 
-            if (this.isCopy) {
                 return;
             }
 
-            if (newCurrent && !this.isTemp) {
+            if (this.isCopy) {
                 this.getFrameList();
+
+                return;
+            }
+
+            this.isChangeAction = true;
+            this.frameIndex = 1;
+
+            if (newCurrent && !this.isTemp) {
+                this.getFrameList().then(() => {
+
+                    this.runInTime([this.frameList[0]], [this.speedList[0]]);
+                });
+
+                return;
             }
 
             if (this.isTemp) {
@@ -153,34 +171,39 @@ export default {
             }
         },
         frameIndex (newIndex, oldIndex) {
-			let start = null;
-			let end = null;
-			if (newIndex > oldIndex) {
-				start = oldIndex;
-				end = newIndex;
-			} else {
-				start = newIndex;
-				end = oldIndex;
-			}
+            if (this.isChangeAction) {
+                this.isChangeAction = false;
 
-			const frameSlice = this.frameList.slice(start, end + 1);
-			const speedSlice = this.speedList.slice(start, end + 1);
+                return;
+            }
 
-			this.$api.runActionSlice({
-                data: {
-                    body: {
-                        frameList: frameSlice,
-                        speedList: speedSlice
-                    },
-                    speed: this.selectedSpeed.speed
+            if (this.isInsert) {
+                this.isInsert = false;
+
+                return;
+            }
+
+            if (this.isEnd) {
+                return;
+            }
+
+			this.changeCUrrentFrameState(newIndex, oldIndex).then(() => {
+                if (this.isDelete) {
+                    this.frameList.splice(oldIndex - 1, 1);
+                    this.isDelete = false;
                 }
             });
-            
-            modeListFactory('lock');
 
         },
         hasChange(newValue) {
             this.$emit('action-changed', newValue);
+        },
+        isEnd(newValue, oldValue) {
+            if (newValue) {
+                this.frameIndex = this.frameList.length;
+
+                this.$emit('index-changed');
+            }
         }
     },
     mounted() {
@@ -189,6 +212,32 @@ export default {
         } 
     },
     methods: {
+        changeCUrrentFrameState(newIndex, oldIndex) {
+            let start = null;
+            let end = null;
+            
+            let frameSlice = [], speedSlice = [];
+
+			if (newIndex > oldIndex) {
+				start = oldIndex;
+                end = newIndex;
+                
+                frameSlice = this.frameList.slice(start - 1, end);
+                speedSlice = this.speedList.slice(start - 1, end);
+			} else {
+				start = newIndex;
+                end = oldIndex;
+                
+                frameSlice = this.frameList.slice(start - 1, end).reverse();
+                speedSlice = this.speedList.slice(start - 1, end).reverse();
+			}
+
+            return this.runInTime(frameSlice, speedSlice).then(() => {
+
+                modeListFactory('lock');
+            });
+            
+        },
         changeSelectedMode(mode) {
 			this.selectedMode = mode;
 		},
@@ -202,19 +251,43 @@ export default {
             
             this.ownModeList = modeListFactory(this.selectedMode.value);
         },
+        runInTime(frameList, speedList) {
+            return this.$api.runActionSlice({
+                data: {
+                    body: {
+                        frameList,
+                        speedList
+                    },
+                    speed: this.actionSpeed
+                }
+            });
+        },
         insertFrame() {
+            this.isInsert = true;
+
 			this.$api
 				.getFrame()
 				.then((data) => {
-					this.frameList.splice(this.frameIndex + 1, 0, data.frame);
+
+                    this.frameList.splice(this.frameIndex, 0, data.frame);
 
                     this.frameIndex = this.frameIndex + 1;
 
-					this.ownModeList = data.modeList;
+                    this.ownModeList = data.modeList;
 				})
 		},
 		deleteFrame() {
-			this.frameList.splice(this.frameIndex - 1, 1);
+            if (this.frameIndex < this.frameList.length) {
+                this.changeCUrrentFrameState(this.frameIndex + 1, this.frameIndex).then(() => {
+                    this.frameList.splice(this.frameIndex - 1, 1);
+                });
+
+                return;
+            }
+
+            this.frameIndex = this.frameIndex - 1;
+
+            this.isDelete = true;
         },
         getFrameList() {
             return this.$api.getActions({
@@ -228,20 +301,17 @@ export default {
             }).then(data => {
                 const {frameList, speedList} = data;
 
-                this.speedList = speedList;
+                const filterSpeed = [];
+
+                frameList.forEach((frame, index) => {
+                    const speed = speedList[index] ? speedList[index] : {"speed": 10};
+                    filterSpeed.push(speed);
+                });
+
+                this.speedList = filterSpeed;
                 this.frameList = frameList;
 
                 this.origin = cloneObj(this.frameList);
-
-                this.$api.runActionSlice({
-                    data: {
-                        body: {
-                            frameList: [this.frameList[0]],
-                            speedList: [this.speedList[0]]
-                        },
-                        speed: this.selectedSpeed.speed
-                    }
-                });
             });
         }
     }

@@ -2,9 +2,9 @@
     <div>
         <div>
             <b-button size="sm" variant="success" @click="tempCreateAction"
-                :disabled="isTemp || isCopy">{{$t('robot.action.create')}}</b-button>
+                :disabled="isTemp">{{$t('robot.action.create')}}</b-button>
             <b-button size="sm" variant="success" @click="CopyAction"
-                :disabled="!currentAction || isTemp || isCopy">{{$t('robot.action.copy')}}</b-button>
+                :disabled="!currentAction || isTemp">{{$t('robot.action.copy')}}</b-button>
         </div>
         <div class="mt-3">
             <b-pagination
@@ -17,7 +17,7 @@
                 {{$t('robot.action.speed')}} <br />
                 <b-form-slider v-model="speed"
                     class="mb-2"
-                    trigger-change-event :min="1" :max="100" :step="1"></b-form-slider>
+                    trigger-change-event :min="1" :max="100" :step="1" @change="updateSpeed"></b-form-slider>
                 <span style="display: inline-block;width: 2em;text-align: center">{{speed}}</span>
             </div>
             <b-table
@@ -52,7 +52,7 @@
                 </template>
             </b-table>
             <div class="mt-3">
-                <b-button size="sm" @click="getActionsList" v-b-tooltip.hover :title="$t('robot.refresh')">
+                <b-button size="sm" @click="init" v-b-tooltip.hover :title="$t('robot.refresh')">
                     <i class="fas fa-sync-alt" /></b-button>
                 <b-button size="sm" @click.stop="run()" v-if="!runed" v-b-tooltip.hover :title="$t('robot.run')">
                     <i class="far fa-play-circle"></i>
@@ -79,8 +79,30 @@ export default {
             actionList: []
         }
     },
-    props: ['currentAction', 'hasChanged', 'isTemp', 'isCopy'],
+    props: ['currentAction', 'hasChanged', 'isTemp'],
+    // watch: {
+    //     currentAction(newName) {
+    //         this.changePageNumber(newName);
+    //     }
+    // },
+    computed: {
+        actionNameList() {
+            return this.actionList.map(action => action.name);
+        }
+    },
     methods: {
+        changePageNumber(newName) {
+            const index = this.actionNameList.indexOf(newName);
+
+            index === -1 ? this.currentActionPage = 1 : this.currentActionPage = Math.ceil((index + 1) / 8);
+        },
+        init() {
+            this.getActionsList();
+            this.$emit('actionlist-init');
+        },
+        updateSpeed({newValue}) {
+            this.$emit('action-speed', newValue);
+        },
         run() {
 			this.runed = true;
 
@@ -102,12 +124,14 @@ export default {
         },
         runAction(row) {
 			const { name } = row.item;
-			this.$api.runUserAction ({
+			this.$api.runUserAction({
 				data: {
 					name,
 					speed: this.speed
 				}
-			});
+			}).then(() => {
+                this.$emit('action-runed');
+            });
         },
         updateAction() {
 			this.$emit('update-action')
@@ -118,7 +142,9 @@ export default {
 				index: name
 			}).then(() => {
 				this.getActionsList();
-			});
+            });
+            
+             this.$emit('actionlist-init');
         },
         createAction(name) {
 			this.$api.createActions({
@@ -134,7 +160,9 @@ export default {
 				
 				if (data) {
                     this.actionList = data;
-				}
+                }
+                
+                this.changePageNumber(this.currentAction);
 
 			});
         },
@@ -160,7 +188,7 @@ export default {
         },
         tempCreateAction() {
 
-            const name = 'a_new_action_1';
+            const name = this.rename('', 'new_action', 1);
 
             if (this.hasChanged) {
 
@@ -185,26 +213,37 @@ export default {
                 return;
             }
 
-            const name = `a_${this.currentAction}_copy`;
+            // const name = `${this.currentAction}_copy`;
+            const name = this.rename(this.currentAction, 'copy', 1);
 
-            if (this.hasChanged) {
+            // if (this.hasChanged) {
 
-                this.$dialog.confirmChange(this.$t('modal.file')).then(() => {
+            //     this.$dialog.confirmChange(this.$t('modal.file')).then(() => {
 
-                    this.actionList.unshift({name})
+            //         this.actionList.unshift({name})
 
-                    this.$emit('copy-action', name);
+            //         this.$emit('copy-action', name);
                     
-                }, () => {
-                    return;
-                });
-			} else {
+            //     }, () => {
+            //         return;
+            //     });
+			// } else {
 
-                this.actionList.unshift({name})
+            // }
 
-                this.$emit('copy-action', name);
-            }
+            this.$emit('copy-action', name);
         },
+        rename(name, postfix, num) {
+            let mergeName = name !== '' ? `${name}_${postfix}_${num}` : `${postfix}_${num}`;
+
+            if (this.actionNameList.indexOf(mergeName) !== -1) {
+                num = num + 1;
+
+                mergeName = this.rename(name, postfix, num);
+            }
+
+            return mergeName;
+        }
     }
 }
 </script>

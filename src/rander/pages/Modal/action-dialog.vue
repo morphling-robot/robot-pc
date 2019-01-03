@@ -28,9 +28,10 @@
 							type="text"></b-form-input>
 						<b-btn
 							@click.stop="updateActionName" size="sm"
-							variant="success" :disabled="isDuplicate">
+							variant="success" :disabled="isShow">
 							<i class="fas fa-save" />
 						</b-btn>
+						<span v-show="isShow" class="text-danger">{{prompt}}</span>
 					</span>
 				</h5>
 				<h5 class="modal-title"  v-if="!hasCurrentAction">{{$t('robot.action.label')}}</h5>
@@ -44,12 +45,15 @@
 				<b-col cols="4">
 					<action-table @change-action="changeCurrentAction" ref="actionTable" :currentAction="currentAction"
 						@create-action="createAction" @copy-action="copyAction" :hasChanged="hasChanged"
-						:isTemp="isTemp" :isCopy="isCopy" @update-action="updateActionContent"></action-table>
+						@action-speed="changeSpeed" @action-runed="realTimeSync"
+						@actionlist-init="init"
+						:isTemp="isTemp" @update-action="updateActionContent"></action-table>
 				</b-col>
 				<b-col cols="8">
 					<frame-table ref="frameTable" :frame="currentFrame" :currentAction="currentAction" :hasCurrentAction="hasCurrentAction"
 						:frameModeList="currentModeList" :isTemp="isTemp" :isCopy="isCopy"
-						@action-changed="changeFlag"></frame-table>
+						:actionSpeed="actionSpeed" :isEnd="isEnd" @index-changed="isEnd = false"
+						@action-changed="changeFlag" :isChangeName="isChangeName" @editor-state="isChangeName = false"></frame-table>
 				</b-col>
 			</b-row>
 		</div>
@@ -74,7 +78,10 @@ export default {
 			tempCreateAction: null,
 			isTemp: false,
 			isCopy: false,
-			hasChanged: false
+			hasChanged: false,
+			actionSpeed: 10,
+			isEnd: false,
+			prompt: ''
 		}
 	},
 	computed: {
@@ -86,15 +93,31 @@ export default {
 				return item.name;
 			});
 		},
-		isDuplicate() {
-			if (this.newActionName === this.currentAction) {
-				return false;
+		isShow() {
+			const isDuplicate = this.actionList.indexOf(this.newActionName) !== -1 && this.newActionName !== this.currentAction;
+      
+			if (isDuplicate) {
+				this.prompt = this.$t('robot.code.prompt');
 			}
-			
-			return this.actionList.indexOf(this.newActionName) !== -1;
+
+			if (this.newActionName.split(' ').length > 1) {
+				this.prompt = this.$t('robot.code.error');
+			}
+
+			return isDuplicate || this.newActionName.split(' ').length > 1;
 		}
 	},
 	methods: {
+		changeSpeed(value) {
+			this.actionSpeed = value;
+		},
+		realTimeSync() {
+			if (!this.hasCurrentAction) {
+				this.getCurrentFrame();
+			} else {
+				this.isEnd = true;
+			}
+		},
 		init() {
 			this.currentAction = null;
 			this.newActionName = '';
@@ -127,12 +150,25 @@ export default {
 			this.isTemp = true;
 		},
 		copyAction(name) {
+			const {frameList, speedList} = this.$refs.frameTable;
+
 			if (!this.hasCurrentAction || this.isTemp) {
 				return;
 			}
 
-			this.isCopy = true;
-			this.currentAction = name;
+			this.$api.createActions({
+				data: {
+					name: name,
+					body: {
+						frameList, speedList
+					}
+				}
+			}).then(() => {
+				this.isCopy = true;
+
+				this.getActionsList();
+				this.currentAction = name;
+			});
 		},
 		updateActionName() {
 			if (this.currentAction === this.newActionName || this.newActionName === '') {
@@ -142,11 +178,11 @@ export default {
 				return;
 			}
 
-			if (this.hasChanged) {
+			if (this.isTemp) {
 
                 this.$dialog.confirmChange(this.$t('modal.action')).then(() => {
 
-                    this.updateAction(this.newActionName, '');
+					this.updateAction(this.newActionName, '');
                     
                 }, () => {
                     return;
@@ -161,7 +197,7 @@ export default {
 			const {frameList, speedList} = this.$refs.frameTable;
 			const name = this.currentAction;
 
-			if (this.isCopy || this.isTemp) {
+			if (this.isTemp) {
 				this.$api.createActions({
 					data: {
 						name: this.currentAction,
@@ -171,7 +207,6 @@ export default {
 					}
 				}).then(() => {
 					this.isTemp = false;
-					this.isCopy = false;
 					
 					this.$refs.frameTable.getFrameList();
 
@@ -199,7 +234,6 @@ export default {
 				if (name !== '') {
 					this.currentAction = name;
 					this.newActionName === '';
-					this.isChangeName = false;
 				}
 
 				this.getActionsList();

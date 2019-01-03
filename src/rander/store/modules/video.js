@@ -1,5 +1,5 @@
 const state = {
-    videoState: 'open',
+    videoState: 'close',
     videoIp: 'rtmp://192.168.31.217/live/test',
     dialogState: 'close',
     large: {

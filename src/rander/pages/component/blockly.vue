@@ -66,7 +66,7 @@ export default {
       return this.editor;
     },
     updateCode() {
-      const code = Blockly.Python.workspaceToCode(this.editor);
+      const code = Blockly.Python.workspaceToCode(this.editor); 
       const xml = Blockly.Xml.workspaceToDom(this.editor, true);
       const blockStr = Blockly.Xml.domToPrettyText(xml);
       this.$emit("update", { code, xml, blockStr });
@@ -79,6 +79,16 @@ export default {
   mounted() {
     this.editor = this.render("blocklyDiv", toolbox);
     this.editor.addChangeListener(this.updateCode);
+
+    this.$root.$on('create-file', this.changeBlockly = () => {
+      const xml = Blockly.Xml.textToDom('<xml xmlns="http://www.w3.org/1999/xhtml"></xml>');
+      this.$store.commit('blocklyOriginUpdateCode', '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>');
+
+      Blockly.Xml.clearWorkspaceAndLoadFromXml(xml, this.editor);
+    });
+  },
+  destroyed() {
+    this.$root.$off('create-file', this.changeBlockly);
   },
   computed: {
     isOpenFile() {

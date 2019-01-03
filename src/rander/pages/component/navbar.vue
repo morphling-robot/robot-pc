@@ -18,7 +18,7 @@
 				<b-dropdown-item @click="saveFile">
 					{{$t('file.save')}}
 				</b-dropdown-item>
-				<b-dropdown-item @click="operateFile">
+				<b-dropdown-item @click="openFile">
 					{{$t('file.open')}}
 				</b-dropdown-item>
 				<b-dropdown-item @click="createCode">
@@ -69,7 +69,7 @@
 					<b-button
 						class="mr-2"
 						size="sm"
-						@click="operateFile"
+						@click="openFile"
 						v-b-tooltip.hover :title="$t('file.open')"><i class="fas fa-folder-open" /></b-button>
 
 					<b-button
@@ -117,6 +117,9 @@ export default {
 		},
 		loggenInUserid() {
 			return this.$store.state.user.id;
+		},
+		isChanged() {
+			return this.$store.getters.isPythonChanged || this.$store.getters.isBlocklyChanged;
 		}
 	},
 	methods: {
@@ -130,21 +133,18 @@ export default {
 			this.$store.commit("updateUserStatus", { id, username });
 		},
 		createFile() {
-			const electron = this.$electron;
-			const { dialog } = electron.remote;
-			const ipcRenderer = electron.ipcRenderer;
-			const fs = electron.remote.require("fs");
-			let text = "";
-			const filters = [pythonFilter, blocklyFilter];
+			this.$store.commit('blocklyUpdateCode', '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>');
+			this.$store.commit('pythonUpdateCode', '');
 
-			dialog.showSaveDialog({ properties: ["openFile"], filters, title: 'Create' }, filename => {
-				fs.writeFileSync(filename, text, "utf8");
-			});
+			this.$store.commit('blocklyOriginUpdateCode', '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>');
+			this.$store.commit('pythonOriginUpdateCode', '');
+
+			this.$root.$emit('create-file');
 		},
 		createFileBtn() {
-			if (this.$store.state.editor.python.code !== '') {
+			if (this.isChanged) {
 
-				this.$dialog.confirmChange(this.$t('modal.open')).then(() => {
+				this.$dialog.confirmChange(this.$t('modal.create')).then(() => {
 					this.createFile();
 				})
 			} else {
@@ -165,16 +165,23 @@ export default {
 				case "/python":
 				text = this.$store.state.editor.python.code;
 				filters.push(pythonFilter);
+				
+				this.$store.commit('pythonOriginUpdateCode', text);
 				break;
 
 				case "/blockly":
 				text = this.$store.state.editor.blockly.code;
 				filters.push(blocklyFilter);
+
+				this.$store.commit('blocklyOriginUpdateCode', text);
 				break;
 
 				case "/":
 				text = this.$store.state.editor.blockly.code;
 				filters.push(blocklyFilter);
+
+				this.$store.commit('pythonOriginUpdateCode', text);
+				this.$store.commit('blocklyOriginUpdateCode', text);
 				break;
 			}
 
@@ -190,6 +197,8 @@ export default {
 			const blocklyReg = /.bk$/;
 			const pythonReg = /.py$/;
 			const filters = [blocklyFilter, pythonFilter];
+			const {isPythonChanged, isBlocklyChanged} = this.$store.getters;
+			let hasChange = false;
 
 			const filePaths = dialog.showOpenDialog(
 				{ properties: ["openFile"], filters },
@@ -199,36 +208,46 @@ export default {
 
 					if (blocklyReg.test(filename)) {
 						route = "blockly";
+						hasChange = isBlocklyChanged || isPythonChanged;
+
+						this.$root.$emit('init-python');
 					}
 
 					if (pythonReg.test(filename)) {
 						route = "python";
+						hasChange = isPythonChanged;
 					}
 
-					setTimeout(() => {
-						const data = fs.readFileSync(filename, "utf8");
-						this.$store.commit(`${route}UpdateCode`, data);
-						this.$store.commit(`${route}UpdateOpendState`, true);
+					if (hasChange) {
 
-						this.$root.$emit('open-file');
-					}, 100);
+						this.$dialog.confirmChange(this.$t('modal.open')).then(() => {
+							this.changeCodeContent(filename, route);
+						});
+					} else {
+						this.changeCodeContent(filename, route);
+					}
+
 					
-					this.$router.push(route);
-					this.$store.commit('modeUpdate', route);
-					this.editorMode = route;
 				}
 			);
 
 		},
-		operateFile() {
-			if (this.$store.state.editor.python.code !== '') {
+		changeCodeContent(filename, route) {
+			const electron = this.$electron;
+			const fs = electron.remote.require("fs");
 
-				this.$dialog.confirmChange(this.$t('modal.file')).then(() => {
-					this.openFile();
-				})
-			} else {
-				this.openFile();
-			}
+			setTimeout(() => {
+				const data = fs.readFileSync(filename, "utf8");
+				this.$store.commit(`${route}UpdateCode`, data);
+				this.$store.commit(`${route}OriginUpdateCode`, data);
+				this.$store.commit(`${route}UpdateOpendState`, true);
+
+				this.$root.$emit('open-file');
+			}, 100);
+			
+			this.$router.push(route);
+			this.$store.commit('modeUpdate', route);
+			this.editorMode = route;
 		},
 		createCode() {
 			window.prompt(this.$t('robot.code.filename'), 'untitle', name => {
@@ -248,6 +267,7 @@ export default {
 
 					// 	this.$store.commit('getCodeList', data);
 					// });
+					this.$store.commit('pythonOriginUpdateCode', this.$store.state.editor.python.code);
 
 					const codeList = [].concat(this.$store.state.editor.codeList);
 

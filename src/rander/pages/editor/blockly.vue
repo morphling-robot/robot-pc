@@ -79,7 +79,10 @@ export default {
 		},
 		updatePythonModel(code) {
 			this.python = code;
-			this.$store.commit('pythonUpdateCode', code);
+			this.$root.$on('init-python', this.initPython = () => {
+				this.$store.commit('pythonUpdateCode', code);
+				this.$store.commit('pythonOriginUpdateCode', code);
+			});
 		}
 	},
 	computed: {
@@ -92,6 +95,9 @@ export default {
 	},
 	mounted() {
 		window.ed = this;
+	},
+	destroyed() {
+		this.$root.$off('init-python', this.initPython);
 	}
 }
 </script>

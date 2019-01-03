@@ -87,6 +87,9 @@ export default {
     },
     updateCode() {
       editor.setValue(this.code, this.editable ? 1 : 0);
+    },
+    changeCode() {
+      editor.setValue(this.$store.state.editor.python.code, this.editable ? 1 : 0);
     }
   },
   mounted () {
@@ -98,7 +101,18 @@ export default {
     editor.getSession().on('change', this.emitCode);
     editor.setReadOnly(!this.editable);
 
-    this.updateCode(this.code);
+    this.updateCode();
+
+    this.$root.$on('change-mode', this.changeCode);
+    
+    this.$root.$on('open-file', this.changeCode);
+
+    this.$root.$on('create-file', this.changeCode);
+  },
+  destroyed() {
+    this.$root.$off('change-mode', this.changeCode);
+    this.$root.$off('open-file', this.changeCode);
+    this.$root.$off('create-file', this.changeCode);
   },
   watch: {
     code() {

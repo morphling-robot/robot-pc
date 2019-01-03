@@ -41,6 +41,7 @@ robot:
     delete: 'Delete'
     upload: 'Upload'
     prompt: 'Upload file name can not be renamed!'
+    error: 'File names cannot have spaces！'
     filename: 'Please enter name'
   action:
     label: 'Action'
@@ -93,6 +94,8 @@ modal:
   ok: 'ok'
   cancel: 'cancel'
   open: 'Files are not saved. Opening new files directly will result in loss of file modification! Do you want to continue?'
+  create: 'Files are not saved, creating new files directly will result in loss of file modification! Do you want to continue?'
+  code: 'Files are not saved, Opening new code will result in loss of file modification! Do you want to continue?'
 
 file:
   create: 'Create File'

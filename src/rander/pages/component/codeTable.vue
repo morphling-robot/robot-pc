@@ -34,6 +34,8 @@
 			</b-col>
 		</b-row>
 
+    <p v-show="isShow" class="text-danger">{{prompt}}</p>
+
 		<b-table
 			small
 			:items="codeList"
@@ -59,8 +61,8 @@
             v-model="newName"
             type="text"></b-form-input>
           <b-btn
-              @click="updateCode(row)" size="sm"
-              :disabled="isDuplicate && newName !== row.item.codeName"
+              @click="updateCode(row)" size="sm" :title="prompt"
+              :disabled="isShow"
               variant="success">
               <i class="fas fa-save" />
             </b-btn>
@@ -89,7 +91,8 @@ export default {
       currentPage: 1,
       perPage: 11,
       currentCode: null,
-      newName: ''
+      newName: '',
+      prompt: ''
     };
   },
 	methods: {
@@ -100,18 +103,30 @@ export default {
           index: codeName
         })
         .then(code => {
-
-          this.$store.commit('pythonUpdateCode', code.body);
-
-          this.$router.push("python");
-
-          this.$emit('close-dialog');
-
-          this.$store.commit('modeUpdate', 'python');
-
-          this.$root.$emit('change-mode', 'python');
+          if (this.isChanged) {
+            this.$dialog.confirmChange(this.$t('modal.code')).then(() => {
+              this.updatePython(code);
+              
+            });
+          } else {
+            this.updatePython(code);
+          }
         });
 
+    },
+    updatePython(code) {
+      this.$store.commit('pythonUpdateCode', code.body);
+
+      this.$store.commit('pythonOriginUpdateCode', code.body);
+      this.$store.commit('blocklyOriginUpdateCode', '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>');
+
+      this.$router.push("python");
+
+      this.$emit('close-dialog');
+
+      this.$store.commit('modeUpdate', 'python');
+
+      this.$root.$emit('change-mode', 'python');
     },
     getCodeList() {
       this.$api.getCodeList().then(data => {
@@ -120,7 +135,6 @@ export default {
       });
     },
     startChangeName(row) {
-      this.isShow = false;
       this.currentCode = row.item.codeName;
 
       this.newName = row.item.codeName;
@@ -141,6 +155,9 @@ export default {
             name: this.newName,
             body: ''
           }
+        }).then(() => {
+          this.currentCode = null;
+          this.getCodeList();
         });
     },
     deleteCode(row) {
@@ -205,12 +222,25 @@ export default {
     codeList() {
       return this.$store.state.editor.codeList;
     },
-    isDuplicate() {
+    isShow() {
       const codeList = this.codeList.map(item => {
         return item.codeName;
       });
 
-			return codeList.indexOf(this.newName) !== -1;
+      const isDuplicate = codeList.indexOf(this.newName) !== -1 && this.newName !== this.currentCode && this.currentCode;
+      
+			if (isDuplicate) {
+				this.prompt = this.$t('robot.code.prompt');
+			}
+
+			if (this.newName.split(' ').length > 1) {
+				this.prompt = this.$t('robot.code.error');
+			}
+
+			return isDuplicate || this.newName.split(' ').length > 1;
+		},
+    isChanged() {
+			return this.$store.getters.isPythonChanged || this.$store.getters.isPythonChanged;
 		}
   }
 };

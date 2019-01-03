@@ -15,13 +15,17 @@ export default {
   },
   computed: {
     isSmall() {
-      return this.$store.state.video.videoState === 'open' && this.$store.state.video.dialogState === 'close';
+      return this.$store.state.video.dialogState === 'close';
+    },
+    isClose() {
+      return this.$store.state.video.videoState === 'close';
     },
     styleObj() {
       const {small, large} = this.$store.state.video;
-
-      return this.isSmall ?  `position: relative;z-index:0;width: ${(this.$store.state.robot.isShow ? 0 : 340)}px;height: ${small.height}px;top: ${small.top}px;left: ${small.left}px` 
+      
+      return this.isSmall ? (this.isClose ?  'display: none' : `position: relative;z-index:0;width: ${(this.$store.state.robot.isShow ? 0 : 340)}px;height: ${small.height}px;top: ${small.top}px;left: ${small.left}px`) 
         : `position: relative;z-index:10000;width: 640px;height: ${large.height}px;margin:90px auto`;
+
     },
     streamURL() {
       // return `http://${this.$store.state.video.videoIp}:8080`;

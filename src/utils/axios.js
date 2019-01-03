@@ -212,7 +212,7 @@ const apiList = {
 			});
 	},
 	runActionSlice({ data, config }) {
-		this
+		return this
 			.postInstructs({
 				data: {
 					instruct_type: 2002,
@@ -223,8 +223,7 @@ const apiList = {
 			})
 			.then(({ data }) => {
 				return data;
-			})
-			.catch(error => console.log(error));
+			});
 	},
 	runSysAction({ data, config }) {
 		this
@@ -242,7 +241,7 @@ const apiList = {
 			.catch(error => console.log(error));
 	},
 	runUserAction({ data, config }) {
-		this
+		return this
 			.postInstructs({
 				data: {
 					instruct_type: 3002,

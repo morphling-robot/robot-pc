@@ -3,13 +3,24 @@ const state = {
 	fileName: '',
 	blockly: {
 		isFileOpen: false,
-		code: ''
+		code: '',
+		originCode: ''
 	},
 	python: {
 		isFileOpen: false,
-		code: ''
+		code: '',
+		originCode: ''
 	},
 	codeList: []
+};
+
+const getters = {
+	isPythonChanged(state) {
+		return state.python.originCode !== state.python.code;
+	},
+	isBlocklyChanged(state) {
+		return state.blockly.originCode !== state.blockly.code;
+	}
 };
 
 const mutations = {
@@ -24,11 +35,17 @@ const mutations = {
 	blocklyUpdateCode(state, payload) {
 		state.blockly.code = payload;
 	},
+	blocklyOriginUpdateCode(state, payload) {
+		state.blockly.originCode = payload;
+	},
 	pythonUpdateOpendState(state, payload) {
 		state.python.isFileOpen = payload;
 	},
 	pythonUpdateCode(state, payload) {
 		state.python.code = payload;
+	},
+	pythonOriginUpdateCode(state, payload) {
+		state.python.originCode = payload;
 	},
 	updateFileName(state, payload) {
 		state.fileName = payload;
@@ -43,5 +60,6 @@ const mutations = {
 
 export default {
 	state,
-	mutations
+	mutations,
+	getters
 };
