@@ -5,6 +5,7 @@
 		ref="robotModalRef"
 		:title="$t('robot.connect.label')"
 		hide-footer
+		centered
 		@show="show"
 		no-close-on-backdrop>
 		<connect-table ref="connect" style="height: 540px;"/>

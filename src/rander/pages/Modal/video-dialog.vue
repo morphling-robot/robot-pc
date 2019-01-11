@@ -2,9 +2,10 @@
 	<b-modal
 		id="videoModal"
 		ref="videoModalRef"
-		size="lg"
+		size="md"
 		:title="$t('robot.video.label')"
 		hide-footer
+		centered
 		@shown="updateDialogState('open')"
 		@hide="updateDialogState('close')"
 		no-close-on-backdrop>
@@ -186,8 +187,12 @@ export default {
 </script>
 
 <style lang="less">
+#videoModal .modal-dialog {
+	max-width: 642px;
+}
+
 #videoModal .modal-body {
-	height: 557px;
+	height: 434px;
 
 	#toolbar {
 		margin: 419px auto;

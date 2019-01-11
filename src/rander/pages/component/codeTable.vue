@@ -1,29 +1,29 @@
 <template>
 	<div
-		class="pb-3"
-		id="filter">
+    id="code-table"
+		class="pb-3">
 		<b-row>
-			<b-col cols="auto" id="toolbar" 	class="pt-3">
+			<b-col cols="auto" id="toolbar" 	class="pt-2">
 				<b-button
 					@click="getCodeList"
 					size="sm" v-b-tooltip.hover :title="$t('robot.refresh')"><i class="fas fa-sync-alt" /></b-button>
         <b-button size="sm" @click.stop="run()" v-if="!runed"
           v-b-tooltip.hover :title="$t('robot.run')">
-          <i class="far fa-play-circle"></i><br/>
+          <i class="far fa-play"></i><br/>
         </b-button>
         <b-button size="sm" @click.stop="pause()" v-if="runed"
         v-b-tooltip.hover :title="$t('robot.pause')">
-          <i class="far fa-pause-circle"></i><br/>
+          <i class="fas fa-pause"></i><br/>
         </b-button>
         <!-- <b-button size="sm" @click.stop="reset()">
           <i class="fas fa-sync-alt"></i>
         </b-button> -->
         <b-button size="sm" @click.stop="stop()"
         v-b-tooltip.hover :title="$t('robot.stop')">
-          <i class="far fa-stop-circle"></i><br/>
+          <i class="fas fa-stop"></i><br/>
         </b-button>
 			</b-col>
-			<b-col class="pt-3">
+			<b-col class="pt-2">
 				<b-pagination
 					size="sm"
           :limit="3"
@@ -89,12 +89,12 @@ export default {
     return {
       runed: true,
       currentPage: 1,
-      perPage: 11,
       currentCode: null,
       newName: '',
       prompt: ''
     };
   },
+  props: ['perPage'],
 	methods: {
     setCodeToModify(row) {
       const { codeName } = row.item;
@@ -245,4 +245,16 @@ export default {
   }
 };
 </script>
+
+
+<style lang="less">
+#code-table {
+  button.btn-secondary {
+    background-color: rgba(0, 0, 0, .1);
+    padding:3px 5px;
+    margin: 0 3px;
+  }
+}
+</style>
+
 

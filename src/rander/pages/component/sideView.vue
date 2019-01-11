@@ -34,7 +34,7 @@
 					<connect-table />
 				</b-tab> -->
 				<b-tab :title="$t('robot.code.label')" no-body>
-					<code-table />
+					<code-table :perPage="6" />
 				</b-tab>
 			</b-tabs>
 		</b-card>
@@ -64,7 +64,7 @@ export default {
 	},
 	data() {
 		return {
-			videoCardHeight: 240
+			videoCardHeight: 300
 		}
 	}
 };
@@ -76,11 +76,15 @@ export default {
 	background-size: 100% 100%;
 	background-origin: 0 0;
 	background-repeat: no-repeat;
+	border-radius: 0px;
+	border-top: 0px;
 }
 
 #card-tabs {
 	position: absolute;
 	bottom: 0px;
+	border-bottom: none;
+	border-radius: 0px;
 }
 
 .hide {

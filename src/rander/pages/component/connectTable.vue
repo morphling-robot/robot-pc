@@ -35,7 +35,6 @@
 		<b-row>
 			<b-col cols="auto">
 				<b-button
-					variant="success"
 					@click="search"
 					:disabled="isSearch"
 					size="sm"><i class="fas fa-search" /></b-button>
@@ -244,6 +243,12 @@ export default {
 <style lang="less">
 #filter {
 	position: relative;
+
+	button {
+		background-color: rgba(0, 0, 0, .1);
+		padding:3px 8px;
+		color: gray;
+	}
 }
 
 .status-card {

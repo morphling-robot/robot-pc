@@ -7,8 +7,9 @@
 	@shown="init"
 	ref="promptModal"
 	hide-footer
+	centered
 	@hidden="clearPromptArgs">
-	<b-input v-model="value" />
+	<b-input v-model="value" class="my-5" />
 	<b-row class="pt-3">
 		<b-col>
 			<p v-if="isShow" class="mb-0 text-danger">
@@ -17,7 +18,7 @@
 		</b-col>
 		<b-col cols="auto">
 			<b-button
-				variant="success"
+				variant="primary"
 				@click="invokeCallback" :disabled="isShow"
 				size="sm">{{$t('robot.code.upload')}}</b-button>
 		</b-col>

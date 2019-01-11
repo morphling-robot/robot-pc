@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<b-navbar id="navbar" toggleable="md" type="dark" variant="dark" class="pl-0">
-			<b-dropdown variant="dark" size="lg" no-caret>
+		<b-navbar id="navbar" toggleable="md" class="pl-0">
+			<b-dropdown class="ml-3" size="lg" no-caret>
 				<template slot="button-content">
 					<i class="fas fa-bars" />
 				</template>
@@ -26,9 +26,9 @@
 				</b-dropdown-item>
 			</b-dropdown>
 
-			<b-navbar-nav class="mr-auto">
+			<!-- <b-navbar-nav class="mr-auto">
 				<b-navbar-brand>{{$t('navbar.brand')}}</b-navbar-brand>
-			</b-navbar-nav>
+			</b-navbar-nav> -->
 
 			<!-- <b-dropdown variant="dark" size="lg" no-caret id="change-locale">
 				<template slot="button-content">
@@ -42,7 +42,7 @@
 				</b-dropdown-item>
 			</b-dropdown> -->
 
-			<b-navbar-nav  class="mx-auto">
+			<b-navbar-nav  style="margin: 0 85px">
 				<b-input-group size="sm">
 					<b-form-radio-group
 						id="btnradios1"
@@ -51,14 +51,18 @@
 						style="margin: 0px;"
 						v-model="editorMode"
 						name="radiosBtnDefault">
-						<b-form-radio value="blockly"><i class="fas fa-cubes mr-1" />{{$t('navbar.blockly')}}</b-form-radio>
+						<b-form-radio value="blockly"><i class="fas fa-puzzle-piece mr-1"></i>{{$t('navbar.blockly')}}</b-form-radio>
 						<b-form-radio value="python"><i class="fab fa-python mr-1" />Python</b-form-radio>
 					</b-form-radio-group>
 				</b-input-group>
 
 			</b-navbar-nav>
 
-			<b-navbar-nav class="ml-auto">
+			<b-navbar-nav  class="mx-auto">
+				<img src="../../../../asset/images/logo.png" style="width:80%">
+			</b-navbar-nav>
+
+			<b-navbar-nav class="ml-auto" id="code-operate">
 				<b-nav-form>
 					<b-button
 						class="mr-2"
@@ -75,7 +79,7 @@
 					<b-button
 						size="sm"
 						@click="createCode"
-						v-b-tooltip.hover :title="$t('file.upload')"><i class="fas fa-upload" /></b-button>
+						v-b-tooltip.hover :title="$t('file.upload')"><i class="fas fa-cloud-upload-alt"></i></b-button>
 				</b-nav-form>
 			</b-navbar-nav>
 		</b-navbar>
@@ -322,6 +326,19 @@ export default {
 <style lang="less">
 #navbar {
 	height: 48px;
+	border-bottom: 1px solid rgba(0,0,0,.125);
+
+	button {
+		padding: 0px;
+	}
+
+	label.btn-secondary {
+		background: #E8E8E8;
+	}
+
+	.btn-secondary:not(:disabled):not(.disabled).active {
+		background: #666666;
+	}
 }
 
 #right {
@@ -333,5 +350,12 @@ export default {
 
 #change-locale button {
 	padding: 0px 1rem;
+}
+
+#code-operate {
+	button {
+		font-size: 16px;
+		padding: 0 3px;
+	}
 }
 </style>

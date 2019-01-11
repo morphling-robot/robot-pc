@@ -12,40 +12,40 @@
 		<b-container
 			id="app-view-container"
 			fluid>
-      <side-view :width="sidebarWidth" v-if="sidebarWidth !== 0" style="left: 60px" />
+      <side-view :width="sidebarWidth" v-if="sidebarWidth !== 0" style="left: 45px" />
       <div id="side-toolbar">
         <b-button
-						class="ml-2 my-2"
+						class="ml-1 my-2"
             @click="changeVideoShow"
 						size="sm" :title="$t('robot.label')"><i class="fas fa-robot" /></b-button>
         <b-button
-						class="ml-2 my-2"
+						class="ml-1 my-2"
             v-b-modal.robotModal
 						size="sm" :title="$t('robot.connect.label')"><i class="fas fa-link"></i></b-button>
         <b-button
-						class="ml-2 my-2"
+						class="ml-1 my-2"
             v-b-modal.networkModal
 						size="sm" :title="$t('robot.network.label')"><i class="fas fa-wifi"></i></b-button>
         <b-button
-						class="ml-2 my-2"
+						class="ml-1 my-2"
             v-b-modal.actionModal
-						size="sm" :title="$t('robot.action.label')"><i class="fas fa-tachometer-alt"></i></b-button>
+						size="sm" :title="$t('robot.action.label')"><i class="fas fa-gamepad"></i></b-button>
         <b-button
-						class="ml-2 my-2"
+						class="ml-1 my-2"
             v-b-modal.codeModal
 						size="sm" :title="$t('robot.code.label')"><i class="fas fa-code"></i></b-button>
         <b-button
-						class="ml-2 my-2"
+						class="ml-1 my-2"
             v-b-modal.videoModal
 						size="sm" :title="$t('robot.video.label')"><i class="fas fa-video"></i></b-button>
         <b-button
-						class="ml-2 my-2"
+						class="ml-1 my-2"
             v-b-modal.engineModal
-						size="sm" :title="$t('robot.engine.calibration')"><i class="fas fa-wrench"></i></b-button>
+						size="sm" :title="$t('robot.engine.calibration')"><i class="fas fa-cog"></i></b-button>
       </div>
       <div id="router-view-container"
         :style="{
-          left: `${60 + sidebarWidth}px`
+          left: `${45 + sidebarWidth}px`
         }">
         <router-view></router-view>
       </div>
@@ -98,7 +98,7 @@ export default {
   },
   computed: {
     sidebarWidth() {
-      return this.$store.state.robot.isShow ? 0 : 340;
+      return this.$store.state.robot.isShow ? 0 : 390;
     }
   },
   methods: {
@@ -240,6 +240,7 @@ export default {
   height: 100%;
   position: absolute;
   right: 0;
+  z-index: 100;
 }
 
 #app-view-container {
@@ -257,15 +258,16 @@ export default {
 }
 
 #side-toolbar {
-  width: 60px;
+  width: 45px;
   height: 100%;
-  background: #343a40;
+  background: #fff;
   position: absolute;
   top: 0;
   left: 0;
-  padding-top: 50px;
   button {
+    font-size: 18px;
     width: 35px;
+    padding: 0px;
   }
 }
 

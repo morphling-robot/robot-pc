@@ -19,7 +19,7 @@
 				<b-input-group-prepend>
 					<b-btn
 						@click="getNetworkList"
-						variant="success"><i
+						variant="primary"><i
 							class="fas fa-sync-alt" />
 					</b-btn>
 				</b-input-group-prepend>
@@ -58,7 +58,7 @@
 			</b-col>
 			<b-col cols="auto">
 				<b-button
-					variant="success"
+					variant="primary"
 					@click="setNetwork" :disabled="prompt.isShow && prompt.isSuccess === 0"
 					size="sm">{{$t('robot.network.connect')}}</b-button>
 			</b-col>
@@ -125,4 +125,18 @@ export default {
 	}
 }
 </script>
+
+<style lang="less">
+#networkModal {
+	.b-dropdown {
+		border-radius: 0 3px 3px 0;
+		background-color: rgba(0, 0, 0, .5);
+		button.btn-secondary {
+			color: #fff;
+		}
+	}
+}
+</style>
+
+
 

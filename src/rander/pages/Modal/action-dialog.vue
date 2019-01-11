@@ -16,8 +16,7 @@
 						<span style="display: inline-block;width: 9em">{{currentAction}}</span>
 						 <b-btn
 						 	:disabled="isTemp"
-							@click.stop="isChangeName = true; newActionName = currentAction" size="sm"
-							variant="success">
+							@click.stop="isChangeName = true; newActionName = currentAction" size="sm">
 							<i class="fas fa-pencil-alt"></i>
 						</b-btn>
 					</span>
@@ -29,7 +28,7 @@
 							type="text"></b-form-input>
 						<b-btn
 							@click.stop="updateActionName" size="sm"
-							variant="success" :disabled="isShow">
+							:disabled="isShow">
 							<i class="fas fa-save" />
 						</b-btn>
 						<span v-show="isShow" class="text-danger">{{prompt}}</span>
@@ -277,6 +276,29 @@ export default {
 	}
 }
 
+#actionModal {
+    button.btn-secondary {
+        background-color: rgba(0, 0, 0, .1);
+        padding:3px 5px;
+        margin: 0 3px;
+	}
+
+	.input-group-prepend {
+		button.btn-secondary {
+			margin: 0;
+		}
+	}
+	
+	.b-dropdown {
+		border-radius: 0 3px 3px 0;
+		background-color: rgba(0, 0, 0, .5);
+		button.btn-secondary {
+			color: #fff;
+			background-color: transparent;
+		}
+	}
+}
+
 #action-table {
 	.operate {
 		width: 113px;
@@ -287,6 +309,12 @@ export default {
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+
+	button.btn-secondary {
+        background-color: rgba(0, 0, 0, .1);
+        padding:3px 5px;
+        margin: 0 3px;
 	}
 }
 </style>

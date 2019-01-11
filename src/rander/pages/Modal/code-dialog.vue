@@ -1,12 +1,13 @@
 <template>
 	<b-modal
 		id="codeModal"
-		size="md"
+		size="lg"
 		ref="codeModalRef"
 		:title="$t('robot.code.label')"
 		hide-footer
+		centered
 		no-close-on-backdrop>
-		<code-table style="height: 540px;" @close-dialog="$refs.codeModalRef.hide()" />
+		<code-table style="height: 540px;" @close-dialog="$refs.codeModalRef.hide()" :perPage="11" />
 	</b-modal>
 </template>
 

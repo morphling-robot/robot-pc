@@ -113,6 +113,13 @@ export default {
 	.row > div {
 		padding: 0;
 	}
+
+	button {
+		background-color: rgba(0, 0, 0, .1);
+		padding:3px 5px;
+		margin-top: 10px;
+		margin-right: 10px;
+	}
 }
 
 #blockly-editor {

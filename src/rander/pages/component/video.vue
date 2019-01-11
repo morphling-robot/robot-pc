@@ -23,8 +23,8 @@ export default {
     styleObj() {
       const {small, large} = this.$store.state.video;
       
-      return this.isSmall ? (this.isClose ?  'display: none' : `position: relative;z-index:0;width: ${(this.$store.state.robot.isShow ? 0 : 340)}px;height: ${small.height}px;top: ${small.top}px;left: ${small.left}px`) 
-        : `position: relative;z-index:10000;width: 640px;height: ${large.height}px;margin:90px auto`;
+      return this.isSmall ? (this.isClose ?  'display: none' : `position: relative;z-index:0;width: ${(this.$store.state.robot.isShow ? 0 : 390)}px;height: ${small.height}px;top: ${small.top}px;left: ${small.left}px`) 
+        : `position: relative;z-index:10000;width: 640px;height: ${large.height}px;margin:160px auto`;
 
     },
     streamURL() {

@@ -7,8 +7,7 @@
                     size="sm">
                     <b-input-group-prepend>
                         <b-btn
-                            @click="setAllServo"
-                            variant="success"><i class="fas fa-cog"></i>
+                            @click="setAllServo"><i class="fas fa-cog"></i>
                         </b-btn>
                     </b-input-group-prepend>
                     <b-dropdown
@@ -42,6 +41,7 @@
                 </b-col>
             </b-row>
             <adjuster
+                style="margin-left:-9px"
                 ref="adjuster"
                 class="adjuster"
                 :frame="selectedFrame"

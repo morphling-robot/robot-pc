@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="action-table">
         <div>
             <b-button size="sm" variant="success" @click="tempCreateAction"
                 :disabled="isTemp">{{$t('robot.action.create')}}</b-button>
@@ -43,7 +43,7 @@
                             <i class="fas fa-save"></i>
                         </b-button>
                         <b-button size="sm" @click.stop="deleteAction(row)">
-                            <i class="fas fa-trash-alt" />
+                            <i class="fas fa-trash" />
                         </b-button>
                         <b-button size="sm" @click.stop="runAction(row)">
                             <i class="fas fa-play" />
@@ -55,13 +55,13 @@
                 <b-button size="sm" @click="init" v-b-tooltip.hover :title="$t('robot.refresh')">
                     <i class="fas fa-sync-alt" /></b-button>
                 <b-button size="sm" @click.stop="run()" v-if="!runed" v-b-tooltip.hover :title="$t('robot.run')">
-                    <i class="far fa-play-circle"></i>
+                    <i class="fas fa-play"></i>
                 </b-button>
                 <b-button size="sm" @click.stop="pause()" v-if="runed" v-b-tooltip.hover :title="$t('robot.pause')">
-                    <i class="far fa-pause-circle"></i>
+                    <i class="fas fa-pause"></i>
                 </b-button>
                 <b-button size="sm" @click.stop="stop()" v-b-tooltip.hover :title="$t('robot.stop')">
-                    <i class="far fa-stop-circle"></i>
+                    <i class="fas fa-stop"></i>
                 </b-button>
             </div>
         </div>
@@ -253,4 +253,5 @@ export default {
     }
 }
 </script>
+
 

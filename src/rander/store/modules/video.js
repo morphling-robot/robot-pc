@@ -6,9 +6,9 @@ const state = {
         height: 360
     },
     small: {
-        height: 240,
+        height: 300,
         top: 0,
-        left: 60
+        left: 45
     }
 };
 

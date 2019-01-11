@@ -35,7 +35,7 @@
 				</p>
 			</b-col>
 			<b-col cols="auto">
-				<b-button variant="success"
+				<b-button variant="primary"
 					@click="handleLogin" :disabled="prompt.isShow && prompt.isSuccess === 0"
 					size="sm">{{$t('user.login')}}</b-button>
 			</b-col>

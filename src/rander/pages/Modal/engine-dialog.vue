@@ -4,11 +4,12 @@
 		size="lg"
 		:title="$t('robot.engine.calibration')"
 		hide-footer
+        centered
         @shown="getCurrentFrame"
         @hidden="emptySetList"
 		no-close-on-backdrop>
         <b-row>
-            <b-col cols="2">
+            <b-col cols="1" class="mr-3">
                 <b-button @click="allSelect" size="sm">
                     {{$t('robot.engine.all')}}
                 </b-button>
@@ -19,7 +20,7 @@
                     <b-input-group-prepend>
                         <b-btn
                             @click="setAllServo"
-                            variant="success"><i
+                            variant="primary"><i
                                 class="fas fa-sync-alt" />
                         </b-btn>
                     </b-input-group-prepend>
@@ -182,6 +183,20 @@ export default {
         margin: 0 auto;
     }
 
+    button.btn-secondary {
+        background-color: rgba(0, 0, 0, .2);
+        padding: 5px;
+    }
+
+    .b-dropdown {
+		border-radius: 0 3px 3px 0;
+        background-color: rgba(0, 0, 0, .2);
+		button.btn-secondary {
+			color: #fff;
+			background-color: transparent;
+		}
+	}
+
 	.point {
 		display: inline-block;
 		height: 30px;
@@ -206,5 +221,4 @@ export default {
     }
 }
 </style>
-
 
