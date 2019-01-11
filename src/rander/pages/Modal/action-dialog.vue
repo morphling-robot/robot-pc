@@ -15,6 +15,7 @@
 					<span v-if="!isChangeName">
 						<span style="display: inline-block;width: 9em">{{currentAction}}</span>
 						 <b-btn
+						 	:disabled="isTemp"
 							@click.stop="isChangeName = true; newActionName = currentAction" size="sm"
 							variant="success">
 							<i class="fas fa-pencil-alt"></i>
@@ -46,13 +47,13 @@
 					<action-table @change-action="changeCurrentAction" ref="actionTable" :currentAction="currentAction"
 						@create-action="createAction" @copy-action="copyAction" :hasChanged="hasChanged"
 						@action-speed="changeSpeed" @action-runed="realTimeSync"
-						@actionlist-init="init"
+						@actionlist-init="init" @run-temAction="runTemAction"
 						:isTemp="isTemp" @update-action="updateActionContent"></action-table>
 				</b-col>
 				<b-col cols="8">
 					<frame-table ref="frameTable" :frame="currentFrame" :currentAction="currentAction" :hasCurrentAction="hasCurrentAction"
 						:frameModeList="currentModeList" :isTemp="isTemp" :isCopy="isCopy"
-						:actionSpeed="actionSpeed" :isEnd="isEnd" @index-changed="isEnd = false"
+						:actionSpeed="actionSpeed" :isEnd="isEnd" :runningAction="runningAction" @index-changed="isEnd = false"
 						@action-changed="changeFlag" :isChangeName="isChangeName" @editor-state="isChangeName = false"></frame-table>
 				</b-col>
 			</b-row>
@@ -81,7 +82,8 @@ export default {
 			hasChanged: false,
 			actionSpeed: 10,
 			isEnd: false,
-			prompt: ''
+			prompt: '',
+			runningAction: null
 		}
 	},
 	computed: {
@@ -104,18 +106,25 @@ export default {
 				this.prompt = this.$t('robot.code.error');
 			}
 
-			return isDuplicate || this.newActionName.split(' ').length > 1;
+			return isDuplicate || this.newActionName.split(' ').length > 1 || this.isTemp;
 		}
 	},
 	methods: {
+		runTemAction() {
+			const frameList = this.$refs.frameTable.frameList;
+			const speedList = this.$refs.frameTable.speedList;
+
+			this.$refs.frameTable.runInTime(frameList, speedList);
+		},
 		changeSpeed(value) {
 			this.actionSpeed = value;
 		},
-		realTimeSync() {
+		realTimeSync(actionName) {
 			if (!this.hasCurrentAction) {
 				this.getCurrentFrame();
 			} else {
 				this.isEnd = true;
+				this.runningAction = actionName;
 			}
 		},
 		init() {

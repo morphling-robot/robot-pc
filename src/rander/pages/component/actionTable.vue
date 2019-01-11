@@ -123,15 +123,21 @@ export default {
 			});
         },
         runAction(row) {
-			const { name } = row.item;
-			this.$api.runUserAction({
-				data: {
-					name,
-					speed: this.speed
-				}
-			}).then(() => {
-                this.$emit('action-runed');
-            });
+            const { name } = row.item;
+
+            if (this.isTemp) {
+                this.$emit('run-temAction');
+            } else {
+
+                this.$api.runUserAction({
+                    data: {
+                        name,
+                        speed: this.speed
+                    }
+                }).then(() => {
+                    this.$emit('action-runed', name);
+                });
+            }
         },
         updateAction() {
 			this.$emit('update-action')

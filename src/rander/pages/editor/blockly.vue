@@ -79,10 +79,10 @@ export default {
 		},
 		updatePythonModel(code) {
 			this.python = code;
-			this.$root.$on('init-python', this.initPython = () => {
-				this.$store.commit('pythonUpdateCode', code);
-				this.$store.commit('pythonOriginUpdateCode', code);
-			});
+			this.$store.commit('pythonUpdateCode', code);
+			this.$store.commit('pythonOriginUpdateCode', code);
+			// this.$root.$on('init-python', this.initPython = () => {
+			// });
 		}
 	},
 	computed: {

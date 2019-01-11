@@ -68,7 +68,7 @@ function modeListFactory(mode) {
 export default {
     name: 'frame-table',
     props: ['currentAction', 'frame', 'hasCurrentAction', 'frameModeList', 'tempCreateAction',
-        "actionSpeed", 'isEnd', 'isChangeName',
+        "actionSpeed", 'isEnd', 'isChangeName', 'runningAction',
         'isTemp', 'isCopy'],
     data() {
         return {
@@ -199,7 +199,7 @@ export default {
             this.$emit('action-changed', newValue);
         },
         isEnd(newValue, oldValue) {
-            if (newValue) {
+            if (newValue && this.runningAction === this.currentAction) {
                 this.frameIndex = this.frameList.length;
 
                 this.$emit('index-changed');

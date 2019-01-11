@@ -170,8 +170,7 @@ const apiList = {
 			.post(prefix + '/instructs', axiosData, axiosConfig)
 			.then(({ data }) => {
 				return data;
-			})
-			.catch(error => console.log(error));
+			});
 		},
 	robotControl({ data: type, config }) {
 		this
@@ -316,18 +315,14 @@ const apiList = {
 			.catch(error => console.log(error));
 	},
 	calibrateServo({ data, config }) {
-		this
+		return this
 			.postInstructs({
 				data: {
 					instruct_type: 6000,
 					para2: data.id
 				},
 				config
-			})
-			.then(({ data }) => {
-				return data;
-			})
-			.catch(error => console.log(error));
+			});
 	},
 	createToken({ data, config: axiosConfig }) {
 		const axiosData = {

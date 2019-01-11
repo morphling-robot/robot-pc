@@ -65,6 +65,7 @@ robot:
   engine:
     calibration: '舵机标定'
     all: '全部标定'
+    error: '标定失败！'
   refresh: '刷新'
   run: '启动'
   pause: '暂停'

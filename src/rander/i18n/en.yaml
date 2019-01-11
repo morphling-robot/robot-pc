@@ -67,6 +67,7 @@ robot:
   engine:
     calibration: 'Calibration'
     all: 'All Calibration'
+    error: 'Calibration failure!'
   refresh: 'Refresh'
   run: 'Run'
   pause: 'Pause'

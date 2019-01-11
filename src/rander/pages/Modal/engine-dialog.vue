@@ -8,15 +8,10 @@
         @hidden="emptySetList"
 		no-close-on-backdrop>
         <b-row>
-            <b-col>
+            <b-col cols="2">
                 <b-button @click="allSelect" size="sm">
                     {{$t('robot.engine.all')}}
                 </b-button>
-            </b-col>
-            <b-col cols="auto">
-                 <b-form-slider v-model="speed"
-                    trigger-change-event :min="1" :max="100" :step="1" @change="updateSpeed"></b-form-slider>
-                <span style="display: inline-block;width: 4em;text-align: center">{{speed}}</span>
             </b-col>
             <b-col cols="3">
                 <b-input-group
@@ -41,13 +36,8 @@
                     </b-dropdown>
                 </b-input-group>
             </b-col>
-            <b-col cols="2">
-                 <b-form-checkbox
-                    v-model="follow"
-                    :value="true"
-                    :unchecked-value="false">
-                   {{$t('robot.action.frame.follow')}}
-                </b-form-checkbox>
+            <b-col>
+                <span v-show="isError" class="text-danger">{{$t('robot.engine.error')}}</span>
             </b-col>
         </b-row>
        
@@ -95,23 +85,26 @@ export default {
 				{ text: this.$t('robot.lock'), value: 'lock'},
             ],
             follow: true,
-            damperModeList: modeListFactory('lock')
+            damperModeList: modeListFactory('lock'),
+            isError: false
         }
     },
     components: {Engine},
     methods: {
         resetPoint(index) {
+            this.isError = false;
+
             if (this.setList.indexOf(index) === -1) {
                 this.$api.calibrateServo({
                     data: {
                         id: index
                     }
+                }).then(() => {
+
+                    this.setList.push(index);
+                }).catch(e => {
+                    this.isError = true;
                 });
-
-                this.setList.push(index);
-
-                this.getCurrentFrame();
-
             }
         },
         emptySetList() {
@@ -121,17 +114,20 @@ export default {
             const arr = new Array(17).fill(0);
             this.setList = [];
 
+            this.isError = false;
+
             this.$api.calibrateServo({
                 data: {
                     id: 121
                 }
+            }).then(() => {
+                arr.forEach((item, index) => {
+                    this.setList.push(index + 1);
+    
+                });
+            }).catch((e) => {
+                this.isError = true;
             });
-            arr.forEach((item, index) => {
-                this.setList.push(index + 1);
-
-            });
-
-            this.getCurrentFrame();
         },
         getCurrentFrame() {
             this.$api.getFrame().then(data => {
@@ -147,15 +143,11 @@ export default {
 				speed: this.speed	
 			}, value);
 			
-			// 连接口
 			if (this.follow) {
 				this.$api.changeServoAngle({
 					data: message
 				});
 			}
-        },
-        updateSpeed() {
-
         },
         setAllServo() {
 			this.$api.changeServoMode({

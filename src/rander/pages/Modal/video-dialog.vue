@@ -68,8 +68,6 @@ export default {
 
 					const captureStream = this.canvasElement.captureStream();
 
-					console.log(captureStream);
-
 					this.recorder = RecordRTC(captureStream, {
 						type: 'video'
 					});

@@ -168,7 +168,7 @@ export default {
 			
 			this.ipList.forEach((ip, index) => {
 
-				axios.get(`http://${ip}:5000/v1/states`, { timeout: 5000 })
+				axios.get(`http://${ip}:5000/v1/states`, { timeout: 30000 })
 					.then(r => {
 						this.robotList.push({
 							id: r.data.robot_id,
