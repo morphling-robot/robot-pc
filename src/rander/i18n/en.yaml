@@ -40,6 +40,7 @@ robot:
     save: 'Save'
     delete: 'Delete'
     upload: 'Upload'
+    leave: 'Leave'
     prompt: 'Upload file name can not be renamed!'
     error: 'File names cannot have spaces！'
     filename: 'Please enter name'

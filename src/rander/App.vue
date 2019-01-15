@@ -234,6 +234,36 @@ export default {
 #app {
   height: 100%;
   width: 100%;
+
+  .page-item.active .page-link {
+    background-color: #25A5EC;
+    border-color: #25A5EC;
+  }
+
+  .pagination-sm .page-link {
+    padding: .15rem .5rem;
+  }
+
+  .page-item.disabled .page-link {
+    color: #dee2e6;
+  }
+
+  .ace-github .ace_gutter, .ace_active-line {
+    background-color: #F7F9FA;
+  }
+  .btn-primary {
+    background-color: #25A5EC;
+    border-color: #25A5EC;
+  }
+
+  .btn-danger, .btn-danger.disabled, .btn-danger:disabled {
+    background-color: #FF4848;
+    border-color: #FF4848;
+  }
+  .slider-handle {
+    background-color: #25A5EC;
+    background-image: none;
+  }
 }
 
 #router-view-container {

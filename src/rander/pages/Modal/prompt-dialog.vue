@@ -18,6 +18,10 @@
 		</b-col>
 		<b-col cols="auto">
 			<b-button
+				variant="primary" style="background-color: rgba(138, 193, 239, 0.48); border-color: rgba(138, 193, 239, 0.48); color: #25A5EC"
+				@click="$refs.promptModal.hide()"
+				size="sm">{{$t('robot.code.leave')}}</b-button>
+			<b-button
 				variant="primary"
 				@click="invokeCallback" :disabled="isShow"
 				size="sm">{{$t('robot.code.upload')}}</b-button>
@@ -75,3 +79,21 @@ export default {
 	}
 }
 </script>
+
+
+<style lang="less">
+#prompt-modal {
+	.modal-title {
+		color: #666666;
+	}
+	.form-control {
+		border-color: #DFDFDF;
+	}
+
+	.btn-primary {
+		width: 57px;
+		height: 25px;
+		line-height: 16px;
+	}
+}
+</style>

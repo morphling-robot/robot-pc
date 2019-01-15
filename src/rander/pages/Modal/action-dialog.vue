@@ -278,7 +278,7 @@ export default {
 
 #actionModal {
     button.btn-secondary {
-        background-color: rgba(0, 0, 0, .1);
+        background-color: #E8E8E8;
         padding:3px 5px;
         margin: 0 3px;
 	}
@@ -291,11 +291,15 @@ export default {
 	
 	.b-dropdown {
 		border-radius: 0 3px 3px 0;
-		background-color: rgba(0, 0, 0, .5);
+		background-color: #999999;
 		button.btn-secondary {
 			color: #fff;
 			background-color: transparent;
 		}
+	}
+
+	.modal-title {
+		color: #666666;
 	}
 }
 
@@ -312,9 +316,10 @@ export default {
 	}
 
 	button.btn-secondary {
-        background-color: rgba(0, 0, 0, .1);
-        padding:3px 5px;
-        margin: 0 3px;
+        background-color: #E8E8E8;
+		padding:1px 5px;
+		margin: 0 3px;
+		border-radius: 4px;
 	}
 }
 </style>

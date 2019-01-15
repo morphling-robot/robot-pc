@@ -59,7 +59,7 @@
 			</b-navbar-nav>
 
 			<b-navbar-nav  class="mx-auto">
-				<img src="../../../../asset/images/logo.png" style="width:80%">
+				<img src="../../../../asset/images/logo.png" style="width:100%">
 			</b-navbar-nav>
 
 			<b-navbar-nav class="ml-auto" id="code-operate">
@@ -326,7 +326,7 @@ export default {
 <style lang="less">
 #navbar {
 	height: 48px;
-	border-bottom: 1px solid rgba(0,0,0,.125);
+	border-bottom: 1px solid #DFDFDF;
 
 	button {
 		padding: 0px;
@@ -334,10 +334,13 @@ export default {
 
 	label.btn-secondary {
 		background: #E8E8E8;
+		color: #000000;
+		border: none;
 	}
 
 	.btn-secondary:not(:disabled):not(.disabled).active {
 		background: #666666;
+		color: #ffffff;
 	}
 }
 

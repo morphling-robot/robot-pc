@@ -115,10 +115,11 @@ export default {
 	}
 
 	button {
-		background-color: rgba(0, 0, 0, .1);
-		padding:3px 5px;
+		background-color: #E8E8E8;
+		padding:0px 3px;
 		margin-top: 10px;
 		margin-right: 10px;
+		border-radius: 4px;
 	}
 }
 

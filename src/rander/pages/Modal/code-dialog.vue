@@ -21,3 +21,12 @@ export default {
 }
 </script>
 
+
+<style lang="less">
+#codeModal {
+	.modal-title {
+		color: #666666;
+	}
+}
+</style>
+

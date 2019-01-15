@@ -21,11 +21,27 @@ html, body {
 
 .btn-secondary,.btn-secondary:hover,.btn-secondary:focus {
 	background: transparent;
-	color: #000;
+	color: #666666;
 	border: none !important;
 	box-shadow: none;
 }
 
 .blocklyToolboxDiv {
-	background-color: #EEE;
+	background-color: #F7F9FA;
+}
+
+.blocklyTreeLabel {
+	color: #333333;
+	font-family: 'Microsoft Yahei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.blocklyTreeRow {
+	height: 2em;
+	.blocklyTreeLabel {
+		line-height: 2em;
+	}
+}
+
+table.b-table > thead > tr > th, table.b-table > tfoot > tr > th {
+	color: #666666;
 }

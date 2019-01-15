@@ -12,7 +12,7 @@
                     </b-input-group-prepend>
                     <b-dropdown
                         split
-                        :text="selectedMode.text"
+                        :text="selectedMode.text" style="border-top-right-radius:0;border-bottom-right-radius:0;"
                         size="sm">
                         <b-dropdown-item
                             v-for="(mode, index) in modeList"
@@ -21,8 +21,8 @@
                             {{mode.text}}
                         </b-dropdown-item>
                     </b-dropdown>
-                    <b-button size="sm" variant="primary" @click="insertFrame" :disabled="!hasCurrentAction">{{$t('robot.action.frame.insert')}}</b-button>
-                    <b-button size="sm" variant="danger" @click="deleteFrame" :disabled="!hasCurrentAction">{{$t('robot.action.frame.delete')}}</b-button>
+                    <b-button size="sm" variant="primary" @click="insertFrame" :disabled="!hasCurrentAction" style="border-radius:0">{{$t('robot.action.frame.insert')}}</b-button>
+                    <b-button size="sm" variant="danger" @click="deleteFrame" :disabled="!hasCurrentAction" style="border-top-left-radius:0;border-bottom-left-radius:0;">{{$t('robot.action.frame.delete')}}</b-button>
                 </b-input-group>
             </b-col>
         </b-row>

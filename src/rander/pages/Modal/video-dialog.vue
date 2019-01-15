@@ -191,8 +191,27 @@ export default {
 	max-width: 642px;
 }
 
+#videoModal {
+	.modal-open .modal {
+		overflow-x: hidden;
+		overflow-y: hidden;
+	}
+
+	.modal-header {
+		border: none;
+	}
+
+	.modal-title {
+		color: #666666;
+	}
+
+	// .modal.fade .modal-dialog {
+	// 	transition-delay: 0s;
+	// }
+}
+
 #videoModal .modal-body {
-	height: 434px;
+	height: 389px;
 
 	#toolbar {
 		margin: 419px auto;

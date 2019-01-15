@@ -33,3 +33,32 @@ export default {
 	}
 };
 </script>
+
+<style lang="less">
+#robotModal {
+
+	.modal-title {
+		color: #666666;
+	}
+
+	fieldset {
+		legend {
+			color: #333333;
+		}
+	}
+
+	.form-control:disabled, .form-control[readonly] {
+		background-color: #F7F9FA;
+		border: none;
+	}
+
+	table thead {
+		background-color: #F7F9FA;
+
+		th {
+			border:none;
+		}
+	}
+}
+</style>
+

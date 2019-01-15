@@ -170,7 +170,7 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 #engineModal {
     #content {
         background-image: url("../../../../asset/images/example.jpg");
@@ -183,6 +183,9 @@ export default {
         margin: 0 auto;
     }
 
+    .modal-title {
+        color: #666666;
+    }
     button.btn-secondary {
         background-color: rgba(0, 0, 0, .2);
         padding: 5px;

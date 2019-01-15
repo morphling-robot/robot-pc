@@ -22,7 +22,7 @@
 		</b-form-group>
 		<b-row>
 			<b-col>
-				<p v-if="prompt.isShow" class="mb-0">
+				<p v-if="prompt.isShow" class="mb-0" style="font-size: 13px">
 					<span v-if="prompt.isSuccess === 0">
 						<i class="fas fa-sync-alt animated rotateIn infinite" /> {{$t('user.waiting')}}
 					</span>
@@ -35,6 +35,9 @@
 				</p>
 			</b-col>
 			<b-col cols="auto">
+				<b-button variant="primary"
+					@click="$refs.loginModalRef.hide()" style="background-color: rgba(138, 193, 239, 0.48); border-color: rgba(138, 193, 239, 0.48); color: #25A5EC"
+					size="sm">{{$t('robot.code.leave')}}</b-button>
 				<b-button variant="primary"
 					@click="handleLogin" :disabled="prompt.isShow && prompt.isSuccess === 0"
 					size="sm">{{$t('user.login')}}</b-button>
@@ -98,4 +101,20 @@ export default {
 	}
 }
 </script>
+
+<style lang="less">
+#loginModal {
+	.modal-title {
+		color:#666666
+	}
+	.form-control {
+		border-color: #DFDFDF;
+	}
+	.btn-primary {
+		width: 57px;
+		height: 25px;
+		line-height: 16px;
+	}
+}
+</style>
 

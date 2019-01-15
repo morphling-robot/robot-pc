@@ -35,13 +35,13 @@ export default {
   position: fixed;
   bottom: 0;
   width: 100%;
-  color: #000;
-  background-color: #EEE;
+  color: #333333;
+  background-color: #F7F9FA;
   height: 24px;
-  font-size: 12px;
-  font-weight: 100;
+  font-size: 13px;
+  font-weight: 500;
   line-height: 24px;
-  border-top: 1px solid rgba(0, 0, 0, .125)
+  border-top: 1px solid #DFDFDF
 }
 </style>
 

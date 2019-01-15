@@ -58,7 +58,7 @@
 			</b-col>
 			<b-col cols="auto">
 				<b-button
-					variant="primary"
+					variant="primary" style="width:57px;height:25px;line-height:16px"
 					@click="setNetwork" :disabled="prompt.isShow && prompt.isSuccess === 0"
 					size="sm">{{$t('robot.network.connect')}}</b-button>
 			</b-col>
@@ -130,10 +130,17 @@ export default {
 #networkModal {
 	.b-dropdown {
 		border-radius: 0 3px 3px 0;
-		background-color: rgba(0, 0, 0, .5);
+		background-color: #999999;
 		button.btn-secondary {
 			color: #fff;
 		}
+	}
+
+	.modal-title {
+		color: #666666;
+	}
+	.form-control {
+		border-color: #DFDFDF;
 	}
 }
 </style>

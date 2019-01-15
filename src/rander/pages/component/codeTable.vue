@@ -40,7 +40,7 @@
 			small
 			:items="codeList"
 			:fields="[
-				{ key: 'codeName', label: 'codeName'},
+				{ key: 'codeName', label: 'Codename'},
 				{ key: 'action', label: 'Action'}
 			]"
 			:current-page="currentPage"
@@ -250,9 +250,10 @@ export default {
 <style lang="less">
 #code-table {
   button.btn-secondary {
-    background-color: rgba(0, 0, 0, .1);
-    padding:3px 5px;
+    background-color: #E8E8E8;
+    padding:1px 5px;
     margin: 0 3px;
+    border-radius: 4px;
   }
 }
 </style>

@@ -38,6 +38,7 @@ robot:
     save: '保存'
     delete: '删除'
     upload: '上传'
+    leave: '离开'
     prompt: '上传文件名不能重名！'
     error: '文件名不能有空格！'
     filename: '请输入文件名'
@@ -56,7 +57,7 @@ robot:
       speed: '帧速率：'
       follow: '跟随'
   video:
-    label: '摄像头'
+    label: '录像'
     start: '开始录像'
     end: '结束录像'
     watch: '查看录像'
