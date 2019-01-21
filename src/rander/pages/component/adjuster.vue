@@ -11,6 +11,7 @@
 			<b-form-checkbox
 				v-model="follow"
 				:value="true"
+				@change="sendIframe"
                 :unchecked-value="false"> 
 				{{$t('robot.action.frame.follow')}}
 			</b-form-checkbox>
@@ -62,6 +63,11 @@ export default {
 			this.frameSpeed.speed = changed.newValue; 
 
 			// 连接口
+		},
+		sendIframe(checkedValue) {
+			if (checkedValue) {
+				this.$emit('current-frame');
+			}
 		}
 	},
 	computed: {

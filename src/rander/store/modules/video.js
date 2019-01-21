@@ -1,6 +1,6 @@
 const state = {
     videoState: 'close',
-    videoIp: 'rtmp://192.168.31.217/live/test',
+    videoIp: null,
     dialogState: 'close',
     large: {
         height: 360
@@ -21,6 +21,14 @@ const mutations = {
     },
     updateDialogState(state, payload) {
         state.dialogState = payload;
+    },
+    openVideo(state) {
+        state.videoState = 'open';
+    },
+    closeVideo(state) {
+        state.videoState = 'close';
+
+
     }
 };
 

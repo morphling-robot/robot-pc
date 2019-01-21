@@ -9,7 +9,7 @@
 					size="sm" v-b-tooltip.hover :title="$t('robot.refresh')"><i class="fas fa-sync-alt" /></b-button>
         <b-button size="sm" @click.stop="run()" v-if="!runed"
           v-b-tooltip.hover :title="$t('robot.run')">
-          <i class="far fa-play"></i><br/>
+          <i class="fas fa-play"></i><br/>
         </b-button>
         <b-button size="sm" @click.stop="pause()" v-if="runed"
         v-b-tooltip.hover :title="$t('robot.pause')">
@@ -87,7 +87,6 @@
 export default {
   data() {
     return {
-      runed: true,
       currentPage: 1,
       currentCode: null,
       newName: '',
@@ -185,14 +184,14 @@ export default {
       });
     },
     run() {
-			this.runed = true;
+      this.$store.commit('updateRunStatus', true);
 
 			this.$api.robotControl({
 				data: 'continue'
 			});
 		},
 		pause() {
-			this.runed = false;
+      this.$store.commit('updateRunStatus', false);
 
 			this.$api.robotControl({
 				data: 'pause'
@@ -204,6 +203,8 @@ export default {
 			});
 		},
 		stop() {
+      this.$store.commit('updateRunStatus', true);
+      
 			this.$api.robotControl({
 				data: 'stop'
 			});
@@ -241,7 +242,10 @@ export default {
 		},
     isChanged() {
 			return this.$store.getters.isPythonChanged || this.$store.getters.isPythonChanged;
-		}
+    },
+    runed() {
+       return this.$store.state.editor.runed;
+    }
   }
 };
 </script>

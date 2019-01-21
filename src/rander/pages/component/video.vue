@@ -1,6 +1,6 @@
 <template>
-	<video id="video" class="video-js vjs-default-skin" :style="styleObj">
-    <source v-if="streamURL" :src="streamURL" type='rtmp/*'>
+	<video id="video" class="video-js vjs-default-skin vjs-big-play-centered" :style="styleObj">
+    <source v-if="streamURL" :src="streamURL">
   </video>
 </template>
 
@@ -39,6 +39,11 @@ export default {
           this.container.style = newStylle;
         }, 100);
       }
+    },
+    isClose(newValue) {
+      if (newValue) {
+        this.player.pause();
+      }
     }
   },
   mounted() {
@@ -48,22 +53,37 @@ export default {
         controls: true,
         fluid: false
       },
-      function() {
+      () => {
+        this.player.on('play',() =>{
+    　　　　this.$store.commit('updateVideoState', 'open');
+    　　});
       });
     this.container = document.getElementById('video');
-
   }
 };
 </script>
 
 <style lang="less">
 #video {
-  .vjs-big-play-button {
+  .vjs-big-play-button{
     z-index: 10000 !important;
+    font-size: 2.5em;
+    line-height: 2.3em;
+    height: 2.5em;
+    width: 2.5em;
+    -webkit-border-radius: 2.5em;
+    -moz-border-radius: 2.5em;
+    border-radius: 2.5em;
+    background-color: #73859f;
+    background-color: rgba(115,133,159,.5);
+    border-width: 0.15em;
+    margin-top: -1.25em;
+    margin-left: -1.75em;
   }
   video {
     margin: 0px !important;
     left: 0px !important;
+    top: 0px !important;
   }
 
   transition: transform .3s ease-out,-webkit-transform .3s ease-out;

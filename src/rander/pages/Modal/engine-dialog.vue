@@ -19,9 +19,8 @@
                     size="sm">
                     <b-input-group-prepend>
                         <b-btn
-                            @click="setAllServo"
-                            variant="primary"><i
-                                class="fas fa-sync-alt" />
+                            style="background-color: rgba(232,232,232,1); color: #333333"
+                            @click="setAllServo"><i class="fas fa-cog"></i>
                         </b-btn>
                     </b-input-group-prepend>
                     <b-dropdown
@@ -187,13 +186,14 @@ export default {
         color: #666666;
     }
     button.btn-secondary {
-        background-color: rgba(0, 0, 0, .2);
+        background-color: rgba(153,153,153,1);
         padding: 5px;
+        color: #fff;
     }
 
     .b-dropdown {
 		border-radius: 0 3px 3px 0;
-        background-color: rgba(0, 0, 0, .2);
+        background-color: rgba(153,153,153,1);
 		button.btn-secondary {
 			color: #fff;
 			background-color: transparent;

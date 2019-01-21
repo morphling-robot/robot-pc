@@ -3,19 +3,24 @@
 		id="videoModal"
 		ref="videoModalRef"
 		size="md"
-		:title="$t('robot.video.label')"
 		hide-footer
 		centered
 		@shown="updateDialogState('open')"
 		@hide="updateDialogState('close')"
 		no-close-on-backdrop>
-		<!-- <div id="toolbar">
-			<b-button size="sm" variant="success" @click="startRecord">{{$t('robot.video.start')}}</b-button>
-			<b-button size="sm" variant="danger" @click="stopRecord">{{$t('robot.video.end')}}</b-button>
-			<b-button size="sm" variant="success" @click="watchRecord">{{$t('robot.video.watch')}}</b-button>
-			<b-button size="sm" variant="success" @click="watchVideo">{{$t('robot.video.return')}}</b-button>
-			<b-button size="sm" variant="success" @click="saveRecord">{{$t('robot.video.save')}}</b-button>
-		</div> -->
+		<div slot="modal-header" class="w-100">
+			<div style="display: inline-block">
+				<h5 class="modal-title">{{$t('robot.video.label')}}</h5>
+			</div>
+			<div style="display: inline-block; float: right">
+				<button type="button" aria-label="Close" class="close" @click.stop="closeVideo()">×</button>
+			</div>
+			<div style="display: inline-block; float: right">
+				<button type="button" style="font-size:1em" aria-label="Close" class="close" @click.stop="$refs.videoModalRef.hide()">
+					<i class="far fa-window-minimize"></i>
+				</button>
+			</div>
+		</div>
 	</b-modal>
 </template>
 
@@ -41,7 +46,6 @@ export default {
 	computed: {
 		dialogState() {
 			setTimeout(() => {
-
 				return this.$store.state.video.dialogState === 'open';
 			}, 1000);
 		}
@@ -54,118 +58,18 @@ export default {
 	methods: {
 		updateDialogState(state) {
 			this.$store.commit('updateDialogState', state);
-		},
-		startRecord() {
-			this.captureScreen(screen => {
-				this.mediaElement.ontimeupdate = (ev) => {
-					this.cropFrame(ev, screen, this.mediaElement);
-					
-					this.mediaElement.style.display = 'none';
 
-					this.mediaElement.srcObject = screen;
-					this.mediaElement.screen = screen;
-
-					this.addStreamStopListener(screen);
-
-					const captureStream = this.canvasElement.captureStream();
-
-					this.recorder = RecordRTC(captureStream, {
-						type: 'video'
-					});
-
-					this.recorder.startRecording();
-				};
-				
-			});
-		},
-		stopRecord() {
-			this.recorder.stopRecording(() => {
-				console.log(1);
-
-				this.blob = this.recorder.getBlob();
-				
-				this.mediaElement.style.display = 'block';
-				this.canvasElement.style.display = 'none';
-
-				if (this.mediaElement.screen && this.mediaElement.screen.getVideoTracks) {
-					this.mediaElement.screen.stop();
-					this.mediaElement.screen = null;
-				}
-			});
-		},
-		watchRecord() {
-			this.mediaElement.srcObject = null;
-			this.mediaElement.src = URL.createObjectURL(this.blob);
-		},
-		watchVideo() {
-			this.mediaElement.srcObject = null;
-			this.mediaElement.src = this.$store.state.video.videoIp; //协议和端口
-		},
-		saveRecord() {
-			const electron = this.$electron;
-			const { dialog } = electron.remote;
-			const fs = electron.remote.require("fs");
-			const filters = ['mp4', 'wav'];
-
-			const fileReader = new FileReader();
-
-  			fileReader.readAsDataURL(this.blob);
-			fileReader.onload = function(e) {
-				const content = e.target.result;
-				const dataBuffer = new Buffer(content.replace(/^data:audio\/\w+;base64,/,""), 'base64');
-
-				dialog.showSaveDialog({ properties: ["openFile"], filters, title: 'Save' }, filename => {
-					fs.writeFileSync(filename, dataBuffer);
+			if (state === 'open') {
+				this.$api.connectCamera().then((ip) => {
+					this.$store.commit('updateVideoIp', ip);
 				});
-			};
-
+			}
 		},
-		captureScreen(callback) {
-			getScreenId(function(error, sourceId, screen_constraints) {
-				navigator.mediaDevices.getUserMedia(screen_constraints).then(callback).catch(function(error) {
-					console.error('getScreenId error', error);
-					alert('Failed to capture your screen. Please check Chrome console logs for further information.');
-				});
-			});
-		},
-		cropFrame(ev, stream, video) {
-			const {left, top, width, height} = this.position;
+		closeVideo() {
+			this.$refs.videoModalRef.hide();
+			this.$store.commit('updateVideoState', 'close');
 
-			this.canvasContext.width = width;
-			this.canvasContext.height = height;
-
-			this.canvasContext.drawImage(video, left, top, width, height, 0, 0, width, height);
-		},
-		setConfig() {
-			this.position = {
-				left: this.mediaElement.offsetLeft,
-				top: this.mediaElement.offsetTop,
-				width: this.mediaElement.offsetWidth,
-				height: this.mediaElement.offsetHeight
-			};
-		},
-		addStreamStopListener(stream, callback) {
-			    stream.addEventListener('ended', function() {
-					// callback();
-					callback = function() {};
-				}, false);
-
-				stream.addEventListener('inactive', function() {
-					// callback();
-					callback = function() {};
-				}, false);
-
-				stream.getTracks().forEach(function(track) {
-					track.addEventListener('ended', function() {
-						// callback();
-						callback = function() {};
-					}, false);
-
-					track.addEventListener('inactive', function() {
-						// callback();
-						callback = function() {};
-					}, false);
-				});
+			this.$api.closeCamera();
 		}
 	},
 	mounted() {
@@ -176,12 +80,6 @@ export default {
 		// ipcRenderer.on('app-toggle-video-dialog', () => {
 		// 	this.$refs.videoModalRef.show();
 		// });
-
-		this.mediaElement = document.getElementsByTagName('video')[0];
-		this.canvasElement = document.querySelector('canvas');
-		this.canvasContext = this.canvasElement.getContext('2d');
-
-		this.setConfig();
 	},
 }
 </script>

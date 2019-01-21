@@ -11,7 +11,8 @@ const state = {
 		code: '',
 		originCode: ''
 	},
-	codeList: []
+	codeList: [],
+	runed: true
 };
 
 const getters = {
@@ -55,6 +56,9 @@ const mutations = {
 		if (payload) {
 			state.codeList = payload;
 		}
+	},
+	updateRunStatus(state, status) {
+		state.runed = status;
 	}
 };
 

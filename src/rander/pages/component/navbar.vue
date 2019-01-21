@@ -332,15 +332,30 @@ export default {
 		padding: 0px;
 	}
 
-	label.btn-secondary {
-		background: #E8E8E8;
-		color: #000000;
-		border: none;
+	#btnradios1 {
+		label.btn-secondary {
+			background-color: transparent;
+			color: #999999;
+			border: none;
+			font-size: 16px;
+		}
+
+		.btn-secondary:not(:disabled):not(.disabled).active {
+			background-color: transparent;
+			color: #666666;
+			border: none;
+		}
 	}
+
 
 	.btn-secondary:not(:disabled):not(.disabled).active {
 		background: #666666;
 		color: #ffffff;
+		box-shadow: none;
+	}
+
+	.btn-secondary:not(:disabled):not(.disabled).active:focus {
+		box-shadow: none;
 	}
 }
 

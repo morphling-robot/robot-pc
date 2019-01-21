@@ -46,6 +46,7 @@
                 class="adjuster"
                 :frame="selectedFrame"
                 :frameSpeed="selectedSpeed"
+                @current-frame="sendCurrentFrame"
                 :damperModeList="selectedModeList" />
         </div>
     </div>
@@ -212,6 +213,11 @@ export default {
         } 
     },
     methods: {
+        sendCurrentFrame() {
+            if (this.hasChange) {
+                this.runInTime([this.selectedFrame], [this.selectedSpeed]);
+            }
+        },
         changeCUrrentFrameState(newIndex, oldIndex) {
             let start = null;
             let end = null;

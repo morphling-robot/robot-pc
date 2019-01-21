@@ -74,7 +74,6 @@ export default {
     data() {
         return {
             currentActionPage: 0,
-            runed: true,
             speed: 10,
             actionList: []
         }
@@ -88,6 +87,9 @@ export default {
     computed: {
         actionNameList() {
             return this.actionList.map(action => action.name);
+        },
+        runed() {
+            return this.$store.state.editor.runed;
         }
     },
     methods: {
@@ -104,20 +106,22 @@ export default {
             this.$emit('action-speed', newValue);
         },
         run() {
-			this.runed = true;
+			this.$store.commit('updateRunStatus', true);
 
 			this.$api.robotControl({
 				data: 'continue'
 			});
 		},
 		pause() {
-			this.runed = false;
+			this.$store.commit('updateRunStatus', false);
 
 			this.$api.robotControl({ 
 				data: 'pause'
 			});
 		},
 		stop() {
+            this.$store.commit('updateRunStatus', true);
+            
 			this.$api.robotControl({
 				data: 'stop'
 			});
