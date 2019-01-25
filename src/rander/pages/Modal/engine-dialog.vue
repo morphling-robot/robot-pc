@@ -48,7 +48,7 @@
                 <span class="number">{{index - 0 + 1}}</span><br />
                 <engine  @mouseenter.stop.prevent="pointTarget = index"  v-if="pointTarget == index"
 				    :servo="frame[index]" :index="index" @angle-changed="updateAngle"
-                    :damperMode="damperModeList[index]" :disabled="follow" />
+                    :damperMode="damperModeList[index]" :disabled="follow" :min="rangObject[index].min" :max="rangObject[index].max" />
             </span>
         </div>
 	</b-modal>
@@ -74,6 +74,7 @@ export default {
     data() {
         return {
             styleObject: null,
+            rangObject: null,
             setList: [],
             pointTarget: -1,
             frame: [],
@@ -164,7 +165,10 @@ export default {
 		}
     },
     created() {
-		this.styleObject = genStyleObjectFromMap(adjusterMap);
+        const {style, range} = genStyleObjectFromMap(adjusterMap);
+        
+        this.styleObject = style;
+        this.rangObject = range;
 	}
 }
 </script>

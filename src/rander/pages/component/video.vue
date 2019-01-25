@@ -1,7 +1,5 @@
 <template>
-	<video id="video" class="video-js vjs-default-skin vjs-big-play-centered" :style="styleObj">
-    <source v-if="streamURL" :src="streamURL">
-  </video>
+	<img :src="streamURL" id="video" :style="styleObj" />
 </template>
 
 <script>
@@ -28,8 +26,8 @@ export default {
 
     },
     streamURL() {
-      // return `http://${this.$store.state.video.videoIp}:8080`;
-      return this.$store.state.video.videoIp;
+      return `http://${this.$store.state.video.videoIp}`;
+      // return this.$store.state.video.videoIp;
     }
   },
   watch: {
@@ -47,17 +45,17 @@ export default {
     }
   },
   mounted() {
-    this.player = videojs(
-      video,
-      {
-        controls: true,
-        fluid: false
-      },
-      () => {
-        this.player.on('play',() =>{
-    　　　　this.$store.commit('updateVideoState', 'open');
-    　　});
-      });
+    // this.player = videojs(
+    //   video,
+    //   {
+    //     controls: true,
+    //     fluid: false
+    //   },
+    //   () => {
+    //     this.player.on('play',() =>{
+    // 　　　　this.$store.commit('updateVideoState', 'open');
+    // 　　});
+    //   });
     this.container = document.getElementById('video');
   }
 };

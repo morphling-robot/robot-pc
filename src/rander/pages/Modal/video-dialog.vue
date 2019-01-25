@@ -60,8 +60,8 @@ export default {
 			this.$store.commit('updateDialogState', state);
 
 			if (state === 'open') {
-				this.$api.connectCamera().then((ip) => {
-					this.$store.commit('updateVideoIp', ip);
+				this.$api.connectCamera().then((camera) => {
+					this.$store.commit('updateVideoIp', camera.camera_ip);
 				});
 			}
 		},
@@ -116,5 +116,9 @@ export default {
 		text-align: center;
 		width: 100%;
 	}
+}
+
+#videoModal.modal.fade .modal-dialog {
+	transition: none;
 }
 </style>

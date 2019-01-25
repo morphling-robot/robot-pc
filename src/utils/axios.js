@@ -338,7 +338,7 @@ const apiList = {
 	},
 	connectCamera() {
 		return api.robot
-			.post(prefix + '/camera')
+			.get(prefix + '/camera')
 			.then(({ data }) => {
 				return data;
 			});

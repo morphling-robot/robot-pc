@@ -44,7 +44,7 @@
 		</b-form-group>
 		<b-row>
 			<b-col>
-				<p v-if="prompt.isShow" class="mb-0">
+				<p v-if="prompt.isShow" class="mb-0" style="font-size: 13px">
 					<span v-if="prompt.isSuccess === 0">
 						<i class="fas fa-sync-alt animated rotateIn infinite" /> {{$t('robot.network.waiting')}}
 					</span>
@@ -110,6 +110,7 @@ export default {
 		},
 		setNetwork() {
 			this.prompt.isShow = true;
+			this.prompt.isSuccess = 0;
 
 			this.$api.postNetwork({
 				data: {

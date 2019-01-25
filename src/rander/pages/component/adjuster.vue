@@ -24,7 +24,7 @@
 			<span>{{Math.round(changedFrame[index].angle * 10) / 10}}</span>
 			<engine  @mouseenter.stop.prevent="pointTarget = index"  v-if="pointTarget == index"
 				:servo="changedFrame[index]" :index="index"
-				@angle-changed="updateAngle" :damperMode="damperModeList[index]"/>
+				@angle-changed="updateAngle" :damperMode="damperModeList[index]" :min="rangObject[index].min" :max="rangObject[index].max"/>
 		</span>
 	</div>
   </div>
@@ -40,6 +40,7 @@ export default {
 	data() {
 		return {
 			styleObject: null,
+			rangObject: null,
 			pointTarget: -1,
 			follow: true
 		}
@@ -80,7 +81,10 @@ export default {
 		}
 	},
 	created() {
-		this.styleObject = genStyleObjectFromMap(adjusterMap);
+		const {style, range} = genStyleObjectFromMap(adjusterMap);
+        
+        this.styleObject = style;
+        this.rangObject = range;
 	}
 }
 </script>

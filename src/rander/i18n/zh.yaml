@@ -30,8 +30,8 @@ robot:
     password: '密码'
     connect: '连接'
     waiting: '配置网络中，请稍侯......'
-    fail: '网络配置成功，机器人下次重启后将优先连接此网络'
-    success: '网络配置失败，请检查wifi密码是否正确'
+    fail: '网络配置失败，请检查wifi密码是否正确'
+    success: '网络配置成功，机器人下次重启后将优先连接此网络'
   code:
     label: '代码'
     run: '运行'

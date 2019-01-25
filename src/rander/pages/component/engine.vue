@@ -31,11 +31,11 @@
 <script>
 
 export default {
-    props: ['servo', 'index', 'damperMode'],
+    props: ['servo', 'index', 'damperMode', 'min', 'max'],
     data() {
 		return {
-			min: -180,
-			max: 180,
+			// min: -180,
+			// max: 180,
 			options: [
 				{ text: this.$t('robot.damp'), value: 'damp'},
 				{ text: this.$t('robot.free'), value: 'free'},

@@ -32,8 +32,8 @@ robot:
     password: 'Password'
     connect: 'Connect'
     waiting: 'Configure the network, please wait a moment......'
-    fail: 'The network configuration is successful. The robot will connect to the network first after the next reboot'
-    success: 'Network configuration failed, please check whether the WiFi password is correct'
+    fail: 'Network configuration failed, please check whether the WiFi password is correct'
+    success: 'The network configuration is successful. The robot will connect to the network first after the next reboot'
   code:
     label: 'Code'
     run: 'Run'
