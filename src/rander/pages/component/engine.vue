@@ -7,9 +7,15 @@
                 <b-row class="mx-0">
                     <b-col cols="2">角度：</b-col>
                     <b-col>
+                        <b-button
+                            size="sm"
+                            @click="servo.angle = servo.angle + 0.1"><i class="fas fa-plus-circle"></i></b-button>
                         <b-form-slider v-model="servo.angle"
                             trigger-change-event :min="min" :max="max" :step="0.1" @slideStop="updateAngle($event, index - 0 + 1)"></b-form-slider>
-                            <span style="display: inline-block;width: 5em">{{servo.angle}}</span>
+                        <b-button
+                            size="sm"
+                            @click="servo.angle = servo.angle - 0.1"><i class="fas fa-minus-circle"></i></b-button>
+                        <span style="display: inline-block;width: 5em">{{Math.round(servo.angle * 10) / 10}}</span>
                     </b-col>
                 </b-row>
                 <b-form-group
@@ -73,6 +79,13 @@ export default {
         max-width: 450px;
         height: 80px;
     }
+
+    button.btn-secondary {
+        padding: 0px 2px;
+        margin: 0px;
+        background-color: transparent;
+        color: #fff;
+	}
 }
 </style>
 

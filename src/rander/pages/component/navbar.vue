@@ -67,6 +67,12 @@
 					<b-button
 						class="mr-2"
 						size="sm"
+						@click="runCode"
+						v-b-tooltip.hover :title="$t('robot.code.run')"><i class="fas fa-play" /></b-button>
+
+					<b-button
+						class="mr-2"
+						size="sm"
 						@click="saveFile"
 						v-b-tooltip.hover :title="$t('file.save')"><i class="fas fa-save" /></b-button>
 
@@ -154,6 +160,18 @@ export default {
 			} else {
 				this.createFile();
 			}
+		},
+		runCode() {
+			if (this.$store.state.editor.python.code === '') {
+				return false;
+			}
+
+			this.$api.postInstructs({
+				data: {
+					instruct_type: 4003,
+					para1: this.$store.state.editor.python.code
+				}
+			});
 		},
 		saveFileBtn() {
 			this.saveFile();

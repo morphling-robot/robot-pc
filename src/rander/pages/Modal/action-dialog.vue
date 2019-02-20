@@ -6,7 +6,7 @@
 		size="lg"
 		centered
 		@show="initActionTable"
-		@hidden="init"
+		@hidden="initAllThing"
 		hide-footer
 		cancel-variant="link">
 		<div slot="modal-header" class="w-100">
@@ -46,7 +46,7 @@
 					<action-table @change-action="changeCurrentAction" ref="actionTable" :currentAction="currentAction"
 						@create-action="createAction" @copy-action="copyAction" :hasChanged="hasChanged"
 						@action-speed="changeSpeed" @action-runed="realTimeSync"
-						@actionlist-init="init" @run-temAction="runTemAction"
+						@actionlist-init="initCurrentAction" @run-temAction="runTemAction"
 						:isTemp="isTemp" @update-action="updateActionContent"></action-table>
 				</b-col>
 				<b-col cols="8">
@@ -109,11 +109,14 @@ export default {
 		}
 	},
 	methods: {
-		runTemAction() {
+		runTemAction(actionName) {
 			const frameList = this.$refs.frameTable.frameList;
 			const speedList = this.$refs.frameTable.speedList;
 
-			this.$refs.frameTable.runInTime(frameList, speedList);
+			this.$refs.frameTable.runInTime(frameList, speedList).then(() => {
+				this.isEnd = true;
+				this.runningAction = actionName;
+			});
 		},
 		changeSpeed(value) {
 			this.actionSpeed = value;
@@ -126,22 +129,38 @@ export default {
 				this.runningAction = actionName;
 			}
 		},
-		init() {
+		initAllThing() {
 			this.currentAction = null;
 			this.newActionName = '';
 			this.isChangeName = false;
 			this.isTemp = false;
 			this.isCopy = false;
 		},
+		initCurrentAction() {
+			this.getCurrentFrame().then(() => {
+				if (this.hasChanged) {
+
+					this.$dialog.confirmChange(this.$t('modal.file')).then(() => {
+						this.initAllThing();
+					}, () => {
+						return;
+					});
+				} else {
+					this.initAllThing();
+				}
+
+			})
+		},
 		changeFlag(value) {
 			this.hasChanged = value;
 		},
 		getActionsList() {
-			this.$refs.actionTable.getActionsList();
+			return this.$refs.actionTable.getActionsList();
 		},
 		initActionTable() {
-			this.getActionsList();
-			this.getCurrentFrame();
+			this.getActionsList().then(() => {
+				this.getCurrentFrame();
+			});
 		},
 		changeCurrentAction(actionName) {
 			this.isTemp = false;
@@ -248,7 +267,7 @@ export default {
 			});
 		},
 		getCurrentFrame() {
-			this.$api.getFrame()
+			return this.$api.getFrame()
 				.then((data) => {
 					if (data) {
 						
@@ -258,7 +277,11 @@ export default {
 						this.currentFrame = frame;
 					}
 				}).catch(e => {
+					this.init();
 				})
+		},
+		init() {
+			this.currentFrame = new Array(17).fill([{angle: ''}]);
 		}
 	}
 }

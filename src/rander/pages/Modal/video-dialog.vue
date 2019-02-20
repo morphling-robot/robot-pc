@@ -21,65 +21,42 @@
 				</button>
 			</div>
 		</div>
+		<camera style="height: 350px" :isFail="isFail"></camera>
 	</b-modal>
 </template>
 
 <script>
 import { setTimeout } from 'timers';
+import Camera from '../component/video';
 
 export default {
 	data() {
 		return {
-			mediaElement: null,
-			canvasElement: null,
-			canvasContext: null,
-			position: {
-				left: 0,
-				top: 0,
-				width: 0,
-				height: 0
-			},
-			recorder: null,
-			blob: null
+			isFail: false
 		}
 	},
-	computed: {
-		dialogState() {
-			setTimeout(() => {
-				return this.$store.state.video.dialogState === 'open';
-			}, 1000);
-		}
-	},
-	watch: {
-		dialogState() {
-			this.setConfig();
-		}
-	},
+	components: {Camera},
 	methods: {
 		updateDialogState(state) {
 			this.$store.commit('updateDialogState', state);
+			this.isFail = false;
 
 			if (state === 'open') {
 				this.$api.connectCamera().then((camera) => {
 					this.$store.commit('updateVideoIp', camera.camera_ip);
+				}).catch(() => {
+					this.isFail = true;
 				});
 			}
 		},
 		closeVideo() {
-			this.$refs.videoModalRef.hide();
-			this.$store.commit('updateVideoState', 'close');
-
-			this.$api.closeCamera();
+			this.$api.closeCamera().then(() => {
+				this.$store.commit('updateVideoIp', null);
+				this.$refs.videoModalRef.hide();
+			});
 		}
 	},
 	mounted() {
-		// const { ipcRenderer } = this.$electron;
-
-		// ipcRenderer.removeAllListeners('app-toggle-video-dialog');
-
-		// ipcRenderer.on('app-toggle-video-dialog', () => {
-		// 	this.$refs.videoModalRef.show();
-		// });
 	},
 }
 </script>
@@ -110,7 +87,7 @@ export default {
 
 #videoModal .modal-body {
 	height: 389px;
-
+	padding-top: 0px;
 	#toolbar {
 		margin: 419px auto;
 		text-align: center;

@@ -35,7 +35,7 @@
 		<b-row>
 			<b-col cols="auto">
 				<b-button
-					@click="search"
+					@click="refresh"
 					:disabled="isSearch"
 					size="sm"><i class="fas fa-search" /></b-button>
 				<span v-if="isSearch">{{$t('robot.connect.waiting')}}</span>
@@ -89,7 +89,6 @@ export default {
 					serialNumber: 'ABCDE-FGHIJ-KLMNO'
 				}
 			],
-			ipList: [],
 			networkInterfaceList: [
 				{
 					name: '',
@@ -104,7 +103,8 @@ export default {
 			currentPage: 1,
 			perPage: 9,
 			robotName: '',
-			isSearch: false
+			isSearch: false,
+			server: null
     	};
 	},
 	computed: {
@@ -112,96 +112,31 @@ export default {
 			return this.$store.state.robot.status ? this.$store.state.robot.status : {};
 		}
 	},
-	mounted() {
-		// const { ipcRenderer } = this.$electron;
-
-		// ipcRenderer.removeAllListeners('app-toggle-connect-dialog');
-
-		// ipcRenderer.on('app-toggle-connect-dialog', () => {
-		// 	this.$refs.robotModalRef.show();
-		// });
-
-		this.init();
-	},
 	methods: {
-		init() {
-			this.getNetworkInterfaceList();
-		},
-		getNetworkInterfaceList() {
-			const os = this.$electron.remote.require('os');
-			const result = [];
-
-			const networkInterfaces = os.networkInterfaces();
-
-			for (const key in networkInterfaces) {
-				networkInterfaces[key].forEach(item => {
-					if (item.family == 'IPv4') {
-						if (item.cidr !== '127.0.0.1/8') {
-							result.push({
-								name: key,
-								cidr: item.cidr
-							});
-						}
-					}
+		search(msg, ip) {
+			if (this.connectedRobot.ip) {
+				this.robotList.push({
+					id: this.connectedRobot.robotId,
+					ip,
+					power: this.connectedRobot.power
 				});
+
+				return;
 			}
 
-			this.networkInterfaceList = result;
-		},
-		getIpList() {
-			let result = [];
-
-			for (const aoeu in this.networkInterfaceList) {
-				result = [...result, ...cidrRange(this.networkInterfaceList[aoeu].cidr)];
-			}
-
-			this.ipList = result;
-		},
-		search() {
-			this.getNetworkInterfaceList();
-			this.getIpList();
-
-			this.robotList = [];
-
-			this.isSearch = true;
-			
-			this.ipList.forEach((ip, index) => {
-
-				axios.get(`http://${ip}:5000/v1/states`, { timeout: 30000 })
-					.then(r => {
-						this.robotList.push({
-							id: r.data.robot_id,
-							ip: r.data.ip,
-							power: r.data.power
-						});
-
-						if (index === this.ipList.length - 1) {
-							this.isSearch = false;
-						}
-					}).catch(r => {
-						if (index === this.ipList.length - 1) {
-							this.isSearch = false;
-						}
-				});
+			this.robotList.push({
+				id: msg,
+				ip,
+				power: '--'
 			});
-
-			// axios.get(`http://192.168.43.108:5000/v1/states`, { timeout: 5000 })
-			// 		.then(r => {
-			// 			this.robotList.push({
-			// 				id: r.data.robot_id,
-			// 				ip: r.data.ip,
-			// 				power: r.data.power
-			// 			});
-			// 			this.isSearch = false;
-			// 		}).catch(r => {
-			// 			this.isSearch = false;
-			// 		});
 		},
-		updateRobotStatus() {
+		updateRobotStatus(row) {
 			this.$api
 				.getStates()
 				.then(payload => {
 					if (payload) {
+						this.robotList[row.index].id = payload.robotId;
+						this.robotList[row.index].power = payload.power;
 
 						this.$store.commit("updateRobotStatus", payload);
 					}
@@ -234,8 +169,51 @@ export default {
 				robotState: null
 			});
 
-			this.updateRobotStatus();
-		}
+			this.updateRobotStatus(row);
+		},
+		refresh() {
+			this.server.close();
+
+			this.createUdpConnect();
+		},
+		createUdpConnect() {
+			const dgram = require('dgram');
+			const subnetInfo = require('subnet-info');
+			const networkInterfaces = require('os').networkInterfaces();
+			const robotId = Buffer.from("ORIGAKER-2018001");
+
+			this.server = dgram.createSocket("udp4");
+				
+			this.server.bind(41234);
+
+			this.server.on("error", err => {
+				this.server.close();
+			});
+
+			this.server.on("message", (msg, rinfo) => {
+				this.search(msg, rinfo.address);
+
+				this.isSearch = false;
+			});
+
+			this.server.on("listening", () => {
+				this.robotList = [];
+				this.isSearch = true;
+				this.server.setBroadcast(true);
+			});
+
+
+			for (const key in networkInterfaces) {
+				networkInterfaces[key].forEach(item => {
+					if (item.family == 'IPv4') {
+						if (item.cidr !== '127.0.0.1/8') {
+							const { broadcastAddress } = new subnetInfo(item.cidr).info();
+							this.server.send(robotId, 8080, broadcastAddress);
+						}
+					}
+				});
+			}
+        }
 	}
 };
 </script>

@@ -44,6 +44,7 @@ robot:
     prompt: 'Upload file name can not be renamed!'
     error: 'File names cannot have spaces！'
     filename: 'Please enter name'
+    editor: 'editor'
   action:
     label: 'Action'
     id: 'ID'
@@ -65,6 +66,8 @@ robot:
     watch: 'Watch Record'
     save: 'Save Record'
     return: 'Video'
+    fail: 'Failed to turn on the camera!'
+    waiting: 'Please wait while you turn on the camera...'
   engine:
     calibration: 'Calibration'
     all: 'All Calibration'

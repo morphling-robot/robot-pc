@@ -1,5 +1,4 @@
 const state = {
-    videoState: 'open',
     videoIp: null,
     dialogState: 'close',
     large: {
@@ -13,20 +12,11 @@ const state = {
 };
 
 const mutations = {
-	updateVideoState(state, payload) {
-        state.videoState = payload;
-    },
     updateVideoIp(state, payload) {
         state.videoIp = payload;
     },
     updateDialogState(state, payload) {
         state.dialogState = payload;
-    },
-    openVideo(state) {
-        state.videoState = 'open';
-    },
-    closeVideo(state) {
-        state.videoState = 'close';
     }
 };
 

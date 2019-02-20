@@ -1,25 +1,34 @@
 const dgram = require('dgram');
+const subnetInfo = require('subnet-info');
+const networkInterfaces = require('os').networkInterfaces();
 
 const server = dgram.createSocket("udp4");
+const ipList = [];
 
 server.on("error", err => {
-    console.log(`server error:\n${err.stack}`);
     server.close();
 });
 
 server.on("message", (msg, rinfo) => {
     console.log(`server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
-    // this.robotList.push("robot");
+    ipList.push(rinfo.address);
 });
 
 server.on("listening", () => {
-    const address = server.address();
-    console.log(`server listening ${address.address}:${address.port}`);
     server.setBroadcast(true);
 });
 
-server.bind(8080);
+server.bind(41234);
 
 const robotId = Buffer.from("ORIGAKER-2018001");
 
-server.send(robotId, 8080, "255.255.255.255");
+for (const key in networkInterfaces) {
+    networkInterfaces[key].forEach(item => {
+        if (item.family == 'IPv4') {
+            if (item.cidr !== '127.0.0.1/8') {
+                const { broadcastAddress } = new subnetInfo(item.cidr).info();
+                server.send(robotId, 8080, broadcastAddress);
+            }
+        }
+    });
+}

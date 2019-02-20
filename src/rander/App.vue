@@ -50,12 +50,11 @@
         <router-view></router-view>
       </div>
 		</b-container>
+    <result-show />
 
     <prompt-modal />
 
 		<Statusbar/>
-
-    <video-element />
 
     <canvas></canvas>
 	</div>
@@ -73,7 +72,7 @@ import ConnectModal from "./pages/Modal/connect-dialog.vue";
 import NetworkModal from "./pages/Modal/network-dialog.vue";
 import PromptModal from "./pages/Modal/prompt-dialog.vue";
 import EngineModal from "./pages/Modal/engine-dialog.vue";
-import VideoElement from "./pages/component/video.vue";
+import ResultShow from "./pages/component/result.vue";
 
 export default {
   name: "app",
@@ -89,7 +88,7 @@ export default {
     NetworkModal,
     PromptModal,
     EngineModal,
-    VideoElement
+    ResultShow
   },
   data() {
     return {
@@ -263,6 +262,11 @@ export default {
   .slider-handle {
     background-color: #25A5EC;
     background-image: none;
+  }
+
+  button:disabled {
+      color: #fff;
+      cursor: not-allowed;
   }
 }
 

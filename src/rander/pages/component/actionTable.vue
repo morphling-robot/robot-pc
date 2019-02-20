@@ -35,17 +35,20 @@
                 :per-page="8"
                 @row-clicked="changeCurrentAction">
                 <template slot="name" slot-scope="row">
-                    <a v-b-tooltip.hover.left :title="`切换到${row.value}`" style="cursor: pointer; color: #0000ff">{{row.value}}</a>
+                    <a v-b-tooltip.hover.left :title="`${$t('robot.code.editor')}${row.value}`" style="cursor: pointer; color: #0000ff">{{row.value}}</a>
                 </template>
                 <template slot="operate" slot-scope="row">
                     <span>
                         <b-button size="sm" @click.stop="updateAction(row)" v-if="row.item.name === currentAction && hasChanged">
                             <i class="fas fa-save"></i>
                         </b-button>
-                        <b-button size="sm" @click.stop="deleteAction(row)">
+                        <b-button size="sm" @click.stop="deleteAction(row)" v-if="row.item.name !== currentAction">
                             <i class="fas fa-trash" />
                         </b-button>
-                        <b-button size="sm" @click.stop="runAction(row)">
+                        <b-button size="sm" @click="init" v-if="row.item.name === currentAction">
+                            <i class="fas fa-times" />
+                        </b-button>
+                        <b-button size="sm" @click.stop="runAction(row)" :disabled="row.item.name !== currentAction && !!currentAction">
                             <i class="fas fa-play" />
                         </b-button>
                     </span>
@@ -100,6 +103,7 @@ export default {
         },
         init() {
             this.getActionsList();
+            
             this.$emit('actionlist-init');
         },
         updateSpeed({newValue}) {
@@ -129,8 +133,8 @@ export default {
         runAction(row) {
             const { name } = row.item;
 
-            if (this.isTemp) {
-                this.$emit('run-temAction');
+            if (this.isTemp || name === this.currentAction) {
+                this.$emit('run-temAction', name);
             } else {
 
                 this.$api.runUserAction({
@@ -174,7 +178,9 @@ export default {
                 
                 this.changePageNumber(this.currentAction);
 
-			});
+			}).catch(() => {
+                this.actionList = [];
+            });
         },
         changeCurrentAction(item, index, event) {
             if (item.name === this.currentAction) {
@@ -257,5 +263,3 @@ export default {
     }
 }
 </script>
-
-

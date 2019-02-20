@@ -21,7 +21,7 @@
 		<span class="point" v-for="(item, index) in styleObject" :key="index"
 			:style="styleObject[index]" @mouseenter.stop.prevent="pointTarget = index">
 			<span class="number">{{index - 0 + 1}}</span><br />
-			<span>{{Math.round(changedFrame[index].angle * 10) / 10}}</span>
+			<span>{{ changedFrame[index].angle ? Math.round(changedFrame[index].angle * 10) / 10 : ''}}</span>
 			<engine  @mouseenter.stop.prevent="pointTarget = index"  v-if="pointTarget == index"
 				:servo="changedFrame[index]" :index="index"
 				@angle-changed="updateAngle" :damperMode="damperModeList[index]" :min="rangObject[index].min" :max="rangObject[index].max"/>

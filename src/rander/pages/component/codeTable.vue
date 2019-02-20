@@ -49,8 +49,7 @@
         <span v-if="row.item.codeName !== currentCode">
           <b-link style="display: inline-block;min-width: 7em">{{row.item.codeName}}</b-link>
           <b-btn
-              @click="startChangeName(row)" size="sm"
-              variant="success">
+              @click="startChangeName(row)" size="sm">
               <i class="fas fa-pencil-alt"></i>
             </b-btn>
         </span>
@@ -62,8 +61,7 @@
             type="text"></b-form-input>
           <b-btn
               @click="updateCode(row)" size="sm" :title="prompt"
-              :disabled="isShow"
-              variant="success">
+              :disabled="isShow">
               <i class="fas fa-save" />
             </b-btn>
         </span>
@@ -210,12 +208,6 @@ export default {
 			});
 		},
   },
-  mounted() {
-    this.$root.$on('get-data', this.getCodeList);
-  },
-  destroyed() {
-		this.$root.$off('get-data', this.getCodeList);
-	},
   computed: {
     content() {
       return this.$store.state.editor.python.code;

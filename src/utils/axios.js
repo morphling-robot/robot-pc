@@ -349,6 +349,11 @@ const apiList = {
 			.then(({ data }) => {
 				return data;
 			});
+	},
+	getResult() {
+		return api.robot.get(prefix + '/output').then(({data}) => {
+			return data;
+		})
 	}
 };
 

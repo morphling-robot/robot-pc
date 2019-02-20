@@ -48,5 +48,5 @@ const app = new Vue(Object.assign({ store, router, i18n }, App));
 app.$mount('#app');
 
 window.addEventListener('connect', event => {
-	app.$root.$emit('get-data');
+	app.$root.$emit('get-result');
 });

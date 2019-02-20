@@ -55,6 +55,7 @@
 <script>
 import Adjuster from '../component/adjuster.vue';
 import cloneObj from '@/utils/cloneObject.js';
+import { setTimeout } from 'timers';
 
 function modeListFactory(mode) {
     const modeList = [];
@@ -185,6 +186,8 @@ export default {
             }
 
             if (this.isEnd) {
+                this.$emit('index-changed');
+                
                 return;
             }
 
@@ -202,8 +205,6 @@ export default {
         isEnd(newValue, oldValue) {
             if (newValue && this.runningAction === this.currentAction) {
                 this.frameIndex = this.frameList.length;
-
-                this.$emit('index-changed');
             }
         }
     },

@@ -12,7 +12,10 @@ const state = {
 		originCode: ''
 	},
 	codeList: [],
-	runed: true
+	runed: true,
+	result: {
+		content: []
+	}
 };
 
 const getters = {

@@ -14,12 +14,23 @@
 			<b-card
 				id="video-card"
 				no-body
-				:class="{'hide': videoState && dialogState}"
+				v-if="!(videoState && dialogState)"
 				:style="{
 					height: `${videoCardHeight}px`,
 					width: `100%`,
 					overflow: 'hidden'
 				}">
+			</b-card>
+			<b-card
+				no-body
+				v-if="videoState && dialogState"
+				:style="{
+					height: `${videoCardHeight}px`,
+					width: `100%`,
+					overflow: 'hidden',
+					'border-radius': 0
+				}">
+				<test-video class="h-100"></test-video>
 			</b-card>
 		</div>
 		<b-card
@@ -30,9 +41,6 @@
 				width: `${width}px`
 			}">
 			<b-tabs card>
-				<!-- <b-tab :title="$t('robot.connect.label')" no-body active>
-					<connect-table />
-				</b-tab> -->
 				<b-tab :title="$t('robot.code.label')" no-body>
 					<code-table :perPage="6" />
 				</b-tab>
@@ -44,7 +52,6 @@
 <script>
 import TestVideo from "../component/video";
 import CodeTable from '../component/codeTable';
-import ConnectTable from '../component/ConnectTable';
 
 export default {
 	name: "sideView",
@@ -52,11 +59,10 @@ export default {
   components: {
 		TestVideo,
 		CodeTable,
-		ConnectTable
 	},
 	computed: {
 		videoState() {
-			return this.$store.state.video.videoState === 'open';
+			return this.$store.state.video.videoIp;
 		},
 		dialogState() {
 			return this.$store.state.video.dialogState === 'close';

@@ -42,6 +42,7 @@ robot:
     prompt: '上传文件名不能重名！'
     error: '文件名不能有空格！'
     filename: '请输入文件名'
+    editor: '编辑'
   action:
     label: '动作'
     id: 'ID'
@@ -57,12 +58,14 @@ robot:
       speed: '帧速率：'
       follow: '跟随'
   video:
-    label: '录像'
+    label: '摄像头'
     start: '开始录像'
     end: '结束录像'
     watch: '查看录像'
     return: '查看摄像头'
     save: '保存录像'
+    fail: '打开摄像头失败！'
+    waiting: '开启摄像头过程中，请稍候...'
   engine:
     calibration: '舵机标定'
     all: '全部标定'

@@ -7,6 +7,7 @@
 		hide-footer
 		centered
 		@show="show"
+		@hidden="hide"
 		no-close-on-backdrop>
 		<connect-table ref="connect" style="height: 540px;"/>
 	</b-modal>
@@ -18,14 +19,19 @@ import axios from 'axios';
 import ConnectTable from '../component/ConnectTable';
 
 export default {
-  data() {
-    return {
-
-		}
-	},
 	methods: {
 		show() {
-			this.$refs.connect.search();
+			this.$refs.connect.createUdpConnect();
+		},
+		hide() {
+			if (this.$refs.connect.server) {
+				this.$refs.connect.server.close();
+			}
+
+			this.$api.getCodeList().then(data => {
+
+				this.$store.commit('getCodeList', data);
+			});
 		}
 	},
 	components: {
