@@ -1,6 +1,9 @@
 <template>
-	<b-container id="app-result" fluid>
-		<p>111</p>
+	<b-container id="app-result" fluid v-show="showResult">
+        <div id="top"></div>
+        <div id="content" ref="content">
+            <p v-for="(item, index) in resultContent" :key="index">{{item}}</p>
+        </div>
 	</b-container>
 </template>
 
@@ -15,9 +18,25 @@ export default {
     methods: {
         getResult() {
             this.timer = setInterval(() => {
-                this.$api.getResult().then(({output}) => {
-                    console.log(output);
-                })
+                if (this.showResult) {
+                    this.$api.getResult().then(({output}) => {
+                        const regExp = new RegExp('GET /v1/output');
+
+                        if (output === '') {
+                            return;
+                        }
+                        
+                        output.split('\n').forEach(item => {
+                            if (regExp.test(item) || item === '') {
+                                return false;
+                            }
+
+                            this.$store.commit('updateResultContent', {
+                                isClear: false, content: item
+                            });
+                        });
+                    });
+                }
             }, 1000);
         }
     },
@@ -26,6 +45,23 @@ export default {
     },
     destroyed() {
         this.$root.$off('get-result', this.getResult);
+    },
+    computed: {
+        showResult() {
+            return this.$store.state.editor.result.isShow;
+        },
+        resultContent() {
+            return this.$store.state.editor.result.content;
+        }
+    },
+    watch: {
+        resultContent() {
+            const element = this.$refs.content;
+
+            this.$nextTick(() => {
+                element.scrollTop = element.scrollHeight;
+            });
+        }
     }
 }
 </script>
@@ -33,8 +69,9 @@ export default {
 
 <style lang="less">
 #app-result {
-//   position: fixed;
-//   bottom: 24px;
+  position: absolute;
+  bottom: 24px;
+  z-index: 100;
   width: 100%;
   color: #333333;
   background-color: #ffffff;
@@ -42,5 +79,19 @@ export default {
   font-size: 13px;
   font-weight: 500;
   line-height: 24px;
+  padding: 0px;
+  p {
+        padding: 1px 15px;
+        margin: 0px;
+    }
 }
+#top {
+    width: 100%;
+    height: 20px;
+    background-color: #F7F9FA;
+}
+#content {
+    height: 300px;
+    overflow: scroll;
+} 
 </style>

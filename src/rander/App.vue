@@ -51,12 +51,8 @@
       </div>
 		</b-container>
     <result-show />
-
+    <Statusbar/>
     <prompt-modal />
-
-		<Statusbar/>
-
-    <canvas></canvas>
 	</div>
 </template>
 

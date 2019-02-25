@@ -1,8 +1,16 @@
 <template>
 	<b-container id="app-status-bar" fluid>
 		<b-row>
-			<b-col>
-				<span v-b-modal.loginModal style="cursor: pointer">{{msg}}</span>
+			<b-col style="padding-left:20px">
+				<span v-b-modal.loginModal style="cursor: pointer">
+          {{msg}}
+        </span>
+        <b-button
+          size="sm" @click="changeShowState(true)"><i class="fas fa-angle-double-up" /></b-button>
+        <b-button
+          size="sm" @click="changeShowState(false)"><i class="fas fa-angle-double-down" /></b-button>
+        <b-button
+          size="sm" @click="clearContent()"><i class="fas fa-trash" /></b-button>
 			</b-col>
 			<b-col />
 			<b-col cols="auto">
@@ -25,6 +33,14 @@ export default {
     },
     msg() {
       return this.$store.state.user.token ? this.$t('user.state.login') : this.$t('user.state.unlogin')
+    }
+  },
+  methods: {
+    changeShowState(isShow) {
+      this.$store.commit('changeResultShow', isShow);
+    },
+    clearContent() {
+      this.$store.commit('updateResultContent', {isClear: true});
     }
   }
 };

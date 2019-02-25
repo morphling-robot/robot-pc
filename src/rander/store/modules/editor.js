@@ -14,7 +14,8 @@ const state = {
 	codeList: [],
 	runed: true,
 	result: {
-		content: []
+		content: [],
+		isShow: false
 	}
 };
 
@@ -62,6 +63,18 @@ const mutations = {
 	},
 	updateRunStatus(state, status) {
 		state.runed = status;
+	},
+	changeResultShow(state, isShow) {
+		state.result.isShow = isShow;
+	},
+	updateResultContent(state, {isClear, content}) {
+		if (isClear) {
+			state.result.content = [];
+
+			return;
+		}
+
+		state.result.content.push(content);
 	}
 };
 
