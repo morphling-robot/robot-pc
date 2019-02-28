@@ -72,6 +72,8 @@
 </template>
 
 <script>
+import Blockly from '@/lib/blockly/browser.js';
+
 export default {
     name: 'action-table',
     data() {
@@ -173,10 +175,24 @@ export default {
 			return this.$api.getActionsList().then(data => {
 				
 				if (data) {
-                    this.actionList = data;
-                }
+						this.actionList = data;
+						const actionArr = data.map(action => [action.name, action.name]);
+						
+						Blockly.Blocks['exec_action'] = {
+								init: function() {
+										this.appendDummyInput()
+												.appendField("执行动作");
+										this.appendDummyInput()
+												.appendField(new Blockly.FieldDropdown(actionArr), "action_name");
+										this.setInputsInline(true);
+										this.setColour(230);
+										this.setTooltip("");
+										this.setHelpUrl("");
+								}
+						};
+        }
                 
-                this.changePageNumber(this.currentAction);
+            this.changePageNumber(this.currentAction);
 
 			}).catch(() => {
                 this.actionList = [];

@@ -412,4 +412,11 @@ module.exports = function (Blockly) {
     return [code, Blockly.Python.ORDER_NONE];
   };
 
+  Blockly.Python['exec_action'] = function(block) {
+    var dropdown_action = block.getFieldValue('action');
+    // TODO: Assemble JavaScript into code variable.
+    var code = '...;\n';
+    return code;
+  };
+
 }

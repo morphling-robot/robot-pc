@@ -16,7 +16,7 @@
 <script>
 import cidrRange from 'cidr-range';
 import axios from 'axios';
-import ConnectTable from '../component/ConnectTable';
+import ConnectTable from '../component/connectTable';
 
 export default {
 	methods: {

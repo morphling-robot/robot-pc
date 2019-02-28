@@ -392,6 +392,9 @@
     <block type="dog_show">
       <field name="action">"nod_head"</field>
     </block>
+    <block type="exec_action">
+      <field name="action">"nod_head"</field>
+    </block>
     <block type="dance"></block>
       <field name="dance_number">"seeweed"</field>
   </category>

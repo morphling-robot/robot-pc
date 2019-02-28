@@ -805,4 +805,16 @@ Blockly.Blocks['get_servo_mode'] = {
 	}
 };
 
+Blockly.Blocks['exec_action'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("执行动作");
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([["option","OPTIONNAME"], ["option","OPTIONNAME"], ["option","OPTIONNAME"]]), "action_name");
+    this.setInputsInline(true);
+    this.setColour(230);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
 }
