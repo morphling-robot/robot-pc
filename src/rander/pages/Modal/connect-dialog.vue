@@ -32,6 +32,8 @@ export default {
 
 				this.$store.commit('getCodeList', data);
 			});
+
+			this.$emit('hide-connect');
 		}
 	},
 	components: {

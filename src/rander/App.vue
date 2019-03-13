@@ -3,9 +3,9 @@
 		<navbar />
 		<login-modal />
 		<video-modal />
-		<action-modal />
+		<action-modal ref="actionModal" />
     <code-modal />
-		<connect-modal />
+		<connect-modal @hide-connect="$refs.actionModal.getActionsList()" />
 		<network-modal />
     <engine-modal />
 

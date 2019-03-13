@@ -12,7 +12,7 @@
                 :total-rows="actionList.length"
                 v-model="currentActionPage"
                 :limit="5"
-                :per-page="10" />
+                :per-page="8" />
             <div style="width: 110%">
                 {{$t('robot.action.speed')}} <br />
                 <b-form-slider v-model="speed"
@@ -173,18 +173,22 @@ export default {
         },
         getActionsList() {
 			return this.$api.getActionsList().then(data => {
-				
 				if (data) {
 						this.actionList = data;
-						const actionArr = data.map(action => [action.name, action.name]);
+						const actionArr = data.map(action => [action.name, `"${action.name}"`]);
 						
 						Blockly.Blocks['exec_action'] = {
 								init: function() {
 										this.appendDummyInput()
-												.appendField("执行动作");
+											.appendField("执行动作");
 										this.appendDummyInput()
-												.appendField(new Blockly.FieldDropdown(actionArr), "action_name");
+                                            .appendField(new Blockly.FieldDropdown(actionArr), "action_name");
+                                        this.appendDummyInput()
+                                            .appendField("运动速度")
+                                            .appendField(new Blockly.FieldNumber(1.0, 0.1, 5, 0.1), "speed");
 										this.setInputsInline(true);
+                                        this.setPreviousStatement(true, null);
+                                        this.setNextStatement(true, null);
 										this.setColour(230);
 										this.setTooltip("");
 										this.setHelpUrl("");
