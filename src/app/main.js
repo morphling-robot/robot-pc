@@ -32,28 +32,17 @@ const Splashscreen = require('@trodi/electron-splashscreen');
 
 function createWindow() {
 
-	mainWindow = Splashscreen.initSplashScreen({
-		windowOpts: {
-			width: 1366,
-			height: 768,
-			minWidth: 1366,
-			minHeight: 768,
-			useContentSize: true,
-			webPreferences: {
-				nodeIntegration: true,
-				webSecurity: false,
-				allowRunningInsecureContent: true
-			}
-		},
-		templateUrl: path.join(__dirname, "../../asset/images", "open.svg"),
-        delay: 0,
-        minVisible: 1500,
-        splashScreenOpts: {
-            height: 500,
-            width: 700,
-			transparent: true,
-			minVisible: 1
-        }
+	mainWindow = new BrowserWindow({
+		width: 1366,
+		height: 768,
+		minWidth: 1366,
+		minHeight: 768,
+		useContentSize: true,
+		webPreferences: {
+			nodeIntegration: true,
+			webSecurity: false,
+			allowRunningInsecureContent: true
+		}
 	});
 
 	Menu.setApplicationMenu(null);

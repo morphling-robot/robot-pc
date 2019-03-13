@@ -16,7 +16,7 @@ module.exports = Object.assign({}, webpackBase, {
 		]
 	},
 	mode: 'development',
-	devtool: 'inline-source-map',
+	devtool: '#eval-source-map',
 	output: {
 
 	},

@@ -1,6 +1,6 @@
 {
   "name": "robot-pc",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "dr-robot",
   "main": "src/app/main.js",
   "scripts": {
