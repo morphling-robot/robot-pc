@@ -28,10 +28,7 @@ if (true) {
 	}
 }
 
-const Splashscreen = require('@trodi/electron-splashscreen');
-
 function createWindow() {
-
 	mainWindow = new BrowserWindow({
 		width: 1366,
 		height: 768,
@@ -42,8 +39,13 @@ function createWindow() {
 			nodeIntegration: true,
 			webSecurity: false,
 			allowRunningInsecureContent: true
-		}
+		},
+		backgroundColor: '#666',
+		show: false
 	});
+
+	splash = new BrowserWindow({width: 631, height: 383, transparent: true, frame: false, alwaysOnTop: true});
+  splash.loadURL(path.join(__dirname, "../../asset/images", "open.svg"));
 
 	Menu.setApplicationMenu(null);
 
@@ -52,6 +54,11 @@ function createWindow() {
 	mainWindow.on('closed', () =>
 		mainWindow = null
 	);
+
+	mainWindow.once('ready-to-show', () => {
+		splash.destroy();
+		mainWindow.show();
+	});
 
 	const { webContents } = mainWindow;
 

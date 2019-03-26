@@ -1,5 +1,7 @@
 import axios from 'axios';
 import * as actionUtil from './actionUtil';
+import decode from './hexToString';
+
 const serverURL = 'localhost';
 
 const versionPrefix = '/v1';
@@ -26,7 +28,7 @@ const apiList = {
 		return api.robot
 			.get(prefix + '/network')
 			.then(({ data }) => {
-				return data;
+				return data.map(item => decode(item));
 			})
 			.catch(error => console.log(error));
 	},
@@ -153,7 +155,7 @@ const apiList = {
 					posture: data.posture,
 					power: data.power,
 					robotId: data.robot_id,
-					ssid: data.ssid,
+					ssid: decode(data.ssid),
 					robotState: data.state
 				}
 			})

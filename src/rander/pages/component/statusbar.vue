@@ -16,7 +16,9 @@
 			<b-col cols="auto">
 				<span v-for="(item, key) in robotStatus"
           class="mx-3"
-          :key="item">{{key}}:{{item}}</span>
+          :key="item">
+          {{key}}:{{item}}
+        </span>
 			</b-col>
 		</b-row>
 	</b-container>

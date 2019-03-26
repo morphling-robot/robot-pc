@@ -9,12 +9,12 @@
                     <b-col>
                         <b-button
                             size="sm"
-                            @click="servo.angle = servo.angle + 0.1"><i class="fas fa-plus-circle"></i></b-button>
+                            @click="servo.angle = servo.angle - 0.1"><i class="fas fa-minus-circle"></i></b-button>
                         <b-form-slider v-model="servo.angle"
                             trigger-change-event :min="min" :max="max" :step="0.1" @slideStop="updateAngle($event, index - 0 + 1)"></b-form-slider>
                         <b-button
                             size="sm"
-                            @click="servo.angle = servo.angle - 0.1"><i class="fas fa-minus-circle"></i></b-button>
+                            @click="servo.angle = servo.angle + 0.1"><i class="fas fa-plus-circle"></i></b-button>
                         <span style="display: inline-block;width: 5em">{{Math.round(servo.angle * 10) / 10}}</span>
                     </b-col>
                 </b-row>
