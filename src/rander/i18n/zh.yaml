@@ -12,6 +12,7 @@ navbar:
   logout: '注销'
   Chinese: '中文'
   English: '英文'
+  Help: '帮助'
   blockly: '方块文件'
 
 robot:
@@ -81,14 +82,21 @@ robot:
 user:
   label: '用户'
   login: '登录'
+  register: '注册'
+  change: '密码修改'
+  changeOperate: '修改'
   name: '用户名'
   password: '密码'
-  waiting: '用户登录中......'
-  success: '用户登录成功!'
-  fail: '用户登录失败!'
+  waiting: '处理中，请等待...'
+  success: '操作成功！'
+  fail: '操作失败!'
   state:
     login: '已登录'
     unlogin: '未登录'
+  code: '验证码'
+  send: '发送'
+  phone: '手机号'
+  email: '邮箱'
 
 modal: 
   prompt: '提示'

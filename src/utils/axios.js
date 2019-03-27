@@ -363,7 +363,6 @@ export default function install(Vue) {
 	Vue.prototype.$api = apiList;
 
 	window.addEventListener('connect', event => {
-		console.log(event.baseURL);
 		api.robot = AxiosFactory({
 			baseURL: event.baseURL
 		});

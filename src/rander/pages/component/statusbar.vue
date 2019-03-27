@@ -2,7 +2,7 @@
 	<b-container id="app-status-bar" fluid>
 		<b-row>
 			<b-col style="padding-left:20px">
-				<span v-b-modal.loginModal style="cursor: pointer">
+				<span style="cursor: pointer">
           {{msg}}
         </span>
         <b-button

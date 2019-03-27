@@ -42,6 +42,10 @@
 						class="ml-1 my-2"
             v-b-modal.engineModal
 						size="sm" :title="$t('robot.engine.calibration')"><i class="fas fa-cog"></i></b-button>
+        <b-button
+						class="ml-1 my-2"
+            v-b-modal.loginModal
+						size="sm" :title="$t('user.login')"><i class="fas fa-sign-in-alt"></i></b-button>
       </div>
       <div id="router-view-container"
         :style="{

@@ -24,6 +24,9 @@
 				<b-dropdown-item @click="createCode">
 					{{$t('file.upload')}}
 				</b-dropdown-item>
+				<b-dropdown-item @click="openLink">
+					{{$t('navbar.Help')}}
+				</b-dropdown-item>
 			</b-dropdown>
 
 			<!-- <b-navbar-nav class="mr-auto">
@@ -175,6 +178,11 @@ export default {
 		},
 		saveFileBtn() {
 			this.saveFile();
+		},
+		openLink() {
+			const electron = this.$electron;
+
+			electron.shell.openExternal('http://www.daran.tech/product/9-cn.html');
 		},
 		saveFile() {
 			const electron = this.$electron;

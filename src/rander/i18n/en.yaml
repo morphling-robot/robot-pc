@@ -12,6 +12,7 @@ navbar:
   logout: 'logout'
   Chinese: 'Chinese'
   English: 'English'
+  Help: 'Help'
   blockly: 'Blockly'
 
 
@@ -83,7 +84,10 @@ robot:
 user:
   label: 'User'
   login: 'Login'
+  register: 'Register'
   name: 'Username'
+  change: 'Change'
+  changeOperate: 'Change'
   password: 'Password'
   waiting: 'Waiting......'
   success: 'Success'
@@ -91,6 +95,10 @@ user:
   state:
     login: 'Logged In'
     unlogin: 'Not Logged In'
+  code: 'Code'
+  send: 'Send'
+  phone: 'Phone Number'
+  email: 'Email'
 
 modal: 
   prompt: 'Prompt'

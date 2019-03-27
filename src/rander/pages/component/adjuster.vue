@@ -12,7 +12,7 @@
 				v-model="follow"
 				:value="true"
 				@change="sendIframe"
-                :unchecked-value="false"> 
+        :unchecked-value="false"> 
 				{{$t('robot.action.frame.follow')}}
 			</b-form-checkbox>
 		</b-col>
