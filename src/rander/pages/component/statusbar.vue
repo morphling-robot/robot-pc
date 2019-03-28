@@ -34,7 +34,7 @@ export default {
       return this.$store.state.robot.updateCycle;
     },
     msg() {
-      return this.$store.state.user.token ? this.$t('user.state.login') : this.$t('user.state.unlogin')
+      return this.$store.state.user.name !== '' ? this.$t('user.state.login') : this.$t('user.state.unlogin')
     }
   },
   methods: {

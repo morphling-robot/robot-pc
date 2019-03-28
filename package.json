@@ -18,6 +18,9 @@
     "productName": "大然科技",
     "directories": {
       "output": "output"
+    },
+    "win": {
+      "icon": "asset/images/icon.ico"
     }
   },
   "win": {

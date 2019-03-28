@@ -99,6 +99,10 @@ user:
   send: 'Send'
   phone: 'Phone Number'
   email: 'Email'
+  msg:
+    register: 'Register'
+    change: 'Forget password'
+    return: 'Return Login'
 
 modal: 
   prompt: 'Prompt'

@@ -12,6 +12,20 @@
 			</b-input-group>
 		</b-form-group>
 		<b-form-group>
+			<b-form-input
+				size="sm"
+				v-model="msg.password"
+				:type="show ? 'text' : 'password'"
+				:placeholder="$t('user.password')" />
+				<i
+					class="far"
+					@click="show = !show"
+					:class="{
+						'fa-eye': show,
+						'fa-eye-slash': !show
+					}" style="position: absolute; top: 70px; right: 30px" />
+		</b-form-group>
+		<b-form-group>
 			<b-input-group>
 				<b-form-input @input.native="init" size="sm" :placeholder="$t('user.code')" v-model="msg.code" />
 				<b-input-group-append>
@@ -22,43 +36,28 @@
 				{{code.returnMsg}}
 			</span>
 		</b-form-group>
-		<b-form-group>
-			<b-form-input
-				size="sm"
-				v-model="msg.password"
-				:placeholder="$t('user.password')" />
-		</b-form-group>
-		<b-row>
-			<b-col>
-				<p v-if="prompt.isShow" class="mb-0" style="font-size: 13px">
-					<span v-if="prompt.isSuccess === 0">
-						<i class="fas fa-sync-alt animated rotateIn infinite" /> {{$t('user.waiting')}}
-					</span>
-					<span v-if="prompt.isSuccess === 1" class="text-success">
-						<i class="far fa-check-circle" /> {{$t('user.success')}}
-					</span>
-					<span v-if="prompt.isSuccess === -1" class="text-danger">
-						<i class="far fa-times-circle" /> {{$t('user.fail')}}
-					</span>
-				</p>
-			</b-col>
-			<b-col cols="auto">
-				<b-button variant="primary"
-					@click="modal.hide()" style="background-color: rgba(138, 193, 239, 0.48); border-color: rgba(138, 193, 239, 0.48); color: #25A5EC"
-					size="sm">{{$t('robot.code.leave')}}</b-button>
-				<b-button variant="primary"
-					@click="operate" :disabled="prompt.isShow && prompt.isSuccess === 0"
-					size="sm">{{operation}}</b-button>
-			</b-col>
-		</b-row>
+		<b-button variant="primary"
+			class="w-100 mt-0 mb-2"
+			@click="operate" :disabled="prompt.isShow && prompt.isSuccess === 0"
+			size="sm">{{operation}}</b-button>
+		<slot name="link"></slot>
+		<p v-if="prompt.isShow" class="mb-0  mt-2" style="font-size: 13px">
+			<span v-if="prompt.isSuccess === 0">
+				<i class="fas fa-sync-alt animated rotateIn infinite" /> {{$t('user.waiting')}}
+			</span>
+			<span v-if="prompt.isSuccess === 1" class="text-success">
+				<i class="far fa-check-circle" /> {{$t('user.success')}}
+			</span>
+			<span v-if="prompt.isSuccess === -1" class="text-danger">
+				<i class="far fa-times-circle" /> {{$t('user.fail')}}
+			</span>
+		</p>
 	</div>
 </template>
 
 <script>
-import axios from 'axios';
-
 export default {
-	props: ['operation', 'modal', 'isRegister'],
+	props: ['operation', 'modal', 'isRegister', 'createAxiosRetrive'],
 	data() {
 		return {
 			selectedAccount: this.$t('user.phone'),
@@ -71,13 +70,13 @@ export default {
 				status: 0,
 				sending:false
 			},
-			prefix: 'http://robot.goodlinlin.com/DRrobot/public/api/v1',
 			isPhone: true,
 			msg: {
 				account: '',
 				code: '',
 				password: ''
-			}
+			},
+			show: true
 		}
 	},
 	methods: {
@@ -105,9 +104,6 @@ export default {
 					this.prompt.isSuccess = -1;
 				});
 			}
-		},
-		createAxiosRetrive(url, arg) {
-			return axios.post(`${this.prefix}/${url}`, arg);
 		},
 		sendCode() {
 			this.code.sending = true;

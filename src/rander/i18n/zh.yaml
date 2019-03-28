@@ -84,7 +84,7 @@ user:
   login: '登录'
   register: '注册'
   change: '密码修改'
-  changeOperate: '修改'
+  changeOperate: '修改密码'
   name: '用户名'
   password: '密码'
   waiting: '处理中，请等待...'
@@ -97,6 +97,10 @@ user:
   send: '发送'
   phone: '手机号'
   email: '邮箱'
+  msg:
+    register: '新用户注册'
+    change: '忘记登陆密码'
+    return: '返回登录'
 
 modal: 
   prompt: '提示'
