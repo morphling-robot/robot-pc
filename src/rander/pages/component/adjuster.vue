@@ -17,7 +17,7 @@
 			</b-form-checkbox>
 		</b-col>
 	</b-row>
-	<div id="adjust" @mouseleave="pointTarget = -1">
+	<div id="adjust" @mouseleave="pointTarget = -1" style="margin-top:10px;margin-left:10px">
 		<span class="point" v-for="(item, index) in styleObject" :key="index"
 			:style="styleObject[index]" @mouseenter.stop.prevent="pointTarget = index">
 			<span class="number">{{index - 0 + 1}}</span><br />
@@ -95,8 +95,8 @@ export default {
 	background-size: 100% 100%;
 	background-origin: 20px 0;
 	background-repeat: no-repeat;
-	width: 111%;
-	height: 440px;
+	width: 100%;
+	height: 450px;
 	position: relative;
 
 	.point {

@@ -98,22 +98,11 @@ export default {
 		handleLogin() {
 			this.prompt.isShow = true;
 
-			// this.$api.createToken({
-			// 	data: {
-			// 		username: this.username,
-			// 		password: this.password
-			// 	}
-			// }).then((data) => {
-			// 	this.$store.commit('updateUserToken', data.token);
-
-			// 	this.prompt.isSuccess = 1;
-			// }).catch(e => {
-			// 	this.prompt.isSuccess = -1;
-			// });
 			this.$refs.register.createAxiosRetrive('login', {
 				user: this.username, pwd: this.password
 			}).then(({data}) => {
 				this.prompt.isSuccess = data.code;
+				this.$store.commit('updateUserToken', data.data.token);
 			}).catch(e => {
 				this.prompt.isSuccess = -1;
 			});

@@ -15,9 +15,12 @@
   },
   "build": {
     "appId": "Lemonce.dr.robot",
-    "productName": "大然科技",
+    "productName": "大然科技-众筹",
     "directories": {
       "output": "output"
+    },
+    "win": {
+      "icon": "asset/images/icon.ico"
     }
   },
   "win": {

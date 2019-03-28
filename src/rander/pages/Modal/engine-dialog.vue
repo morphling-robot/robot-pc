@@ -180,10 +180,11 @@ export default {
         background-size: 100% 100%;
         background-origin: 20px 0;
         background-repeat: no-repeat;
-        width: 530.66px;
-        height: 440px;
+        width: 480.66px;
+        height: 450px;
         position: relative;
-        margin: 0 auto;
+        margin: 20px auto;
+        overflow: hidden;
     }
 
     .modal-title {
