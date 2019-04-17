@@ -33,7 +33,7 @@
     },
     "mac": {
       "icon": "asset/images/icon-mac.icns",
-      "targe": "dmg"
+      "target": "dmg"
     }
   },
   "repository": {
