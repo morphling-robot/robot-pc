@@ -15,8 +15,8 @@
     "fix-memory-limit": "cross-env LIMIT=3072 increase-memory-limit"
   },
   "build": {
-    "appId": "Lemonce.dr.robot",
-    "productName": "大然科技",
+    "appId": "Lemonce.dr.robot.funding",
+    "productName": "大然科技-众筹",
     "directories": {
       "output": "output"
     },
