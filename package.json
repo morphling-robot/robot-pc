@@ -10,28 +10,31 @@
     "build": "cross-env NODE_ENV=production webpack --config build/webpack.prod.js --progress",
     "dev:app": "cross-env NODE_ENV=development webpack-serve --config build/webpack.dev.js",
     "dev": "run-p dev:*",
-    "package": "electron-builder",
+    "package:window": "electron-builder",
+    "package:mac": "electron-builder -m",
     "fix-memory-limit": "cross-env LIMIT=3072 increase-memory-limit"
   },
   "build": {
-    "appId": "Lemonce.dr.robot.funding",
-    "productName": "大然科技-众筹",
+    "appId": "Lemonce.dr.robot",
+    "productName": "大然科技",
     "directories": {
       "output": "output"
     },
     "win": {
-      "icon": "asset/images/icon.ico"
+      "icon": "asset/images/icon-win.ico",
+      "target": [
+        {
+          "target": "squirrel",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "mac": {
+      "icon": "asset/images/icon-mac.icns",
+      "targe": "dmg"
     }
-  },
-  "win": {
-    "target": [
-      {
-        "target": "squirrel",
-        "arch": [
-          "x64"
-        ]
-      }
-    ]
   },
   "repository": {
     "type": "git",
