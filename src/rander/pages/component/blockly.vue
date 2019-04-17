@@ -14,11 +14,10 @@ const electron = window.require("electron");
 
 const { process } = electron.remote;
 
-const cwd = process.cwd();
+const basePath = process.srcPath;
 
 const fs = electron.remote.require("fs");
 const path = electron.remote.require("path");
-const basePath = path.resolve(cwd, "asset");
 
 const definition = window.require(path.resolve(basePath, "dr_definition.js"));
 const generator = window.require(path.resolve(basePath, "dr_generator.js"));

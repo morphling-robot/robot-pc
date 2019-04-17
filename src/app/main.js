@@ -12,20 +12,18 @@ let mainWindow;
 
 const winURL = isProd
 	? `http://localhost:8081`
-	: path.resolve(__dirname, '../../dist/index.html')
+	: `file://${path.resolve(__dirname, '../../dist/index.html')}`
 
-if (true) {
-	const assetPath = path.resolve(cwd, 'asset');
-	const srcPath = path.resolve(__dirname, '../../asset', )
-	if (!fs.existsSync(path.resolve(assetPath))) {
-		fs.mkdirSync(assetPath, { recursive: true });
-		fs.mkdirSync(path.resolve(assetPath, 'i18n'), { recursive: true });
-		fs.copyFileSync(path.resolve(srcPath, 'dr_definition.js'), path.resolve(assetPath, 'dr_definition.js'), COPYFILE_EXCL);
-		fs.copyFileSync(path.resolve(srcPath, 'dr_generator.js'), path.resolve(assetPath, 'dr_generator.js'), COPYFILE_EXCL);
-		fs.copyFileSync(path.resolve(srcPath, 'toolbox.xml'), path.resolve(assetPath, 'toolbox.xml'), COPYFILE_EXCL);
-		fs.copyFileSync(path.resolve(srcPath, 'i18n', 'en.js'), path.resolve(assetPath, 'i18n', 'en.js'), COPYFILE_EXCL);
-		fs.copyFileSync(path.resolve(srcPath, 'i18n', 'zh-hans.js'), path.resolve(assetPath, 'i18n', 'zh-hans.js'), COPYFILE_EXCL);
-	}
+const assetPath = path.resolve(app.getPath('userData'), 'asset');
+const srcPath = process.srcPath = path.resolve(__dirname, '../../asset')
+if (!fs.existsSync(path.resolve(assetPath))) {
+	fs.mkdirSync(assetPath);
+	fs.mkdirSync(path.resolve(assetPath, 'i18n'));
+	fs.copyFileSync(path.resolve(srcPath, 'dr_definition.js'), path.resolve(assetPath, 'dr_definition.js'), COPYFILE_EXCL);
+	fs.copyFileSync(path.resolve(srcPath, 'dr_generator.js'), path.resolve(assetPath, 'dr_generator.js'), COPYFILE_EXCL);
+	fs.copyFileSync(path.resolve(srcPath, 'toolbox.xml'), path.resolve(assetPath, 'toolbox.xml'), COPYFILE_EXCL);
+	fs.copyFileSync(path.resolve(srcPath, 'i18n', 'en.js'), path.resolve(assetPath, 'i18n', 'en.js'), COPYFILE_EXCL);
+	fs.copyFileSync(path.resolve(srcPath, 'i18n', 'zh-hans.js'), path.resolve(assetPath, 'i18n', 'zh-hans.js'), COPYFILE_EXCL);
 }
 
 function createWindow() {
@@ -45,7 +43,7 @@ function createWindow() {
 	});
 
 	splash = new BrowserWindow({width: 631, height: 383, transparent: true, frame: false, alwaysOnTop: true});
-  splash.loadURL(path.join(__dirname, "../../asset/images", "open.svg"));
+  splash.loadURL(`file://${path.join(srcPath, "images", "open.svg")}`);
 
 	Menu.setApplicationMenu(null);
 
