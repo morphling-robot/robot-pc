@@ -16,7 +16,8 @@ const winURL = isProd
 
 const assetPath = path.resolve(app.getPath('userData'), 'asset');
 const srcPath = process.srcPath = path.resolve(__dirname, '../../asset')
-if (!fs.existsSync(path.resolve(assetPath))) {
+if (fs.existsSync(path.resolve(app.getPath('userData'))) && 
+!fs.existsSync(path.resolve(assetPath))) {
 	fs.mkdirSync(assetPath);
 	fs.mkdirSync(path.resolve(assetPath, 'i18n'));
 	fs.copyFileSync(path.resolve(srcPath, 'dr_definition.js'), path.resolve(assetPath, 'dr_definition.js'), COPYFILE_EXCL);
