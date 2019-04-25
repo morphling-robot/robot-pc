@@ -78,7 +78,7 @@ export default {
 
 <style lang="less">
 #video-card {
-	background-image: url('../../../../asset/images/placeholder.jpg');
+	background-image: url('../../../../asset/images/placeholder.png');
 	background-size: 100% 100%;
 	background-origin: 0 0;
 	background-repeat: no-repeat;

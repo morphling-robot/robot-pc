@@ -62,7 +62,7 @@
 			</b-navbar-nav>
 
 			<b-navbar-nav  class="mx-auto">
-				<img src="../../../../asset/images/logo.png" style="width:100%">
+				<!-- <img src="../../../../asset/images/logo.png" style="width:100%"> -->
 			</b-navbar-nav>
 
 			<b-navbar-nav class="ml-auto" id="code-operate">

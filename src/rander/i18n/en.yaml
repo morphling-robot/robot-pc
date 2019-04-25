@@ -1,7 +1,7 @@
 home: 'home'
 
 navbar:
-  brand: 'DRRobot'
+  brand: 'Artificial Intelligence Robot Platform'
   editor: 'editor'
   manage: 'robot manage'
   action: 'action manage'
