@@ -1,7 +1,7 @@
 home: '首页'
 
 navbar:
-  brand: '大然科技'
+  brand: '人工智能机器人平台'
   editor: '代码编辑器'
   manage: '机器人管理'
   action: '动作管理'

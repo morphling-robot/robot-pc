@@ -1,6 +1,6 @@
 {
   "name": "robot-pc",
-  "version": "1.5.8",
+  "version": "1.5.9",
   "description": "dr-robot",
   "main": "src/app/main.js",
   "scripts": {
@@ -16,25 +16,23 @@
   },
   "build": {
     "appId": "Lemonce.dr.robot.funding",
-    "productName": "大然科技-众筹",
+    "productName": "AI Robot-众筹",
     "directories": {
       "output": "output"
     },
-    "win": {
-      "icon": "asset/images/icon-win.ico",
-      "target": [
-        {
-          "target": "squirrel",
-          "arch": [
-            "x64"
-          ]
-        }
-      ]
-    },
     "mac": {
-      "icon": "asset/images/icon-mac.icns",
       "target": "dmg"
     }
+  },
+  "win": {
+    "target": [
+      {
+        "type": null,
+        "arch": [
+          "x64"
+        ]
+      }
+    ]
   },
   "repository": {
     "type": "git",
