@@ -194,6 +194,7 @@ export default {
         background-color: rgba(153,153,153,1);
         padding: 5px;
         color: #fff;
+        width: 4em;
     }
 
     .b-dropdown {
