@@ -200,7 +200,8 @@ export default {
         background-color: rgba(153,153,153,1);
 		button.btn-secondary {
 			color: #fff;
-			background-color: transparent;
+            background-color: transparent;
+            width: 4em;
 		}
 	}
 
